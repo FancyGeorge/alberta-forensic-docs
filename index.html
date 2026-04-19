@@ -233,15 +233,82 @@ footer a:hover{color:var(--critical-bright)}
 </head>
 <body>
 
-<nav class="top-nav">
-  <div class="nav-inner">
-    <a href="./" class="nav-brand">Alberta UCP Forensic Record</a>
-    <div class="nav-links">
-      <a href="#pages">Pages</a>
-      <a href="#pdfs">PDFs</a>
-    </div>
+<!-- ===== UCP FORENSIC RECORD NAV SIDEBAR ===== -->
+<style>
+.ucpfr-nav{position:fixed;top:0;left:0;bottom:0;width:14px;z-index:9999;background:rgba(10,10,20,.96);border-right:1px solid #22223a;font-family:"JetBrains Mono", monospace;transition:width .3s cubic-bezier(.2,.8,.2,1);overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.ucpfr-nav:hover,.ucpfr-nav.open{width:210px;border-right-color:#33334a}
+.ucpfr-nav::before{content:"";position:absolute;top:0;right:0;width:2px;height:100%;background:linear-gradient(to bottom,transparent,#E74C3C 40%,#E74C3C 60%,transparent);opacity:.4}
+.ucpfr-nav-header{padding:20px 18px 16px;border-bottom:1px solid #22223a;white-space:nowrap;opacity:0;transition:opacity .2s;transition-delay:.1s}
+.ucpfr-nav:hover .ucpfr-nav-header,.ucpfr-nav.open .ucpfr-nav-header{opacity:1}
+.ucpfr-nav-header .ucpfr-kicker{font-size:9px;letter-spacing:.25em;color:#E67E22;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.ucpfr-nav-header .ucpfr-kicker::before{content:"";width:6px;height:6px;border-radius:50%;background:#E74C3C;animation:ucpfr-pulse 2s ease-in-out infinite}
+@keyframes ucpfr-pulse{0%,100%{opacity:1;box-shadow:0 0 6px #E74C3C}50%{opacity:.4;box-shadow:0 0 2px #E74C3C}}
+.ucpfr-nav-header .ucpfr-title{font-family:"Fraunces",Georgia,serif;font-size:14px;font-style:italic;font-weight:500;color:#e8e5e0;letter-spacing:-.01em;line-height:1.2}
+.ucpfr-nav-list{list-style:none;margin:0;padding:8px 0}
+.ucpfr-nav-list li{margin:0;padding:0}
+.ucpfr-nav-list a{display:flex;align-items:center;gap:14px;padding:11px 16px;color:#6a6880;text-decoration:none;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:color .15s, background .15s;position:relative;border-left:2px solid transparent}
+.ucpfr-nav-list a:hover{color:#e8e5e0;background:rgba(255,255,255,.03)}
+.ucpfr-nav-list a.active{color:#e8e5e0;border-left-color:#E74C3C;background:rgba(231,76,60,.06)}
+.ucpfr-nav-list a.active::after{content:"";position:absolute;right:14px;width:4px;height:4px;background:#E74C3C;border-radius:50%;opacity:0;transition:opacity .2s}
+.ucpfr-nav:hover .ucpfr-nav-list a.active::after,.ucpfr-nav.open .ucpfr-nav-list a.active::after{opacity:1}
+.ucpfr-nav-list .ucpfr-icon{display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;color:#E67E22;font-family:"Fraunces",Georgia,serif;line-height:1}
+.ucpfr-nav-list a.active .ucpfr-icon{color:#E74C3C}
+.ucpfr-nav-list .ucpfr-num{font-size:9.5px;color:#6a6880;letter-spacing:.2em;width:18px;flex-shrink:0;text-align:center}
+.ucpfr-nav-list a.active .ucpfr-num{color:#E67E22}
+.ucpfr-nav-list .ucpfr-label{opacity:0;transition:opacity .2s;transition-delay:.05s;font-family:"JetBrains Mono",monospace}
+.ucpfr-nav:hover .ucpfr-nav-list .ucpfr-label,.ucpfr-nav.open .ucpfr-nav-list .ucpfr-label{opacity:1}
+.ucpfr-nav-tab{position:absolute;top:50%;right:-8px;transform:translateY(-50%);width:16px;height:48px;background:#E74C3C;opacity:.15;border-radius:0 3px 3px 0;transition:opacity .2s;pointer-events:none}
+.ucpfr-nav:hover .ucpfr-nav-tab,.ucpfr-nav.open .ucpfr-nav-tab{opacity:0}
+body{padding-left:14px !important}
+@media (max-width:700px){
+  body{padding-left:0 !important;padding-top:48px !important}
+  .ucpfr-nav{width:100% !important;height:48px;bottom:auto;border-right:none;border-bottom:1px solid #22223a;overflow-x:auto;overflow-y:hidden}
+  .ucpfr-nav::before{top:auto;bottom:0;left:0;right:auto;width:100%;height:2px;background:linear-gradient(to right,transparent,#E74C3C 40%,#E74C3C 60%,transparent)}
+  .ucpfr-nav-header{display:none}
+  .ucpfr-nav-list{display:flex;padding:0;height:100%;align-items:center}
+  .ucpfr-nav-list a{padding:0 12px;height:48px;gap:6px;border-left:none;border-bottom:2px solid transparent;font-size:10px}
+  .ucpfr-nav-list a.active{border-left:none;border-bottom-color:#E74C3C}
+  .ucpfr-nav-list a.active::after{display:none}
+  .ucpfr-nav-list .ucpfr-label{opacity:1;font-size:10px;letter-spacing:.08em}
+  .ucpfr-nav-list .ucpfr-num{display:none}
+  .ucpfr-nav-tab{display:none}
+}
+</style>
+<nav class="ucpfr-nav" id="ucpfrNav" aria-label="Site navigation">
+  <div class="ucpfr-nav-tab"></div>
+  <div class="ucpfr-nav-header">
+    <div class="ucpfr-kicker">UCP Forensic Record</div>
+    <div class="ucpfr-title">Navigate</div>
   </div>
+  <ul class="ucpfr-nav-list">
+    <li><a href="index.html" data-page="home"><span class="ucpfr-icon">&#8962;</span><span class="ucpfr-num">00</span><span class="ucpfr-label">Home</span></a></li>
+    <li><a href="alberta_forensic_roadmap.html" data-page="roadmap"><span class="ucpfr-icon">&#9678;</span><span class="ucpfr-num">01</span><span class="ucpfr-label">Roadmap</span></a></li>
+    <li><a href="CRONYISM_NETWORK_V2.html" data-page="network"><span class="ucpfr-icon">&#9711;</span><span class="ucpfr-num">02</span><span class="ucpfr-label">Network</span></a></li>
+    <li><a href="the_ledger.html" data-page="ledger"><span class="ucpfr-icon">&#9707;</span><span class="ucpfr-num">03</span><span class="ucpfr-label">Ledger</span></a></li>
+    <li><a href="ucp_policy_ledger.html" data-page="policy"><span class="ucpfr-icon">&#9635;</span><span class="ucpfr-num">04</span><span class="ucpfr-label">Policy</span></a></li>
+  </ul>
 </nav>
+<script>
+(function(){
+  var path=window.location.pathname.split("/").pop().toLowerCase();
+  var match="home";
+  if(path===""||path==="index.html")match="home";
+  else if(path.indexOf("roadmap")!==-1)match="roadmap";
+  else if(path.indexOf("cronyism")!==-1||path.indexOf("network")!==-1)match="network";
+  else if(path.indexOf("policy")!==-1)match="policy";
+  else if(path.indexOf("ledger")!==-1)match="ledger";
+  var links=document.querySelectorAll(".ucpfr-nav-list a");
+  for(var i=0;i<links.length;i++){
+    if(links[i].getAttribute("data-page")===match)links[i].classList.add("active");
+  }
+  var nav=document.getElementById("ucpfrNav");
+  nav.addEventListener("click",function(e){
+    if(e.target.tagName==="A"||e.target.closest("a"))return;
+    nav.classList.toggle("open");
+  });
+})();
+</script>
+<!-- ===== END SIDEBAR ===== -->
 
 <header class="hero">
   <div class="kicker">Forensic Documentation · UCP Alberta · 2019&ndash;2026</div>
@@ -276,13 +343,13 @@ footer a:hover{color:var(--critical-bright)}
     <a href="CRONYISM_NETWORK_V2.html" class="link-card">
       <div class="lc-head">
         <div>
-          <div class="lc-num">02 &middot; The Web (Network Viz)</div>
-          <h3>The <span class="italic">Web</span> &mdash; Network Visualization</h3>
-          <div class="sub">Visual expression of Branch 01</div>
+          <div class="lc-num">02 &middot; Who Does the UCP Serve and Benefit?</div>
+          <h3>Who Does the UCP <span class="italic">Serve and Benefit?</span></h3>
+          <div class="sub">UCP Alberta &middot; Cronyism Network &middot; 2019&ndash;2026</div>
         </div>
         <div class="arrow">&rarr;</div>
       </div>
-      <p>The force-directed cronyism graph. 61 nodes, every one sourced. Drag, filter, and click for details.</p>
+      <p>The force-directed network behind Branch 01 of the Roadmap. 61 nodes &mdash; cabinet, donors, family, lobbyists, captured oversight bodies, legislation, vendors, public-cost endpoints &mdash; every one sourced. Drag, filter, and click for details.</p>
     </a>
 
     <a href="the_ledger.html" class="link-card">
