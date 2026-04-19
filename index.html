@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Web · Alberta Forensic Documentation</title>
+<title>Alberta UCP and Forensic Record</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,700&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -40,22 +40,14 @@ body{
   overflow-x:hidden;
 }
 body::before{
-  content:"";
-  position:fixed;
-  inset:0;
+  content:"";position:fixed;inset:0;
   background-image:
     radial-gradient(ellipse at 15% 10%, rgba(192,57,43,.06) 0%, transparent 45%),
     radial-gradient(ellipse at 85% 95%, rgba(230,126,34,.05) 0%, transparent 50%);
-  pointer-events:none;
-  z-index:0;
+  pointer-events:none;z-index:0;
 }
 body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  opacity:.035;
-  pointer-events:none;
-  z-index:1;
+  content:"";position:fixed;inset:0;opacity:.035;pointer-events:none;z-index:1;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 h1,h2,h3,h4,h5{font-family:"Fraunces", Georgia, serif;font-weight:500;letter-spacing:-.015em;line-height:1.1}
@@ -68,15 +60,13 @@ nav.top-nav{
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
 }
-.nav-inner{
-  max-width:var(--max);margin:0 auto;padding:14px 32px;
-  display:flex;align-items:center;gap:28px;
-}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:14px 32px;display:flex;align-items:center;gap:28px}
 .nav-brand{
-  font-family:"Fraunces",serif;font-size:18px;font-weight:500;font-style:italic;
+  font-family:"Fraunces",serif;font-size:17px;font-weight:500;
   letter-spacing:-.01em;color:var(--ink);text-decoration:none;
   display:flex;align-items:center;gap:10px;
 }
+.nav-brand .brand-main{font-style:italic}
 .nav-brand::before{
   content:"";width:8px;height:8px;border-radius:50%;
   background:var(--critical-bright);animation:pulse 2s ease-in-out infinite;
@@ -107,19 +97,15 @@ nav.top-nav{
   max-width:260px;
 }
 .hero h1{
-  font-size:clamp(52px, 9vw, 112px);
-  font-weight:400;font-style:italic;line-height:.92;
-  margin-bottom:24px;letter-spacing:-.02em;
+  font-size:clamp(44px, 7vw, 92px);
+  font-weight:400;line-height:.98;
+  margin-bottom:22px;letter-spacing:-.02em;
 }
-.hero h1 .em{color:var(--critical-bright)}
-.hero h1 .sub-em{
-  font-style:normal;font-weight:300;color:var(--ink-mute);
-  display:block;font-size:.42em;letter-spacing:0;
-  margin-top:14px;line-height:1.3;
-}
+.hero h1 .one{display:block;font-weight:300;color:var(--ink)}
+.hero h1 .two{display:block;font-style:italic;color:var(--critical-bright);margin-top:4px}
 .hero-lead{
   font-size:clamp(17px, 1.5vw, 21px);color:var(--ink-mute);
-  max-width:820px;line-height:1.55;margin-bottom:40px;
+  max-width:820px;line-height:1.55;margin-bottom:40px;margin-top:18px;
 }
 .hero-lead em{color:var(--ink);font-style:italic}
 .hero-meta{
@@ -133,6 +119,28 @@ nav.top-nav{
   letter-spacing:-.01em;margin-bottom:4px;
 }
 .hero-meta span strong.red{color:var(--critical-bright)}
+
+/* TAXONOMY callout — explains what the project names mean */
+.taxonomy{
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-left:3px solid var(--gold);
+  padding:26px 30px;
+  margin-top:32px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:24px;
+}
+.taxonomy-item h5{
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:6px;font-weight:500;
+}
+.taxonomy-item .name{
+  font-family:"Fraunces",serif;font-size:17px;
+  font-style:italic;font-weight:500;margin-bottom:4px;
+}
+.taxonomy-item p{font-size:13px;color:var(--ink-mute);line-height:1.5}
 
 /* SECTIONS */
 section{max-width:var(--max);margin:0 auto;padding:72px 32px;position:relative;z-index:2}
@@ -157,7 +165,7 @@ section{max-width:var(--max);margin:0 auto;padding:72px 32px;position:relative;z
   padding:36px 38px;text-decoration:none;color:inherit;
   transition:all .25s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden;
 }
-.card.primary{min-height:300px}
+.card.primary{min-height:320px}
 .card::before{
   content:"";position:absolute;top:0;left:0;
   width:4px;height:0;background:var(--critical-bright);
@@ -176,7 +184,7 @@ section{max-width:var(--max);margin:0 auto;padding:72px 32px;position:relative;z
   padding:2px 7px;border:1px solid var(--reform);color:var(--reform);
   border-radius:2px;letter-spacing:.18em;
 }
-.card h3{font-size:clamp(24px, 2.6vw, 32px);font-weight:500;line-height:1.15;margin-bottom:6px}
+.card h3{font-size:clamp(22px, 2.4vw, 30px);font-weight:500;line-height:1.18;margin-bottom:6px}
 .card h3 .italic{font-style:italic;color:var(--critical-bright)}
 .card .sub{
   font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-dim);
@@ -194,6 +202,29 @@ section{max-width:var(--max);margin:0 auto;padding:72px 32px;position:relative;z
   padding:3px 10px;border:1px solid var(--border);border-radius:2px;
 }
 .card .tag.highlight{color:var(--amber);border-color:rgba(230,126,34,.4)}
+
+/* Feature-detail list for the Web card — showing its specific capabilities */
+.card .feature-list{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px dotted var(--border);
+}
+.card .feature-list .feat-label{
+  font-family:"JetBrains Mono",monospace;font-size:9px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:6px;font-weight:500;
+}
+.card .feature-list ul{list-style:none;padding:0}
+.card .feature-list li{
+  font-size:13px;color:var(--ink-mute);
+  padding:4px 0 4px 14px;
+  position:relative;line-height:1.4;
+}
+.card .feature-list li::before{
+  content:"·";position:absolute;left:0;
+  color:var(--critical-bright);font-size:18px;line-height:1;top:4px;
+}
+.card .feature-list li strong{color:var(--ink);font-weight:500}
 
 /* BRANCHES TABLE */
 .branches{background:var(--bg-panel);border:1px solid var(--border)}
@@ -221,6 +252,8 @@ section{max-width:var(--max);margin:0 auto;padding:72px 32px;position:relative;z
 .branch-status.planned{color:var(--ink-dim);border:1px solid var(--border)}
 .branch-driver{background:rgba(192,57,43,.06)}
 .branch-driver .branch-num{color:var(--critical-bright)}
+.branch-web-link{background:rgba(231,76,60,.04)}
+.branch-web-link .branch-num{color:var(--critical-bright)}
 
 /* DOWNLOADS */
 .downloads-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:10px}
@@ -296,6 +329,7 @@ footer a:hover{color:var(--critical-bright)}
   .branch-status{grid-column:2;justify-self:start;margin-top:4px}
   .hero-meta{gap:20px 28px}
   .hero-meta span strong{font-size:18px}
+  .taxonomy{padding:20px;gap:18px}
 }
 </style>
 </head>
@@ -303,7 +337,9 @@ footer a:hover{color:var(--critical-bright)}
 
 <nav class="top-nav">
   <div class="nav-inner">
-    <a href="./" class="nav-brand">The Web</a>
+    <a href="./" class="nav-brand">
+      <span class="brand-main">Alberta UCP Forensic Record</span>
+    </a>
     <div class="nav-links">
       <a href="#primary">Primary</a>
       <a href="#branches">Branches</a>
@@ -316,8 +352,8 @@ footer a:hover{color:var(--critical-bright)}
 <header class="hero">
   <div class="kicker">Forensic Documentation · UCP Alberta · 2019&ndash;2026</div>
   <h1>
-    The <span class="em">Web</span>
-    <span class="sub-em">Money. Policy. Power. Every pipeline sourced.</span>
+    <span class="one">Alberta UCP</span>
+    <span class="two">and Forensic Record</span>
   </h1>
   <p class="hero-lead">
     A multi-year, multi-source investigation of how concentrated donor, lobbyist, family, and ex-staff networks received legislation, contracts, and appointments from the UCP government of Alberta. <em>Not a replacement for the underlying papers</em> &mdash; a navigable home for all of them, showing how every branch connects to every other branch.
@@ -329,26 +365,50 @@ footer a:hover{color:var(--critical-bright)}
     <span><strong class="red">$30B+</strong>Quantified cost to taxpayers</span>
     <span><strong>V4 / V5</strong>Evidence standard</span>
   </div>
+
+  <!-- Taxonomy: what the key terms mean so nobody confuses Roadmap with The Web with the network viz -->
+  <div class="taxonomy">
+    <div class="taxonomy-item">
+      <h5>The site</h5>
+      <div class="name">Alberta UCP and Forensic Record</div>
+      <p>The whole project &mdash; this landing page and everything it links to.</p>
+    </div>
+    <div class="taxonomy-item">
+      <h5>The hub</h5>
+      <div class="name">The Roadmap</div>
+      <p>The 17-branch interactive map showing how every investigative area connects to every other.</p>
+    </div>
+    <div class="taxonomy-item">
+      <h5>Branch 01</h5>
+      <div class="name">The Web</div>
+      <p>The specific branch covering cronyism pipelines &mdash; money, policy, donors, family, captured oversight.</p>
+    </div>
+    <div class="taxonomy-item">
+      <h5>Branch 01 &mdash; visualization</h5>
+      <div class="name">The Web &mdash; Network Visualization</div>
+      <p>The interactive force-directed graph that renders Branch 01 visually, with filters and sourced write-ups.</p>
+    </div>
+  </div>
 </header>
 
 <section id="primary">
   <div class="sec-head">Start here</div>
   <h2 class="sec-title">Primary materials</h2>
-  <p class="sec-lead">Four living documents form the core of the project. Together they render the same findings four ways: as a branching map, as a network, as a claim-by-claim refutation register, and as a legislative chronology.</p>
+  <p class="sec-lead">Four living documents form the core of the project. Together they render the same findings four ways: as a branching map, as a visual network, as a claim-by-claim refutation register, and as a legislative chronology.</p>
 
   <div class="primary-grid">
 
     <a href="alberta_forensic_roadmap.html" class="card primary">
       <div class="card-head">
         <div>
-          <div class="card-num">01 &middot; Roadmap Site <span class="status">LIVE</span></div>
+          <div class="card-num">01 &middot; The Roadmap <span class="status">LIVE</span></div>
           <h3>The <span class="italic">Roadmap</span></h3>
           <div class="sub">17 branches &middot; interactive network map &middot; the project hub</div>
         </div>
         <div class="card-arrow">&rarr;</div>
       </div>
       <p>
-        The architectural hub. A hand-positioned network of all 17 investigative branches with weighted connections, hoverable detail, and core-driver pulse rings. Five branches have complete write-ups (Web, Energy, Separation, Housing, Health); twelve are scaffolded with placeholders. Every branch links to PDFs when available.
+        The architectural hub of the entire project. A hand-positioned network of all 17 investigative branches with weighted connections, hoverable detail, and core-driver pulse rings. Five branches have complete write-ups (<em>The Web, Energy, Separation, Housing, Health</em>); twelve are scaffolded with placeholders. Every branch links to its supporting PDF when available.
       </p>
       <div class="tags">
         <span class="tag highlight">Start here</span>
@@ -360,15 +420,27 @@ footer a:hover{color:var(--critical-bright)}
     <a href="CRONYISM_NETWORK_V2.html" class="card primary">
       <div class="card-head">
         <div>
-          <div class="card-num">02 &middot; Cronyism Network <span class="status">LIVE</span></div>
-          <h3>The <span class="italic">Web</span> &middot; Force-directed graph</h3>
-          <div class="sub">61 nodes &middot; 7 relationship types &middot; animated money-flow particles</div>
+          <div class="card-num">02 &middot; The Web (Network Viz) <span class="status">LIVE</span></div>
+          <h3>The <span class="italic">Web</span> &mdash; Network Visualization</h3>
+          <div class="sub">Visual expression of Branch 01 &middot; 61 nodes &middot; 7 relationship types</div>
         </div>
         <div class="card-arrow">&rarr;</div>
       </div>
       <p>
-        The visual expression of Branch 01. A physics-simulated graph of every actor in the cronyism network &mdash; cabinet, donors, family, lobbyists, captured oversight bodies, legislation, vendors, public-cost endpoints. Drag nodes, filter by industry pipeline or actor type, click for sourced detail. Every node carries its primary source.
+        The force-directed graph for Branch 01. A physics-simulated map of every actor in the cronyism network &mdash; cabinet, donors, family, lobbyists, captured oversight bodies, legislation, vendors, and public-cost endpoints. Animated particles trace money as it moves between donation and contract edges. Drag any node, click for the full sourced record, and filter in two dimensions.
       </p>
+
+      <div class="feature-list">
+        <div class="feat-label">What you can do</div>
+        <ul>
+          <li><strong>Filter by industry pipeline</strong> (row 1): 01 Insurance &middot; 02 RStar/Yager &middot; 03 Coal &middot; 04 Charters &middot; 05 Mraiche &middot; 06 Liricon &middot; 07 Captive Ins. &middot; 08 Sole-source. Non-matching bubbles shrink and fade.</li>
+          <li><strong>Filter by actor type</strong> (row 2): Cabinet &middot; Donors &middot; Family &middot; Lobbyists &middot; Captured bodies &middot; Legislation &middot; Vendors &middot; Public cost.</li>
+          <li><strong>Hover any node</strong> for the top-line tooltip with its primary source.</li>
+          <li><strong>Click any node</strong> to jump to its full write-up card below the graph &mdash; every card carries description + source citation.</li>
+          <li><strong>Search</strong> across all names, dollar amounts, and descriptions at once.</li>
+        </ul>
+      </div>
+
       <div class="tags">
         <span class="tag highlight">Companion to Roadmap Branch 01</span>
         <span class="tag">D3.js force simulation</span>
@@ -405,7 +477,7 @@ footer a:hover{color:var(--critical-bright)}
         <div class="card-arrow">&rarr;</div>
       </div>
       <p>
-        A chronological registry of UCP legislation 2019&ndash;2026, cross-referenced to the branches that document each bill's consequences. Bill 47 (No-Fault Insurance), Bill 54 (Corporate Donations / Elections Deadline), Bill 76 (Captive Insurance), Bill 14 (Peterson Law), and the unprecedented four-times notwithstanding clause use. Every entry maps back to the roadmap branch where its evidence lives.
+        A chronological registry of UCP legislation 2019&ndash;2026, cross-referenced to the branches that document each bill's consequences. Bill 47 (No-Fault Insurance), Bill 54 (Corporate Donations / Elections Deadline), Bill 76 (Captive Insurance), Bill 14 (Peterson Law), and the unprecedented four-times notwithstanding clause use. Every entry maps back to the Roadmap branch where its evidence lives.
       </p>
       <div class="tags">
         <span class="tag highlight">Chronological companion</span>
@@ -420,15 +492,15 @@ footer a:hover{color:var(--critical-bright)}
   <div class="sec-head">The architecture</div>
   <h2 class="sec-title">17 investigative branches</h2>
   <p class="sec-lead">
-    Every branch traces back to one of <strong>three core drivers</strong> &mdash; if a branch does not, it is either misclassified or incomplete. The three drivers are <strong>The Web</strong> (who benefits?), <strong>Democratic Erosion</strong> (how are oversight mechanisms dismantled?), and <strong>Social Conservative Agenda</strong> (where does the policy come from?). Rows below link to their section inside the roadmap.
+    Every branch traces back to one of <strong>three core drivers</strong> &mdash; if a branch does not, it is either misclassified or incomplete. The three drivers are <strong>The Web</strong> (who benefits?), <strong>Democratic Erosion</strong> (how are oversight mechanisms dismantled?), and <strong>Social Conservative Agenda</strong> (where does the policy come from?). Rows below link to their section inside the Roadmap; Branch 01 additionally has its own dedicated visualization (<em>The Web &mdash; Network Visualization</em> above).
   </p>
 
   <div class="branches">
-    <a href="alberta_forensic_roadmap.html#web" class="branch-row branch-driver">
+    <a href="alberta_forensic_roadmap.html#web" class="branch-row branch-driver branch-web-link">
       <span class="branch-num">01</span>
       <div>
         <div class="branch-title">The <span class="italic">Web</span></div>
-        <div class="branch-sub">Cronyism pipelines, Mraiche network, captured oversight &mdash; the core driver</div>
+        <div class="branch-sub">Cronyism pipelines, Mraiche network, captured oversight &mdash; the core driver. Visualized in <em>The Web &mdash; Network Visualization</em> (above).</div>
       </div>
       <span class="branch-status complete">Complete</span>
     </a>
@@ -671,12 +743,12 @@ footer a:hover{color:var(--critical-bright)}
 
   <div class="standards">
     <h4>Best viewing</h4>
-    <p>Interactive visualizations (<em>The Roadmap</em>, <em>The Web</em>) work best in a desktop browser (Chrome, Firefox, Safari). They work on mobile too &mdash; drag and pinch as you'd expect &mdash; but the dense network views are easier to read on a larger screen. <strong>If you receive one of these as an email attachment on iPhone, tap &ldquo;Open in Safari&rdquo; or save to Files first</strong>; Mail's inline preview blocks the scripts that make them work.</p>
+    <p>Interactive visualizations (<em>The Roadmap</em>, <em>The Web &mdash; Network Visualization</em>) work best in a desktop browser (Chrome, Firefox, Safari). They work on mobile too &mdash; drag and pinch as you'd expect &mdash; but the dense network views are easier to read on a larger screen. <strong>If you receive one of these as an email attachment on iPhone, tap &ldquo;Open in Safari&rdquo; or save to Files first</strong>; Mail's inline preview blocks the scripts that make them work.</p>
   </div>
 </section>
 
 <footer>
-  <span>The Web &middot; Forensic Documentation · Calgary</span>
+  <span>Alberta UCP and Forensic Record &middot; Calgary</span>
   <span>Compiled April 2026 &middot; Living document &middot; <a href="https://github.com/FancyGeorge/alberta-forensic-docs" target="_blank" rel="noopener">Source on GitHub</a></span>
 </footer>
 
