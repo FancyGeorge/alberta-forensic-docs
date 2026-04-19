@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Web · UCP Alberta Money Flow Network · V3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,500&family=Source+Serif+4:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+:root {
+  --bg: #0a0a0c;
+  --bg-2: #0f0f12;
+  --paper: #17171a;
+  --paper-hi: #1f1f24;
+  --line: #2a2a30;
+  --line-hi: #3a3a42;
+  --ink: #e8e5e0;
+  --ink-mute: #a8a39b;
+  --ink-dim: #75716a;
+  --red: #e04848;
+  --red-soft: #8b2f2f;
+  --amber: #d4a24c;
+  --amber-soft: #8a6a2f;
+  --teal: #4eaea0;
+  --navy: #4a6b95;
+  --sage: #7a9566;
+  --copper: #c78559;
+  --purple: #9b7cb8;
+  --orange: #d97a3a;
+  --max: 1400px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Source Serif 4", Georgia, serif;
+  font-weight:400;
+  line-height:1.55;
+  font-size:15px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(ellipse at 30% 10%, rgba(224,72,72,.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 90%, rgba(212,162,76,.04) 0%, transparent 50%);
+  pointer-events:none;
+  z-index:0;
+}
+h1,h2,h3,h4,h5{font-family:"Fraunces", Georgia, serif;font-weight:500;letter-spacing:-.01em;line-height:1.15}
+.mono{font-family:"JetBrains Mono", monospace;font-size:.82em}
+
+/* HEADER */
+.top{max-width:var(--max);margin:0 auto;padding:40px 32px 24px;position:relative;z-index:2}
+.kicker{
+  font-family:"JetBrains Mono",monospace;font-size:11px;text-transform:uppercase;
+  letter-spacing:.3em;color:var(--amber);margin-bottom:18px;
+}
+.top h1{font-size:clamp(38px, 5vw, 66px);font-weight:400;font-style:italic;line-height:1;margin-bottom:16px}
+.top h1 .flow{display:inline-block;color:var(--red);font-style:normal;font-weight:300;margin:0 .12em}
+.top h1 .em{color:var(--amber)}
+.top .lead{max-width:880px;color:var(--ink-mute);font-size:16px;line-height:1.55;font-style:italic}
+.top .hint{
+  display:inline-flex;gap:24px;margin-top:22px;
+  font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-dim);flex-wrap:wrap;
+}
+.top .hint strong{color:var(--ink);font-weight:500}
+
+/* CONTROLS - two-row layout */
+.controls{
+  max-width:var(--max);margin:0 auto;padding:0 32px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:rgba(15,15,18,.7);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  position:sticky;top:0;z-index:20;
+}
+.controls-row{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:12px 0;
+}
+.controls-row.row-2{
+  border-top:1px solid var(--line);
+}
+.controls-row .lbl{
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  text-transform:uppercase;letter-spacing:.2em;color:var(--amber);
+  margin-right:8px;min-width:72px;font-weight:500;
+}
+.chip{
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;text-transform:uppercase;
+  letter-spacing:.12em;padding:6px 12px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink-mute);cursor:pointer;
+  border-radius:2px;transition:all .15s;white-space:nowrap;
+}
+.chip:hover{border-color:var(--amber);color:var(--ink)}
+.chip.active{background:var(--amber);color:var(--bg);border-color:var(--amber);font-weight:700}
+.controls-row .spacer{flex:1}
+.controls-row .search-input{
+  background:var(--paper);border:1px solid var(--line);color:var(--ink);
+  padding:7px 12px;font-family:"JetBrains Mono",monospace;font-size:11px;width:200px;border-radius:2px;
+}
+.controls-row .search-input:focus{outline:none;border-color:var(--amber)}
+.controls-row .search-input::placeholder{color:var(--ink-dim)}
+
+/* NETWORK */
+.net-wrap{
+  position:relative;width:100%;height:78vh;min-height:620px;
+  background:radial-gradient(ellipse at center, var(--bg-2) 0%, var(--bg) 100%);
+  border-bottom:1px solid var(--line);overflow:hidden;
+}
+.net-wrap::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,.015) 60px, rgba(255,255,255,.015) 61px),
+    repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,.015) 60px, rgba(255,255,255,.015) 61px);
+  pointer-events:none;
+}
+#network{width:100%;height:100%;cursor:grab;position:relative;z-index:1}
+#network:active{cursor:grabbing}
+
+/* LEGEND */
+.legend{
+  position:absolute;top:20px;left:20px;
+  background:rgba(10,10,12,.85);backdrop-filter:blur(10px);
+  border:1px solid var(--line);padding:16px 18px;
+  z-index:5;max-width:220px;font-size:12px;
+}
+.legend h4{
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  color:var(--amber);text-transform:uppercase;letter-spacing:.2em;
+  margin-bottom:12px;font-weight:500;
+}
+.legend-row{display:flex;align-items:center;gap:10px;padding:3px 0;color:var(--ink-mute);font-size:11.5px}
+.legend-row .dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.legend-row .line{width:20px;height:2px;flex-shrink:0}
+.legend hr{border:none;height:1px;background:var(--line);margin:10px 0}
+
+/* INSTRUCTIONS */
+.instructions{
+  position:absolute;bottom:20px;left:20px;z-index:5;
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  color:var(--ink-dim);letter-spacing:.1em;
+  background:rgba(10,10,12,.75);padding:10px 14px;border-left:2px solid var(--amber-soft);
+}
+.instructions div{padding:2px 0}
+.instructions kbd{
+  background:var(--paper);border:1px solid var(--line);padding:1px 5px;
+  border-radius:2px;font-size:9px;color:var(--ink);
+}
+
+/* TOOLTIP (replaces detail panel) */
+.tooltip{
+  position:absolute;pointer-events:none;
+  background:rgba(10,10,12,.96);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--amber);
+  padding:12px 16px;
+  z-index:10;
+  max-width:280px;
+  min-width:200px;
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .15s, transform .15s;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+}
+.tooltip.visible{opacity:1;transform:translateY(0)}
+.tooltip .tt-type{
+  font-family:"JetBrains Mono",monospace;font-size:9px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:6px;
+}
+.tooltip .tt-name{
+  font-family:"Fraunces",serif;font-size:18px;font-weight:500;
+  line-height:1.15;margin-bottom:3px;
+}
+.tooltip .tt-role{
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;
+  color:var(--ink-mute);letter-spacing:.05em;margin-bottom:8px;
+}
+.tooltip .tt-amount{
+  font-family:"JetBrains Mono",monospace;font-size:15px;font-weight:500;
+  color:var(--red);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.tooltip .tt-source{
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  color:var(--ink-dim);letter-spacing:.05em;line-height:1.5;
+}
+.tooltip .tt-source strong{color:var(--amber);font-weight:500}
+.tooltip .tt-click{
+  margin-top:10px;padding-top:8px;border-top:1px dotted var(--line);
+  font-family:"JetBrains Mono",monospace;font-size:9px;
+  color:var(--ink-dim);letter-spacing:.15em;text-align:center;
+  text-transform:uppercase;
+}
+
+/* NODE STYLES */
+.node{transition:opacity .3s}
+.node circle{
+  cursor:pointer;
+  transition:r .4s cubic-bezier(.2,.8,.2,1), stroke-width .2s, opacity .3s;
+}
+.node text{
+  font-family:"Source Serif 4",serif;font-size:11px;fill:var(--ink);
+  text-anchor:middle;pointer-events:none;paint-order:stroke fill;
+  stroke:var(--bg);stroke-width:3px;stroke-linejoin:round;
+  transition:opacity .3s;
+}
+.node text.sub{font-family:"JetBrains Mono",monospace;font-size:8.5px;fill:var(--ink-dim);letter-spacing:.05em}
+
+/* SHRUNK (filtered out) — aggressive so filter is unmistakable */
+.node.shrunk circle{opacity:.15;stroke-opacity:.2}
+.node.shrunk text{opacity:0}
+
+.node.highlight circle{stroke-width:3 !important}
+.link{pointer-events:none;transition:opacity .3s, stroke-width .3s}
+.link.shrunk{opacity:.02}
+.link.dimmed{opacity:.08}
+
+.particle{pointer-events:none;transition:opacity .3s}
+.particle.shrunk{opacity:0 !important}
+
+/* SECTIONS */
+section{max-width:var(--max);margin:0 auto;padding:64px 32px;position:relative;z-index:2}
+.sec-kicker{
+  font-family:"JetBrains Mono",monospace;font-size:11px;
+  text-transform:uppercase;letter-spacing:.3em;color:var(--amber);
+  margin-bottom:14px;display:flex;align-items:center;gap:12px;
+}
+.sec-kicker::before{content:"";width:36px;height:1px;background:var(--amber)}
+.sec-title{font-size:clamp(28px, 3.5vw, 42px);font-weight:400;font-style:italic;margin-bottom:14px;max-width:900px}
+.sec-lead{font-size:15px;color:var(--ink-mute);max-width:800px;line-height:1.6;margin-bottom:36px}
+
+/* MINI STATS */
+.mini-stats{
+  display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:2px;
+  background:var(--line);border:1px solid var(--line);margin-bottom:40px;
+}
+.mini-stats .cell{background:var(--paper);padding:20px 22px}
+.mini-stats .val{
+  font-family:"Fraunces",serif;font-size:28px;font-weight:500;font-style:italic;
+  color:var(--amber);line-height:1;margin-bottom:6px;
+}
+.mini-stats .val.red{color:var(--red)}
+.mini-stats .lbl{
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  text-transform:uppercase;letter-spacing:.15em;color:var(--ink-dim);
+}
+
+/* ROSTER - full card with description and source */
+.roster{
+  display:grid;grid-template-columns:repeat(auto-fill, minmax(380px, 1fr));gap:12px;
+}
+.card{
+  background:var(--paper);border:1px solid var(--line);
+  padding:22px 24px;cursor:pointer;transition:all .2s;position:relative;
+  scroll-margin-top:100px;
+}
+.card:hover{border-color:var(--amber-soft);background:var(--paper-hi);transform:translateY(-1px)}
+.card.highlighted{
+  border-color:var(--amber);
+  background:var(--paper-hi);
+  box-shadow:0 0 0 2px rgba(212,162,76,.35), 0 8px 24px rgba(0,0,0,.5);
+  animation:pulseCard 1.6s ease-out;
+}
+@keyframes pulseCard{
+  0%{box-shadow:0 0 0 0 rgba(212,162,76,.8), 0 8px 24px rgba(0,0,0,.5)}
+  100%{box-shadow:0 0 0 2px rgba(212,162,76,.35), 0 8px 24px rgba(0,0,0,.5)}
+}
+.card .type-pill{
+  display:inline-block;font-family:"JetBrains Mono",monospace;font-size:9px;
+  letter-spacing:.15em;text-transform:uppercase;padding:3px 8px;
+  margin-bottom:10px;color:var(--bg);font-weight:600;
+}
+.card h4{font-size:18px;font-weight:500;margin-bottom:3px}
+.card .role{
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--ink-dim);
+  letter-spacing:.04em;margin-bottom:12px;
+}
+.card .amount{
+  font-family:"JetBrains Mono",monospace;font-size:15px;color:var(--red);
+  font-weight:500;margin-bottom:12px;
+}
+.card .desc{
+  font-size:13.5px;color:var(--ink-mute);line-height:1.58;
+  margin-bottom:14px;
+}
+.card .source-box{
+  padding-top:12px;border-top:1px dotted var(--line);
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  color:var(--ink-dim);letter-spacing:.03em;line-height:1.6;
+}
+.card .source-box .src-lbl{
+  color:var(--amber);font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;margin-right:6px;font-size:9px;
+}
+.card.filtered-hidden{display:none}
+.card .tier{
+  position:absolute;top:18px;right:18px;
+  font-family:"JetBrains Mono",monospace;font-size:9px;
+  color:var(--teal);letter-spacing:.15em;
+}
+
+footer{
+  max-width:var(--max);margin:48px auto 0;padding:32px;
+  border-top:1px solid var(--line);
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+footer a{color:var(--amber);text-decoration:none;border-bottom:1px dotted var(--amber-soft)}
+footer a:hover{color:var(--ink)}
+
+/* RESPONSIVE */
+@media (max-width: 900px){
+  .top{padding:24px 20px}
+  section{padding:40px 20px}
+  .controls{padding:0 20px}
+  .controls-row{overflow-x:auto;flex-wrap:nowrap;padding:10px 0}
+  .controls-row::-webkit-scrollbar{height:4px}
+  .controls-row .search-input{width:140px}
+  .legend{display:none}
+  .net-wrap{height:70vh;min-height:500px}
+  .instructions{font-size:9px;bottom:10px;left:10px}
+  .tooltip{max-width:240px}
+  .roster{grid-template-columns:1fr}
+}
+
+@keyframes pulse{
+  0%,100%{filter:drop-shadow(0 0 6px currentColor)}
+  50%{filter:drop-shadow(0 0 16px currentColor)}
+}
+.node-primary circle{animation:pulse 3s ease-in-out infinite}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="kicker">V3 · Two-row filters · Aggressive shrink · Every node sourced</div>
+  <h1>The<span class="flow">→</span><span class="em">Web</span></h1>
+  <p class="lead">
+    Every dot is a person, institution, or policy. Every line is a relationship, a payment, or a captured oversight body. Hover any bubble for the top-line fact and its source. Click to drop to the full record in the list below. Drag to explore the physics. Filters shrink everything else so what you're studying is the only thing on the page.
+  </p>
+  <div class="hint">
+    <span><strong>61</strong> nodes</span>
+    <span><strong>7</strong> relationship types</span>
+    <span><strong>10</strong> pipelines</span>
+    <span><strong>Every node sourced</strong></span>
+    <span><strong>$30B+</strong> traced</span>
+  </div>
+</header>
+
+<div class="controls" id="controls">
+  <div class="controls-row row-1">
+    <span class="lbl">Industry</span>
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="pipeline:1">01 Insurance</button>
+    <button class="chip" data-filter="pipeline:2">02 RStar / Yager</button>
+    <button class="chip" data-filter="pipeline:3">03 Coal</button>
+    <button class="chip" data-filter="pipeline:4">04 Charters</button>
+    <button class="chip" data-filter="pipeline:5">05 Mraiche</button>
+    <button class="chip" data-filter="pipeline:6">06 Liricon</button>
+    <button class="chip" data-filter="pipeline:7">07 Captive Ins.</button>
+    <button class="chip" data-filter="pipeline:8">08 Sole-source</button>
+  </div>
+  <div class="controls-row row-2">
+    <span class="lbl">Actor</span>
+    <button class="chip" data-filter="type:cabinet">Cabinet</button>
+    <button class="chip" data-filter="type:donor">Donors</button>
+    <button class="chip" data-filter="type:family">Family</button>
+    <button class="chip" data-filter="type:lobbyist">Lobbyists</button>
+    <button class="chip" data-filter="type:captured">Captured bodies</button>
+    <button class="chip" data-filter="type:policy">Legislation</button>
+    <button class="chip" data-filter="type:vendor">Vendors</button>
+    <button class="chip" data-filter="type:public">Public cost</button>
+    <div class="spacer"></div>
+    <input type="text" class="search-input" placeholder="Search name / $ / term" id="search"/>
+  </div>
+</div>
+
+<div class="net-wrap">
+  <div class="legend">
+    <h4>Node types</h4>
+    <div class="legend-row"><span class="dot" style="background:#c94545"></span>Government / cabinet</div>
+    <div class="legend-row"><span class="dot" style="background:#d4a24c"></span>Appointee / ex-staff</div>
+    <div class="legend-row"><span class="dot" style="background:#c78559"></span>Family member</div>
+    <div class="legend-row"><span class="dot" style="background:#4a6b95"></span>Lobbyist / firm</div>
+    <div class="legend-row"><span class="dot" style="background:#4eaea0"></span>Captured oversight</div>
+    <div class="legend-row"><span class="dot" style="background:transparent; border:2px solid #7a9566"></span>Legislation</div>
+    <div class="legend-row"><span class="dot" style="background:#d97a3a"></span>Sole-source vendor</div>
+    <div class="legend-row"><span class="dot" style="background:#75716a"></span>Public cost</div>
+    <hr>
+    <h4>Flows</h4>
+    <div class="legend-row"><span class="line" style="background:#e04848"></span>Donation</div>
+    <div class="legend-row"><span class="line" style="background:#d97a3a"></span>Contract</div>
+    <div class="legend-row"><span class="line" style="background:#d4a24c"></span>Appointment</div>
+    <div class="legend-row"><span class="line" style="background:#9b7cb8"></span>Family</div>
+    <div class="legend-row"><span class="line" style="background:#4a6b95"></span>Lobbying</div>
+    <div class="legend-row"><span class="line" style="background:#7a9566"></span>Policy output</div>
+  </div>
+
+  <svg id="network"></svg>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <div class="instructions">
+    <div><kbd>drag</kbd> to pan · <kbd>scroll</kbd> to zoom</div>
+    <div><kbd>hover</kbd> a node · <kbd>click</kbd> to jump to its record</div>
+    <div><kbd>esc</kbd> to reset</div>
+  </div>
+</div>
+
+<section>
+  <div class="sec-kicker">The scale</div>
+  <h2 class="sec-title">What the network moves</h2>
+  <p class="sec-lead">Every total below is what can be quantified from primary source.</p>
+  <div class="mini-stats">
+    <div class="cell"><div class="val red">$614M+</div><div class="lbl">Mraiche Contracts</div></div>
+    <div class="cell"><div class="val red">$237.5M</div><div class="lbl">Coal Settlements</div></div>
+    <div class="cell"><div class="val">$24B</div><div class="lbl">Electricity Excess</div></div>
+    <div class="cell"><div class="val">$1.5B</div><div class="lbl">Liricon Ask</div></div>
+    <div class="cell"><div class="val red">$253.7K</div><div class="lbl">Straw Donations</div></div>
+    <div class="cell"><div class="val">$897.5K</div><div class="lbl">Sole-Source</div></div>
+    <div class="cell"><div class="val red">$7,080</div><div class="lbl">Auto Insurance</div></div>
+    <div class="cell"><div class="val">105+</div><div class="lbl">Active Lobbying Files</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-kicker">The record · Granular detail</div>
+  <h2 class="sec-title">Every node · every actor · every source</h2>
+  <p class="sec-lead">This is where the granular detail lives. Each card carries the full description and its primary source. The filter chips above the network apply here too. Click any card to focus that node in the graph.</p>
+  <div class="roster" id="roster"></div>
+</section>
+
+<footer>
+  <span>The Web · Network Visualization · April 2026</span>
+  <span>Companion to <a href="#">CRONYISM_MONEY_TO_POLICY_MAP.md</a> and <a href="#">CRONYISM_INTERACTIVE.html</a></span>
+</footer>
+
+<script>
+// ============================================================
+// NODES — every entry now carries a primary source
+// ============================================================
+const NODES = [
+  // CABINET / GOVERNMENT
+  { id:"smith", name:"Danielle Smith", sub:"Premier", type:"cabinet", size:32, pipelines:[1,2,3,4,5,6,7,8,9,10],
+    desc:"Premier of Alberta since October 2022. Former CFIB president, Calgary school trustee (fired by province 1999), Wildrose leader who led the 2014 floor-crossing to PCs. Won 2022 UCP leadership 53.8% on the sixth ballot.",
+    source:"Globe and Mail · CBC · Alberta Legislature biography · Master Inventory §4.1" },
+  { id:"anderson", name:"Rob Anderson", sub:"Chief of Staff", type:"cabinet", size:20, pipelines:[2,4,6],
+    desc:"Co-author of the Free Alberta Strategy (separation blueprint). Ex-Wildrose MLA who floor-crossed with Smith. Mother Jane Anderson funded the 1994 charter-school legislation and founded Footprints for Learning.",
+    source:"Globe and Mail (Aug 2023) · abresistance.substack.com (Apr 2026) · Hansard · Session 3 Findings §15.1" },
+  { id:"marshall", name:"Marshall Smith", sub:"Former CoS", type:"cabinet", size:20, pipelines:[5,6],
+    desc:"Chief of Staff until October 2024. Lived in Mraiche family home purchased August 11, 2023. Signed the nephew contracts. Twice caught selling drugs. Now linked to Red Deer Recovery Community (EHN).",
+    source:"Globe and Mail · FOI employment records · Master Inventory §1.4, §20.7" },
+  { id:"amery", name:"Mickey Amery", sub:"Justice Minister", type:"cabinet", size:24, pipelines:[5],
+    desc:"Justice Minister since 2023. Cousin-in-law to Sam Mraiche (wife Fariha is Mraiche's cousin; both families from Joub Jannine, Bekaa Valley). Introduced Bill 54 shortening Elections Alberta's deadline during active probe of his relative. Authored the Peterson Law granting himself Law Society immunity.",
+    source:"Globe and Mail (May 1, 2025 · Apr 8, 2026) · Grok cronyism research · CBC (Jan 2026)" },
+  { id:"moretta", name:"David Moretta", sub:"Smith's spouse", type:"cabinet", size:16, pipelines:[6],
+    desc:"Smith's husband. Former Global Television + Sun Media executive. Attended 3 government meetings on Liricon rail in 2023. On the Saudi trip. Smith: 'he's an adviser because he's married to me.'",
+    source:"CBC (July 2025, FOIP release) · Global News / Canadian Press · Master Inventory §4.5" },
+  { id:"ministers", name:"Cabinet", sub:"Collective", type:"cabinet", size:18, pipelines:[1,3,4,5,6,7],
+    desc:"LaGrange (Health), Shandro (former Health, Covenant board), Jean (Energy — letter to AER on Grassy Mountain), Dreeshen (Transport), Schow (House Leader), Horner (Finance, cousin Doug Horner of P3 Capital lobbied 33×). Half the caucus now faces recall petitions.",
+    source:"Hansard · Elections Alberta · Lobbyist Registry · Master Inventory §10, §22.9" },
+
+  // MRAICHE FAMILY
+  { id:"mraiche", name:"Sam Mraiche", sub:"MHCare / Contractor", type:"donor", size:30, pipelines:[5], amount:614000000,
+    desc:"Contractor at the centre of the network. Convicted of credit-card fraud at age 19 (1998). Bankrupt at 21 with $100K+ gambling debt. Pre-COVID role: junior 'Training Marketing Coordinator' at an oilfield company. Now holds $614M+ in government contracts. RCMP searches March 2026. Held in contempt of Elections Alberta.",
+    source:"Globe and Mail (Nov 29, 2025 profile · Sept 2025 · Dec 2025) · CBC · The Tyee · Master Inventory §1.1" },
+  { id:"fatima", name:"Fatima Mraiche", sub:"Sister", type:"family", size:15, pipelines:[5],
+    desc:"Associate Professor in Pharmacology, University of Alberta (Vargo Teaching Chair, PhD 2010). Bought $1.6M house August 11, 2023 via numbered company; Marshall Smith moved in the same day. Sold August 2024 for $1.7M.",
+    source:"Globe and Mail · Edmonton land titles · UAlberta Faculty profile · Grok cronyism research" },
+  { id:"khalil-son", name:"Khalil Mraiche", sub:"Son · Policy adviser", type:"family", size:14, pipelines:[5],
+    desc:"Sam's son (same name as grandfather). Hired as Alberta government policy adviser August 2023, left December 2023. Contract signed by Marshall Smith. Director of numbered company 2464052 Alberta Ltd. with AHS procurement officials.",
+    source:"Globe and Mail · FOI employment records · Corporate filings (2464052 Alberta Ltd.)" },
+  { id:"ahmad-j", name:"Ahmad Jebara", sub:"Nephew", type:"family", size:14, pipelines:[5],
+    desc:"Nephew via Mraiche sister. Policy adviser, Energy & Minerals, August 2023. Prior MHCare account assistant per LinkedIn. Hired Aug 10–12, 2023 — the same day Fatima bought the $1.6M house. Zero work product via FOI across 3 combined nephew-years.",
+    source:"Globe and Mail · The Breakdown (Aug 2025) · FOI employment records" },
+  { id:"mahmoud-j", name:"Mahmoud Jebara", sub:"Nephew", type:"family", size:14, pipelines:[5],
+    desc:"Nephew via Mraiche sister. Policy adviser, Environment and Parks, May 2024. Hired May 6, 2024 — the same day the Premier's Office committed to the Vancouver skybox trip with Mraiche.",
+    source:"Globe and Mail · The Breakdown (Aug 2025) · FOI employment records" },
+  { id:"mike-e", name:"Mike Eldassouki", sub:"Brother-in-law", type:"family", size:16, pipelines:[5],
+    desc:"Owns Melewka Construction; senior executive at Mraiche companies. Central figure in 2026 construction litigation. Alleged $8.4M forged-document transfer. Mraiche's defence: informal advice only, no controlling role.",
+    source:"Civil court filings (Semashkewich v. Mraiche/Eldassouki) · The Tyee (Mar 2026) · Grok cronyism research" },
+  { id:"fariha", name:"Fariha Amery", sub:"Cousin of Sam", type:"family", size:12, pipelines:[5],
+    desc:"Lawyer. Married to Mickey Amery since ~2009. Sam Mraiche's cousin — the bridge that makes Mickey Amery a cousin-in-law. Shared origin: Joub Jannine, Bekaa Valley, Lebanon.",
+    source:"Globe and Mail (May 1, 2025 Amery profile) · Grok cronyism research (multi-outlet cross-reference)" },
+
+  // MHCARE EMPLOYEES / ASSOCIATES
+  { id:"jaber", name:"Sam Jaber", sub:"MHCare CFO", type:"captured", size:16, pipelines:[5],
+    desc:"CFO/accountant for MHCare (not blood-related). Registered all key Mraiche entities. Appointed to Invest Alberta board 2023 — Premier's Office marked 'priority for immediate action,' OIC signed 4 weeks later. RCMP searched Jaberson & Associates March 2026.",
+    source:"Globe and Mail · Orders-in-Council records · MHCare 2022 org chart · Master Inventory §1.7" },
+  { id:"prasad", name:"Jitendra Prasad", sub:"AHS Procurement", type:"captured", size:14, pipelines:[5],
+    desc:"AHS procurement chief. 'Retired' April 2022, rehired immediately as consultant. Had MHCare email while at AHS. Director of numbered company with Khalil Mraiche. RCMP searched residence March 2026.",
+    source:"Globe and Mail (Sept 2025) · Wyant Report (Oct 2025) · Master Inventory §1.6" },
+  { id:"nagendran", name:"Dr. Nagendran", sub:"Mraiche partner", type:"captured", size:12, pipelines:[5],
+    desc:"Mraiche business partner. Co-director of numbered company. Placed on Edmonton Police Commission by UCP February 2025.",
+    source:"The Tyee (Feb 2025) · Master Inventory §1.1" },
+  { id:"mentz", name:"Mentzelopoulos", sub:"AHS CEO · FIRED", type:"captured", size:14, pipelines:[5],
+    desc:"AHS CEO who investigated the procurement. Board recommended going to RCMP. Government ordered investigation shut down. Fired January 8, 2025 — 2 days before scheduled AG meeting. Filed $1.7M wrongful-dismissal lawsuit. Government seeking injunction to control her documents.",
+    source:"Globe and Mail (Feb 2025) · CBC (Feb 2025) · Global News · Court filings" },
+
+  // DONORS / INDUSTRY
+  { id:"insurance", name:"Insurance Industry", sub:"IBC · Intact · carriers", type:"donor", size:22, pipelines:[1], amount:600000,
+    desc:"$600K donations to UCP in 2023 election cycle. IBC issued congratulatory statement the day Bill 47 passed. Intact Financial publicly disclosed 'mid-teens return on equity' target. Alberta auto insurance: $7,080/year Honda Civic vs $717 in Quebec.",
+    source:"Elections Alberta filings (2023) · IBC press releases · Intact Financial investor materials · Master Inventory §12.2" },
+  { id:"rinehart", name:"Gina Rinehart", sub:"Hancock / Northback", type:"donor", size:22, pipelines:[3],
+    desc:"Australian mining billionaire. Owns Hancock Prospecting → Northback (formerly Benga). Grassy Mountain rejected 2021 by Joint Review Panel as 'not in the public interest.' Returned 2023 with new application. Currently suing Alberta for $2B+. 14 registered lobbyists.",
+    source:"Joint Review Panel Report (2021) · The Tyee (Jan 2025) · CBC · Globe and Mail · CPAWS (Apr 2026)" },
+  { id:"waterous", name:"Adam Waterous", sub:"Liricon / Plenary P3", type:"donor", size:20, pipelines:[6], amount:1500000000,
+    desc:"Liricon principal seeking Calgary-Banff rail. Donor history: $20K to Wildrose 2015 + $4,575 UCP 2018-19. Sat on Invest Alberta board WHILE Liricon was seeking Invest Alberta funding. $1.5B performance payment ask on top of the CIB 50% federal capital. Plenary Americas (Australian P3) as partner.",
+    source:"The Tyee · FOIP · CBC (July 2025 Moretta story) · Elections Alberta donor records" },
+  { id:"yager", name:"David Yager", sub:"RStar advisor → AER", type:"donor", size:16, pipelines:[2], amount:60000,
+    desc:"Smith leadership-campaign fundraiser. $60K sole-source contract February 2023 for 'RStar / Liability Management' advice on the very program he had lobbied for. Appointed to AER Board of Directors 2024. Complete pre-premier to regulator loop in 18 months.",
+    source:"Gemini cronyism research (identification) · Alberta Executive Council contract disclosures · AER board composition" },
+  { id:"pba", name:"PBA Land & Dev", sub:"Bill 76 captive ins.", type:"donor", size:13, pipelines:[7],
+    desc:"PBA Insurance Ltd. incorporated July 2022 under Bill 76. Principals are consistent UCP and Smith leadership-campaign donors.",
+    source:"Alberta Gazette Part I · Alberta Superintendent of Insurance registry · Gemini cronyism research" },
+  { id:"arc", name:"ARC Resources", sub:"Bill 76 captive ins.", type:"donor", size:12, pipelines:[7],
+    desc:"Incorporated captive insurance 2022. Major corporate UCP donor. Has active registered lobbyists who are former UCP staff.",
+    source:"Alberta Gazette Part I · Alberta Lobbyist Registry · Gemini cronyism research" },
+  { id:"pembina", name:"Pembina Pipeline", sub:"Bill 76 captive ins.", type:"donor", size:12, pipelines:[7],
+    desc:"Incorporated captive insurance 2023. Corporate UCP donor with active registered lobbyists.",
+    source:"Alberta Gazette Part I · Alberta Lobbyist Registry · Gemini cronyism research" },
+  { id:"enerplus", name:"Enerplus", sub:"Bill 76 captive ins.", type:"donor", size:11, pipelines:[7],
+    desc:"Incorporated captive insurance 2023.",
+    source:"Alberta Gazette Part I · Gemini cronyism research" },
+  { id:"whitecap", name:"Whitecap", sub:"Bill 76 captive ins.", type:"donor", size:11, pipelines:[7],
+    desc:"Incorporated captive insurance 2024.",
+    source:"Alberta Gazette Part I · Gemini cronyism research" },
+  { id:"anderson-fam", name:"Anderson Family", sub:"Charter + childcare", type:"donor", size:14, pipelines:[4], amount:6950000,
+    desc:"Jane Anderson (Rob's mother) funded the 1994 charter-school legislation and founded Footprints for Learning. Family also runs Active Start Childcare and Magic Mountain Daycare. Combined annual public funding ~$6.95M by 2025-26 (up from $4.15M in 2022-23).",
+    source:"Gemini cronyism research · Alberta Education annual funding reports · Footprints for Learning audited financial statements · CACWELCC disclosures" },
+  { id:"stem-ia-net", name:"STEM IA Network", sub:"Sawhney + Davis + Ford", type:"donor", size:14, pipelines:[4], amount:118000000,
+    desc:"Raman Sawhney (daughter of MLA Rajan Sawhney) on board. Lisa Davis (failed UCP candidate) is co-founder. Caylan Ford (failed UCP candidate) runs separate charter. $118M in public capital.",
+    source:"@JasonOnTheDrums (Sep 18, 2024 Grok with 432 likes) · Alberta Education funding records · Session 3 Findings §6.1" },
+
+  // LOBBYIST FIRMS
+  { id:"ab-counsel", name:"Alberta Counsel", sub:"Saskiw · Gotfried", type:"lobbyist", size:22, pipelines:[6],
+    desc:"Saskiw principal (Smith's pre-2015 PC-merger contact). Full roster: Carlile (Smith byelection manager + 40 active files), Frey (ex-UCP MLA + ex-Smith advisor, 20+), Gill (ex-CoS Health+Education, 25+), Olson (CFO of Brian Jean CoS's TPA), Richard Gotfried (ex-UCP MLA). Client: Liricon Nov 2022 onward. ~105 files across the ex-UCP roster alone.",
+    source:"Alberta Lobbyist Registry · Master Inventory §32 · Gemini cronyism research" },
+  { id:"wellington", name:"Wellington Advocacy", sub:"Koolsbergen", type:"lobbyist", size:16,
+    desc:"Nick Koolsbergen = Kenney's former Chief of Staff. Clients: Terrestrial Energy (SMR nuclear), Mortgage Professionals Canada, tech sectors.",
+    source:"Alberta Lobbyist Registry · Gemini cronyism research · Master Inventory §32.4.1" },
+  { id:"new-west", name:"New West Public Affairs", sub:"M. Solberg · son UCP Comms", type:"lobbyist", size:16,
+    desc:"Monte Solberg (ex-federal Conservative MP). Son Matt Solberg = UCP Director of Communications. Clients: Flourish Foundation, energy/infrastructure. Firm itself received Alberta Jobs Now grant.",
+    source:"Alberta Lobbyist Registry · Alberta Open Data (Jobs Now recipients) · Master Inventory §32.4.2" },
+  { id:"p3-cap", name:"P3 Capital", sub:"Doug Horner · 33 meetings", type:"lobbyist", size:16,
+    desc:"Doug Horner, ex-PC Finance Minister, cousin of Nate Horner (current Finance Minister). 33 documented meetings on 'Alternative Financing' for schools and seniors' housing. Clients: Canada Asia Synergy Group, Timber Wolf Investments, North East Anthony Henday partners.",
+    source:"Alberta Lobbyist Registry · Gemini cronyism research · Master Inventory §10 (patronage)" },
+  { id:"hann", name:"Nicholas Hann", sub:"CIB→Invest AB→Liricon", type:"lobbyist", size:14, pipelines:[6],
+    desc:"Revolving door: former Canada Infrastructure Bank head of investments → Invest Alberta advisor → now registered lobbyist for Liricon. Present at the November 27, 2024 Fairmont Lake Louise meeting.",
+    source:"Alberta Lobbyist Registry · Pass 10 research · Gemini cronyism research" },
+  { id:"solberg", name:"Monte Solberg", sub:"Coal + Charter + firm", type:"lobbyist", size:12, pipelines:[3,4],
+    desc:"Also personally lobbies for FFCA charter school and Northback coal, beyond his firm's work. Triple-pipeline lobbyist.",
+    source:"Alberta Lobbyist Registry · IJF reporting · Session 3 Findings §6.3.2" },
+  { id:"aitchison", name:"Colin Aitchison", sub:"Press Sec → Northback", type:"lobbyist", size:12, pipelines:[3],
+    desc:"Ex-senior press secretary; now coal lobbyist for Northback.",
+    source:"Alberta Lobbyist Registry · Master Inventory §20.9.4" },
+  { id:"carlile", name:"Alexandra Carlile", sub:"40 active PO files", type:"lobbyist", size:12, pipelines:[6],
+    desc:"Simultaneously ran Smith's Brooks-Medicine Hat byelection AND was registered lobbyist at Alberta Counsel with 40 active files targeting the Premier's Office.",
+    source:"Alberta Lobbyist Registry · Master Inventory §32.3" },
+
+  // CAPTURED OVERSIGHT
+  { id:"aimco", name:"AIMCo", sub:"Harper chair · $161B", type:"captured", size:22,
+    desc:"Entire 10-person board + CEO Evan Siddall fired November 2024. Stephen Harper (author of 2001 firewall letter) appointed chair despite ethics-commissioner concerns. 2 of 5 new directors have concurrent legal obligations to oil & gas companies.",
+    source:"CBC (Nov 2024, Nov 2025) · Shift Action · BNN Bloomberg · Top1000funds" },
+  { id:"aer", name:"AER", sub:"Yager + no independent analysis", type:"captured", size:18, pipelines:[2,3],
+    desc:"Alberta Energy Regulator. Court found it 'appears to offer no independent analysis' in the Grassy Mountain case. Yager (Smith fundraiser, RStar advisor, sole-source recipient) appointed to board 2024.",
+    source:"Penticton Herald (Jan 2025) · Alberta Court of Appeal · AER board composition · Gemini cronyism research" },
+  { id:"invest-ab", name:"Invest Alberta", sub:"Jaber + Waterous", type:"captured", size:16, pipelines:[5,6],
+    desc:"Two directors with direct procurement interests before the same body: Jaber (MHCare CFO) and Waterous (Liricon principal seeking Invest Alberta funding).",
+    source:"Orders-in-Council · Invest Alberta board page · Master Inventory §11.1" },
+  { id:"covenant", name:"Covenant Health", sub:"Shandro + Stelmach", type:"captured", size:15,
+    desc:"Catholic hospital network absorbing public hospitals. Board: Shandro (Jan 31, 2024), Chair Ed Stelmach (former Premier). Ethics guide prohibits abortion, MAID, and gender care.",
+    source:"Covenant Health board governance disclosures · Law Society of Alberta hearing HE20220045 · Session 3 Findings §11.3" },
+  { id:"ethics", name:"Ethics Commissioner", sub:"McLeod replaced Trussler", type:"captured", size:13,
+    desc:"Shelley-Anne McLeod (who had sought a UCP nomination) replaced Marguerite Trussler — who had previously found Smith in violation.",
+    source:"Ethics Commissioner reports (Trussler findings; Trussler report on Smith violation) · Master Inventory §3.1.7" },
+  { id:"auditor", name:"Auditor General", sub:"Peters replaced Wylie", type:"captured", size:13,
+    desc:"Phillip Peters (internal Amery Justice Ministry tax lawyer) replaced Doug Wylie April 2026, after Wylie was denied extension during active probe. Motion introduced by Scott Cyr (Sylvestre's MLA).",
+    source:"CBC (Mar 2026) · Session 3 Findings §18 · Master Inventory §3.1.15" },
+  { id:"ahs", name:"AHS", sub:"Board fired · Tremblay sole", type:"captured", size:16, pipelines:[5],
+    desc:"Board fired after recommending going to the RCMP. Now dismantled into 4 agencies. Andre Tremblay simultaneously administrator, interim CEO, and deputy minister — one person controlling $16.4B and 88,000 employees.",
+    source:"Globe and Mail · Auditor General report · Master Inventory §5.1" },
+  { id:"elections", name:"Elections Alberta", sub:"Deadline curtailed", type:"captured", size:14, pipelines:[5],
+    desc:"Investigation deadline shortened from 3 years to 1 year by Amery (Bill 54) during active probe of his cousin-in-law Mraiche. 59 max donors ($253,700 total) alleged straw donations. Six+ donors in contempt.",
+    source:"Globe and Mail (Apr 8, 2026 · Dec 2025) · Elections Alberta enforcement records · Bill 54 text" },
+  { id:"police", name:"EPS Commission", sub:"Nagendran placed", type:"captured", size:12,
+    desc:"Edmonton Police Commission. Dr. Nagendran (Mraiche business partner) placed on civilian oversight by UCP February 2025.",
+    source:"The Tyee (Feb 2025) · EPS Commission composition" },
+  { id:"law-society", name:"Law Society", sub:"Peterson Law strips power", type:"captured", size:12,
+    desc:"Bill 14 / 'Peterson Law' (Dec 2025) grants the Attorney General immunity from Law Society discipline. Alberta Law Foundation: 2 directors removed, mass resignation followed.",
+    source:"CBC (Jan 2026) · Bill 14 text · Session 3 Findings §17.4" },
+
+  // LEGISLATION
+  { id:"bill-47", name:"Bill 47", sub:"No-fault insurance", type:"policy", size:14, pipelines:[1],
+    desc:"No-fault auto insurance. Eliminated right to sue. Tribunal funded by insurers. Effective January 2027. Alberta rates already 2nd-highest at passage.",
+    source:"Alberta Legislature bill text · Hansard debate · IBC press materials" },
+  { id:"bill-54", name:"Bill 54", sub:"Corporate donations", type:"policy", size:14, pipelines:[1,5],
+    desc:"Corporate donations restored (May 2025). Post-passage: $766K corporate (10.7% of total), $471K in first months. Also shortens Elections Alberta deadline during Mraiche probe — two distinct functions in one bill.",
+    source:"Alberta Legislature bill text · Elections Alberta filings · Globe and Mail (Apr 8, 2026)" },
+  { id:"bill-76", name:"Bill 76", sub:"Captive insurance", type:"policy", size:13, pipelines:[7],
+    desc:"Captive Insurance Companies Act (effective July 1, 2022). Five registered users so far: PBA, ARC, Pembina, Enerplus, Whitecap — all major UCP donors.",
+    source:"Alberta Legislature bill text · Alberta Gazette Part I · Gemini cronyism research" },
+  { id:"bill-14", name:"Bill 14", sub:"Peterson Law · 7 functions", type:"policy", size:14,
+    desc:"Seven functions including: AG immunity from Law Society; citizen-initiative authority transferred to Minister; Alberta Law Foundation ministerial control; Election Commissioner authority altered. Introduced one day before Justice Feasby's ruling on separation petition.",
+    source:"Alberta Legislature bill text · CBC (Jan 2026) · Session 3 Findings §17.4" },
+  { id:"lmip", name:"LMIP / RStar", sub:"Royalty credits", type:"policy", size:14, pipelines:[2],
+    desc:"Liability Management Incentive Program. Billions in royalty credits to oil & gas companies for well cleanup they were already legally required to perform. Written into the first Energy Minister's mandate letter.",
+    source:"Alberta Energy mandate letters · CBC (Sep 2024) · Parkland Institute analysis · Master Inventory §32.1" },
+  { id:"coal-reversal", name:"Coal Moratorium Lifted", sub:"No public announcement", type:"policy", size:14, pipelines:[3],
+    desc:"The 2022 moratorium was quietly lifted in 2025 with no public announcement. Regulations are being developed 'exclusively with coal companies, with no public or Indigenous consultation' (CPAWS).",
+    source:"CPAWS (Apr 2026) · CBC (Oct 2025) · SAGE (Feb 2025) · Master Inventory §20.9" },
+  { id:"charter-funding", name:"Charter Funding +18.6%", sub:"vs public +6.83%", type:"policy", size:13, pipelines:[4],
+    desc:"Charter-school operational funding grew 18.6% while public schools grew 6.83%. The $8.6B School Construction Accelerator (September 2024) disproportionately capital-funded charters (~45 capital requests).",
+    source:"ATA Progress Report · Alberta Education budget documents · Session 3 Findings §6.2" },
+  { id:"notwith", name:"Notwithstanding ×4", sub:"Teachers · trans · etc.", type:"policy", size:13,
+    desc:"Used 4 times in December 2025 alone. Before 2025: used only twice in Alberta's entire history. Bill 2 (teachers' strike) passed in one day. Bill 9 suspended both the Alberta Bill of Rights AND the Human Rights Act at 2:20 AM.",
+    source:"Hansard · CBC · Alberta Legislature records · Master Inventory §3.2" },
+
+  // SOLE-SOURCE VENDORS
+  { id:"nordic", name:"Nordic Media", sub:"Altheim · $72.5K", type:"vendor", size:11, pipelines:[8], amount:72500,
+    desc:"Chayce Altheim = ex-Smith campaign manager. $72,500 sole-source November 2022 – January 2023 for 'digital media planning.' No bids.",
+    source:"Standing Committee on Public Accounts (Feb 25, 2025) · Executive Council contract disclosures · Perplexity research" },
+  { id:"mash", name:"Mash Strategy", sub:"ex-UCP · $500K", type:"vendor", size:13, pipelines:[8], amount:500000,
+    desc:"Ex-UCP staff. $300K (May 2025, Alberta Next Panel campaign) + $200K (Fall 2025, teachers-strike education campaign) sole-source. Internal CPE memo flagged public-perception concerns.",
+    source:"Standing Committee on Public Accounts (Feb 2025) · Alberta Sunshine List · Perplexity research" },
+  { id:"navius", name:"Navius Research", sub:"$125K emissions model", type:"vendor", size:11, pipelines:[8], amount:125000,
+    desc:"$125K sole-source 2024 for 'economic modeling of federal emissions caps.' Used by the province in its fight against Ottawa over the emissions cap.",
+    source:"Executive Council contract disclosures · Gemini cronyism research" },
+  { id:"gunter", name:"Lorne Gunter", sub:"$55K speechwriting", type:"vendor", size:10, pipelines:[8], amount:55000,
+    desc:"$55K sole-source 2023 for 'speechwriting and communications advice.'",
+    source:"Executive Council contract disclosures · Gemini cronyism research" },
+  { id:"zza", name:"Zubko Creative", sub:"$85K branding", type:"vendor", size:10, pipelines:[8], amount:85000,
+    desc:"$85K sole-source 2025 for 'strategic branding of provincial priorities.'",
+    source:"Executive Council contract disclosures · Gemini cronyism research" },
+  { id:"wstandard", name:"Western Standard", sub:"$65K+ across 4 channels", type:"vendor", size:12, pipelines:[8,9], amount:65000,
+    desc:"Publicly claims 'no government funding.' Actually: $54,669.58 Alberta Jobs Now wage subsidy + 100 monthly government subscriptions + undisclosed FOIP-confirmed ads + $10,500 federal CSJ. Minimum $65,169+ across four distinct channels.",
+    source:"Standing Committee on Public Accounts (Feb 25, 2025) · FOIP releases · Perplexity verification" },
+  { id:"war-room", name:"War Room / CEC", sub:"$120M+", type:"vendor", size:14, pipelines:[9], amount:120000000,
+    desc:"Canadian Energy Centre. $22M single 'Scrap the Cap' campaign. FOIP-exempt per IPC ruling. Total spend since 2019: $120M+.",
+    source:"Alberta Budget documents · IPC ruling · Master Inventory §7.1" },
+
+  // PUBLIC IMPACT
+  { id:"pub-insurance", name:"+$6,363/vehicle/yr", sub:"Public pays", type:"public", size:13, pipelines:[1],
+    desc:"Alberta Honda Civic: $7,080/year vs Quebec public: $717/year. Excess: ~$6,363/vehicle/year. Approximately 3M vehicles in Alberta.",
+    source:"CBC rate comparison (2025) · IBC data · SAAQ (Quebec) rate schedule" },
+  { id:"pub-electricity", name:"$24B Electricity", sub:"Public pays", type:"public", size:14,
+    desc:"Cumulative excess cost since deregulation took effect in 2001. Alberta has the highest rates in Canada despite the largest gas reserves. Responsible for 33% of all North American Level 3 grid emergencies.",
+    source:"AFL/Sepulveda 'Power in the Public Interest' (Oct 2024) · Statistics Canada CPI · COST_MODEL_ELECTRICITY_DEREGULATION.md" },
+  { id:"pub-doctor", name:"800K without doctor", sub:"Public pays", type:"public", size:12,
+    desc:"800,000+ Albertans without a family doctor, up from 600K. Primary-care budget cut 1.8%. Smith's 90-day healthcare-fix promise (2023) went unfulfilled.",
+    source:"Alberta Medical Association · CIHI data · Master Inventory §5.1.8" },
+  { id:"pub-orphan", name:"4,031 Orphan Wells", sub:"Public pays", type:"public", size:12, pipelines:[2],
+    desc:"4,031 orphan wells transferred to OWA April 2026. $154M levy on taxpayers 2026/27. Total liability $40–70B. Province returned $137M in federal cleanup money unspent.",
+    source:"Orphan Well Association · AER · CBC (Sep 2024) · PBO (Jan 2022) · Master Inventory §20.13" },
+  { id:"pub-coal", name:"$237.5M Coal", sub:"Public pays", type:"public", size:12, pipelines:[3],
+    desc:"$142.5M (Atrum) + $95M (Evolve/Montem) in public money paid to settle foreign-company lawsuits over the government's own policy chaos.",
+    source:"CBC (Oct 2025) · SAGE (2025) · Court settlement records · The Great Unravelling" },
+];
+
+// ============================================================
+// LINKS
+// ============================================================
+const LINKS = [
+  { s:"insurance", t:"smith", type:"donation", amount:"$600K", anim:true, pipe:[1] },
+  { s:"mraiche", t:"smith", type:"donation", amount:"$253.7K alleged", anim:true, pipe:[5] },
+  { s:"waterous", t:"smith", type:"donation", amount:"$24.5K", anim:true, pipe:[6] },
+  { s:"yager", t:"smith", type:"donation", amount:"Fundraiser", anim:false, pipe:[2] },
+  { s:"pba", t:"smith", type:"donation", amount:"Consistent donor", anim:true, pipe:[7] },
+  { s:"arc", t:"smith", type:"donation", amount:"Corporate", anim:true, pipe:[7] },
+  { s:"pembina", t:"smith", type:"donation", amount:"Corporate", anim:false, pipe:[7] },
+  { s:"rinehart", t:"smith", type:"donation", amount:"Via 14 lobbyists", anim:true, pipe:[3] },
+
+  { s:"smith", t:"mraiche", type:"contract", amount:"$614M", anim:true, pipe:[5] },
+  { s:"smith", t:"yager", type:"contract", amount:"$60K+", anim:true, pipe:[2,8] },
+  { s:"smith", t:"nordic", type:"contract", amount:"$72.5K", anim:true, pipe:[8] },
+  { s:"smith", t:"mash", type:"contract", amount:"$500K", anim:true, pipe:[8] },
+  { s:"smith", t:"navius", type:"contract", amount:"$125K", anim:false, pipe:[8] },
+  { s:"smith", t:"gunter", type:"contract", amount:"$55K", anim:false, pipe:[8] },
+  { s:"smith", t:"zza", type:"contract", amount:"$85K", anim:false, pipe:[8] },
+  { s:"smith", t:"wstandard", type:"contract", amount:"$65K+", anim:false, pipe:[9] },
+  { s:"smith", t:"war-room", type:"contract", amount:"$120M+", anim:true, pipe:[9] },
+  { s:"smith", t:"anderson-fam", type:"contract", amount:"$6.95M/yr", anim:true, pipe:[4] },
+  { s:"smith", t:"stem-ia-net", type:"contract", amount:"$118M", anim:true, pipe:[4] },
+
+  { s:"ab-counsel", t:"smith", type:"lobby", amount:"~105 files", pipe:[6] },
+  { s:"wellington", t:"smith", type:"lobby", amount:"Energy/nuclear" },
+  { s:"new-west", t:"smith", type:"lobby", amount:"Energy" },
+  { s:"p3-cap", t:"smith", type:"lobby", amount:"33 meetings" },
+  { s:"hann", t:"waterous", type:"lobby", amount:"Liricon rep", pipe:[6] },
+  { s:"carlile", t:"ab-counsel", type:"lobby", amount:"40 active" },
+  { s:"solberg", t:"new-west", type:"lobby", amount:"Principal" },
+  { s:"solberg", t:"rinehart", type:"lobby", amount:"Coal", pipe:[3] },
+  { s:"aitchison", t:"rinehart", type:"lobby", amount:"Northback", pipe:[3] },
+  { s:"waterous", t:"ab-counsel", type:"lobby", amount:"Nov 2022", pipe:[6] },
+
+  { s:"smith", t:"aimco", type:"appt", amount:"Harper chair" },
+  { s:"smith", t:"ethics", type:"appt", amount:"McLeod" },
+  { s:"smith", t:"auditor", type:"appt", amount:"Peters" },
+  { s:"smith", t:"aer", type:"appt", amount:"Yager board", pipe:[2] },
+  { s:"smith", t:"invest-ab", type:"appt", amount:"Jaber + Waterous", pipe:[5,6] },
+  { s:"smith", t:"covenant", type:"appt", amount:"Shandro + Stelmach" },
+  { s:"smith", t:"ahs", type:"appt", amount:"Tremblay sole", pipe:[5] },
+  { s:"smith", t:"police", type:"appt", amount:"Nagendran" },
+  { s:"yager", t:"aer", type:"appt", amount:"Board 2024", pipe:[2] },
+  { s:"jaber", t:"invest-ab", type:"appt", amount:"Priority action", pipe:[5] },
+  { s:"waterous", t:"invest-ab", type:"appt", amount:"Conflict", pipe:[6] },
+  { s:"nagendran", t:"police", type:"appt" },
+
+  { s:"mraiche", t:"fatima", type:"family", amount:"Sister" },
+  { s:"mraiche", t:"khalil-son", type:"family", amount:"Son" },
+  { s:"mraiche", t:"ahmad-j", type:"family", amount:"Nephew" },
+  { s:"mraiche", t:"mahmoud-j", type:"family", amount:"Nephew" },
+  { s:"mraiche", t:"mike-e", type:"family", amount:"Brother-in-law" },
+  { s:"mraiche", t:"fariha", type:"family", amount:"Cousin" },
+  { s:"fariha", t:"amery", type:"family", amount:"Wife" },
+  { s:"anderson", t:"anderson-fam", type:"family", amount:"Mother" },
+  { s:"fatima", t:"marshall", type:"family", amount:"Housed him" },
+  { s:"mraiche", t:"marshall", type:"family", amount:"Home access" },
+  { s:"mike-e", t:"mraiche", type:"family", amount:"Melewka" },
+
+  { s:"smith", t:"bill-47", type:"policy", amount:"Passed" },
+  { s:"smith", t:"bill-54", type:"policy", amount:"Passed" },
+  { s:"smith", t:"bill-76", type:"policy", amount:"Passed" },
+  { s:"smith", t:"bill-14", type:"policy", amount:"Dec 2025" },
+  { s:"smith", t:"lmip", type:"policy", amount:"Mandate letter", pipe:[2] },
+  { s:"smith", t:"coal-reversal", type:"policy", amount:"No announcement", pipe:[3] },
+  { s:"smith", t:"charter-funding", type:"policy", amount:"+18.6%", pipe:[4] },
+  { s:"smith", t:"notwith", type:"policy", amount:"×4 in 6 weeks" },
+  { s:"amery", t:"bill-14", type:"policy", amount:"Peterson Law" },
+  { s:"amery", t:"bill-54", type:"policy", amount:"Shortened deadline", pipe:[5] },
+
+  { s:"bill-47", t:"insurance", type:"policy", amount:"Tribunal capture", pipe:[1] },
+  { s:"bill-47", t:"pub-insurance", type:"policy", amount:"Public cost", pipe:[1] },
+  { s:"bill-54", t:"insurance", type:"policy", amount:"Corp $ back" },
+  { s:"bill-76", t:"pba", type:"policy", amount:"Self-insure", pipe:[7] },
+  { s:"bill-76", t:"arc", type:"policy", amount:"Self-insure", pipe:[7] },
+  { s:"bill-76", t:"pembina", type:"policy", amount:"Self-insure", pipe:[7] },
+  { s:"bill-76", t:"enerplus", type:"policy", amount:"Self-insure", pipe:[7] },
+  { s:"bill-76", t:"whitecap", type:"policy", amount:"Self-insure", pipe:[7] },
+  { s:"lmip", t:"pub-orphan", type:"policy", amount:"Costs to public", pipe:[2] },
+  { s:"coal-reversal", t:"rinehart", type:"policy", amount:"Enabled", pipe:[3] },
+  { s:"coal-reversal", t:"pub-coal", type:"policy", amount:"$237.5M", pipe:[3] },
+  { s:"charter-funding", t:"stem-ia-net", type:"policy", amount:"Capital", pipe:[4] },
+  { s:"charter-funding", t:"anderson-fam", type:"policy", amount:"Growth", pipe:[4] },
+  { s:"ahs", t:"mraiche", type:"contract", amount:"AHS contracts", anim:true, pipe:[5] },
+  { s:"mraiche", t:"jaber", type:"contract", amount:"Registration", pipe:[5] },
+  { s:"mraiche", t:"prasad", type:"contract", amount:"MHCare email at AHS", pipe:[5] },
+  { s:"mraiche", t:"nagendran", type:"family", amount:"Partner", pipe:[5] },
+  { s:"anderson", t:"smith", type:"appt", amount:"CoS" },
+  { s:"marshall", t:"smith", type:"appt", amount:"Former CoS" },
+  { s:"amery", t:"smith", type:"appt", amount:"Cabinet" },
+  { s:"moretta", t:"smith", type:"family", amount:"Spouse" },
+  { s:"ministers", t:"smith", type:"appt", amount:"Cabinet" },
+  { s:"mraiche", t:"mentz", type:"appt", amount:"Fired for probe", pipe:[5] },
+  { s:"amery", t:"elections", type:"appt", amount:"Deadline cut", pipe:[5] },
+  { s:"amery", t:"law-society", type:"policy", amount:"Immunity" },
+  { s:"ministers", t:"mraiche", type:"family", amount:"Skybox guests", pipe:[5] },
+];
+
+// ============================================================
+// STYLING CONSTANTS
+// ============================================================
+const TYPE_COLOR = {
+  cabinet:"#c94545", donor:"#a83333", family:"#c78559", lobbyist:"#4a6b95",
+  captured:"#4eaea0", policy:"transparent", vendor:"#d97a3a", public:"#75716a",
+};
+const TYPE_STROKE = {
+  cabinet:"#e0a0a0", donor:"#e0a0a0", family:"#e8c29a", lobbyist:"#95b3d1",
+  captured:"#4eaea0", policy:"#7a9566", vendor:"#e8a57a", public:"#a8a39b",
+};
+const LINK_COLOR = {
+  donation:"#e04848", contract:"#d97a3a", appt:"#d4a24c",
+  family:"#9b7cb8", lobby:"#4a6b95", policy:"#7a9566",
+};
+const TYPE_PILL_COLORS = {
+  cabinet:"#c94545", donor:"#a83333", family:"#c78559", lobbyist:"#4a6b95",
+  captured:"#4eaea0", policy:"#7a9566", vendor:"#d97a3a", public:"#75716a"
+};
+const TYPE_LABELS = {
+  cabinet:"Cabinet / Inner Circle", donor:"Donor / Industry", family:"Mraiche Family",
+  captured:"Captured Body / Official", lobbyist:"Lobbyist", vendor:"Sole-Source Vendor",
+  policy:"Legislation / Policy", public:"Public Cost"
+};
+
+// ============================================================
+// SVG SETUP
+// ============================================================
+const svg = d3.select("#network");
+const container = svg.node().parentElement;
+let W = container.clientWidth, H = container.clientHeight;
+svg.attr("viewBox", `0 0 ${W} ${H}`);
+const gRoot = svg.append("g");
+const zoom = d3.zoom().scaleExtent([0.3, 3]).on("zoom", e => gRoot.attr("transform", e.transform));
+svg.call(zoom);
+
+const defs = svg.append("defs");
+Object.entries(LINK_COLOR).forEach(([k, c]) => {
+  defs.append("marker").attr("id", `arrow-${k}`).attr("viewBox", "0 -5 10 10")
+    .attr("refX", 18).attr("refY", 0).attr("markerWidth", 6).attr("markerHeight", 6).attr("orient", "auto")
+    .append("path").attr("d", "M0,-5L10,0L0,5").attr("fill", c).attr("opacity", 0.6);
+});
+
+const nodeById = Object.fromEntries(NODES.map(n => [n.id, n]));
+const links = LINKS.map(l => ({...l, source: l.s, target: l.t})).filter(l => nodeById[l.s] && nodeById[l.t]);
+
+// FORCE SIMULATION
+const sim = d3.forceSimulation(NODES)
+  .force("link", d3.forceLink(links).id(d => d.id).distance(d => {
+    if (d.type === "family") return 70;
+    if (d.type === "policy") return 110;
+    if (d.source.id === "smith" || d.target.id === "smith") return 140;
+    return 100;
+  }).strength(0.4))
+  .force("charge", d3.forceManyBody().strength(d => -250 - d.size * 8))
+  .force("center", d3.forceCenter(W/2, H/2))
+  .force("collide", d3.forceCollide().radius(d => d.size + 14))
+  .force("x", d3.forceX(W/2).strength(0.03))
+  .force("y", d3.forceY(H/2).strength(0.04));
+sim.nodes().find(n => n.id === "smith").fx = W/2;
+sim.nodes().find(n => n.id === "smith").fy = H/2;
+
+// LINKS
+const linkGroup = gRoot.append("g").attr("class", "links");
+const linkElements = linkGroup.selectAll("path").data(links).enter().append("path")
+  .attr("class", "link")
+  .attr("stroke", d => LINK_COLOR[d.type] || "#3a3a42")
+  .attr("stroke-width", d => d.anim ? 1.8 : 1.1)
+  .attr("stroke-opacity", d => d.anim ? 0.75 : 0.4)
+  .attr("fill", "none")
+  .attr("marker-end", d => `url(#arrow-${d.type})`);
+
+// NODES — we store original size for shrink animation
+const nodeGroup = gRoot.append("g").attr("class", "nodes");
+const nodeSel = nodeGroup.selectAll(".node").data(NODES).enter().append("g")
+  .attr("class", d => `node ${d.id === "smith" ? "node-primary" : ""}`)
+  .call(d3.drag()
+    .on("start", (e, d) => { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+    .on("drag", (e, d) => { d.fx = e.x; d.fy = e.y; })
+    .on("end", (e, d) => { if (!e.active) sim.alphaTarget(0); if (d.id !== "smith") { d.fx = null; d.fy = null; } })
+  )
+  .on("mouseenter", (e, d) => { showTooltip(d, e); highlightSubgraph(d); })
+  .on("mousemove", (e) => moveTooltip(e))
+  .on("mouseleave", () => { hideTooltip(); clearHighlight(); })
+  .on("click", (e, d) => { jumpToCard(d); e.stopPropagation(); });
+
+nodeSel.append("circle")
+  .attr("r", d => d.size)
+  .attr("fill", d => TYPE_COLOR[d.type])
+  .attr("stroke", d => TYPE_STROKE[d.type])
+  .attr("stroke-width", d => d.type === "policy" ? 2 : 1.5);
+
+nodeSel.append("text").attr("dy", d => d.size + 13).text(d => d.name);
+nodeSel.append("text").attr("class", "sub").attr("dy", d => d.size + 26).text(d => d.sub);
+
+// PARTICLES
+const particleGroup = gRoot.append("g").attr("class", "particles");
+const animLinks = links.filter(l => l.anim);
+const particles = [];
+animLinks.forEach(l => {
+  for (let i = 0; i < 2; i++) particles.push({ link: l, phase: i / 2, color: LINK_COLOR[l.type] });
+});
+const particleSel = particleGroup.selectAll("circle").data(particles).enter().append("circle")
+  .attr("class", "particle").attr("r", 3).attr("fill", d => d.color)
+  .attr("stroke", "#fff").attr("stroke-width", 0.5)
+  .style("filter", "drop-shadow(0 0 4px currentColor)")
+  .style("color", d => d.color);
+
+let particleClock = 0;
+function animateParticles() {
+  particleClock += 0.005;
+  particleSel.each(function(d) {
+    const progress = (particleClock + d.phase) % 1;
+    const s = d.link.source, t = d.link.target;
+    if (!s.x || !t.x) return;
+    const x = s.x + (t.x - s.x) * progress;
+    const y = s.y + (t.y - s.y) * progress;
+    d3.select(this).attr("cx", x).attr("cy", y).attr("opacity", Math.sin(progress * Math.PI));
+  });
+  requestAnimationFrame(animateParticles);
+}
+
+sim.on("tick", () => {
+  linkElements.attr("d", d => {
+    const dx = d.target.x - d.source.x;
+    const dy = d.target.y - d.source.y;
+    const dr = Math.sqrt(dx*dx + dy*dy) * 2.2;
+    return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+  });
+  nodeSel.attr("transform", d => `translate(${d.x},${d.y})`);
+});
+requestAnimationFrame(animateParticles);
+
+// ============================================================
+// TOOLTIP (replaces old detail panel — concise top line only)
+// ============================================================
+const tooltip = document.getElementById("tooltip");
+function fmtAmount(n) {
+  if (!n) return null;
+  if (n >= 1e9) return `$${(n/1e9).toFixed(1)}B+`;
+  if (n >= 1e6) return `$${(n/1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `$${(n/1e3).toFixed(0)}K`;
+  return `$${n}`;
+}
+function showTooltip(d, event) {
+  const amt = fmtAmount(d.amount);
+  tooltip.innerHTML = `
+    <div class="tt-type">${TYPE_LABELS[d.type] || d.type}</div>
+    <div class="tt-name">${d.name}</div>
+    <div class="tt-role">${d.sub || ""}</div>
+    ${amt ? `<div class="tt-amount">${amt}</div>` : ''}
+    <div class="tt-source"><strong>Source:</strong><br>${d.source || "See detail card below"}</div>
+    <div class="tt-click">Click for full record</div>
+  `;
+  tooltip.classList.add("visible");
+  moveTooltip(event);
+}
+function moveTooltip(event) {
+  const rect = container.getBoundingClientRect();
+  const tipW = tooltip.offsetWidth;
+  const tipH = tooltip.offsetHeight;
+  let x = event.clientX - rect.left + 20;
+  let y = event.clientY - rect.top + 20;
+  if (x + tipW > rect.width - 20) x = event.clientX - rect.left - tipW - 20;
+  if (y + tipH > rect.height - 20) y = event.clientY - rect.top - tipH - 20;
+  tooltip.style.left = x + "px";
+  tooltip.style.top = y + "px";
+}
+function hideTooltip() { tooltip.classList.remove("visible"); }
+
+// ============================================================
+// HIGHLIGHTING ON HOVER
+// ============================================================
+function getConnected(node) {
+  const r = new Set([node.id]);
+  links.forEach(l => {
+    if (l.source.id === node.id) r.add(l.target.id);
+    if (l.target.id === node.id) r.add(l.source.id);
+  });
+  return r;
+}
+function highlightSubgraph(node) {
+  const rel = getConnected(node);
+  nodeSel.classed("shrunk", d => !rel.has(d.id) && !isInFilter(d));
+  nodeSel.classed("highlight", d => d.id === node.id);
+  linkElements.classed("dimmed", d => d.source.id !== node.id && d.target.id !== node.id);
+  particleSel.classed("shrunk", d => d.link.source.id !== node.id && d.link.target.id !== node.id);
+}
+function clearHighlight() {
+  if (currentFilter !== "all") return applyFilter(currentFilter);
+  nodeSel.classed("shrunk", false).classed("highlight", false);
+  linkElements.classed("dimmed", false).classed("shrunk", false);
+  particleSel.classed("shrunk", false);
+}
+
+// ============================================================
+// NODE CLICK — jump to roster card (where granular detail lives)
+// ============================================================
+function jumpToCard(node) {
+  const card = document.querySelector(`.card[data-id="${node.id}"]`);
+  if (!card) return;
+  hideTooltip();
+  document.querySelectorAll(".card.highlighted").forEach(c => c.classList.remove("highlighted"));
+  card.classList.add("highlighted");
+  card.scrollIntoView({behavior:"smooth", block:"center"});
+  setTimeout(() => card.classList.remove("highlighted"), 2600);
+}
+
+// ============================================================
+// FILTERS — WITH SHRINK for non-matching
+// ============================================================
+let currentFilter = "all";
+let filteredIds = null;
+
+function isInFilter(d) {
+  return !filteredIds || filteredIds.has(d.id);
+}
+
+function applyFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll(".chip").forEach(c => c.classList.toggle("active", c.dataset.filter === f));
+
+  if (f === "all") {
+    filteredIds = null;
+    // Restore all bubbles to original size
+    nodeSel.classed("shrunk", false);
+    nodeSel.select("circle").transition().duration(450).attr("r", d => d.size);
+    linkElements.classed("shrunk", false).classed("dimmed", false);
+    particleSel.classed("shrunk", false);
+    document.querySelectorAll("#roster .card").forEach(c => c.classList.remove("filtered-hidden"));
+    return;
+  }
+
+  const [key, val] = f.split(":");
+  const matching = new Set();
+
+  if (key === "pipeline") {
+    const p = parseInt(val);
+    NODES.forEach(n => { if ((n.pipelines || []).includes(p)) matching.add(n.id); });
+    // NOTE: no one-hop expansion. Smith is tagged for all pipelines and is connected
+    // to nearly every node; expanding neighbors pulls in ~90% of the graph and
+    // makes the filter visually useless. Strict tag match only.
+  } else if (key === "type") {
+    NODES.forEach(n => { if (n.type === val) matching.add(n.id); });
+  }
+
+  filteredIds = matching;
+
+  // Non-matching nodes shrink to 20% size + fade
+  // Interrupt any running transitions so this takes effect immediately
+  nodeSel.interrupt();
+  nodeSel.classed("shrunk", d => !matching.has(d.id));
+  nodeSel.select("circle")
+    .transition().duration(500)
+    .attr("r", d => matching.has(d.id) ? d.size : d.size * 0.2);
+
+  // Dim all links to/from non-matching
+  linkElements
+    .classed("shrunk", d => !matching.has(d.source.id) || !matching.has(d.target.id))
+    .classed("dimmed", false);
+  particleSel.classed("shrunk", d => !matching.has(d.link.source.id) || !matching.has(d.link.target.id));
+
+  // Update roster below — hide non-matching cards
+  document.querySelectorAll("#roster .card").forEach(c => {
+    c.classList.toggle("filtered-hidden", !matching.has(c.dataset.id));
+  });
+}
+
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => applyFilter(chip.dataset.filter));
+});
+
+// ============================================================
+// SEARCH (treats as overlay filter on top of category)
+// ============================================================
+const searchInput = document.getElementById("search");
+searchInput.addEventListener("input", e => {
+  const q = e.target.value.toLowerCase().trim();
+  if (!q) { applyFilter(currentFilter); return; }
+  const matches = new Set();
+  NODES.forEach(n => {
+    const hay = `${n.name} ${n.sub || ""} ${n.desc || ""} ${n.source || ""}`.toLowerCase();
+    if (hay.includes(q)) matches.add(n.id);
+  });
+  filteredIds = matches;
+
+  nodeSel.interrupt();
+  nodeSel.classed("shrunk", d => !matches.has(d.id));
+  nodeSel.select("circle").transition().duration(400)
+    .attr("r", d => matches.has(d.id) ? d.size : d.size * 0.2);
+  linkElements.classed("shrunk", d => !matches.has(d.source.id) || !matches.has(d.target.id));
+  particleSel.classed("shrunk", d => !matches.has(d.link.source.id) || !matches.has(d.link.target.id));
+  document.querySelectorAll("#roster .card").forEach(c => {
+    c.classList.toggle("filtered-hidden", !matches.has(c.dataset.id));
+  });
+});
+
+svg.on("click", () => { hideTooltip(); clearHighlight(); });
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    searchInput.value = "";
+    applyFilter("all");
+    hideTooltip();
+    svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+  }
+});
+
+// ============================================================
+// ROSTER CARDS — full detail with source (granular reference)
+// ============================================================
+const typeOrder = ["cabinet","donor","family","captured","lobbyist","vendor","policy","public"];
+const roster = document.getElementById("roster");
+const sortedNodes = [...NODES].sort((a,b) => {
+  const ai = typeOrder.indexOf(a.type), bi = typeOrder.indexOf(b.type);
+  if (ai !== bi) return ai - bi;
+  return (b.size || 0) - (a.size || 0);
+});
+sortedNodes.forEach(n => {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.id = n.id;
+  const amountStr = n.amount ? fmtAmount(n.amount) : "";
+  card.innerHTML = `
+    <span class="type-pill" style="background:${TYPE_PILL_COLORS[n.type]}">${TYPE_LABELS[n.type] || n.type}</span>
+    <h4>${n.name}</h4>
+    <div class="role">${n.sub || ""}</div>
+    ${amountStr ? `<div class="amount">${amountStr}</div>` : ""}
+    <div class="desc">${n.desc || ""}</div>
+    <div class="source-box"><span class="src-lbl">Source</span>${n.source || "Pending"}</div>
+  `;
+  card.addEventListener("click", () => {
+    const node = nodeById[n.id];
+    // Move graph focus here
+    svg.transition().duration(700).call(
+      zoom.transform,
+      d3.zoomIdentity.translate(W/2 - node.x*1.4, H/2 - node.y*1.4).scale(1.4)
+    );
+    document.querySelector(".net-wrap").scrollIntoView({behavior:"smooth", block:"center"});
+  });
+  roster.appendChild(card);
+});
+
+window.addEventListener("resize", () => {
+  W = container.clientWidth;
+  H = container.clientHeight;
+  svg.attr("viewBox", `0 0 ${W} ${H}`);
+  sim.force("center", d3.forceCenter(W/2, H/2));
+  sim.nodes().find(n => n.id === "smith").fx = W/2;
+  sim.nodes().find(n => n.id === "smith").fy = H/2;
+  sim.alpha(0.3).restart();
+});
+</script>
+</body>
+</html>

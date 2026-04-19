@@ -1,0 +1,2500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Web — Alberta Governance Forensic Documentation</title>
+<meta name="description" content="Forensic documentation of UCP governance 2019–2026. Seventeen research branches. Evidence-first, cross-verified." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Libre+Franklin:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     DESIGN SYSTEM
+     ========================================================= */
+  :root {
+    --bg: #0a0a14;
+    --bg-panel: #11111f;
+    --bg-panel-2: #16162a;
+    --bg-panel-3: #1a1a2e;
+    --border: #22223a;
+    --border-bright: #3a3a5a;
+    --text: #e8e6e3;
+    --text-dim: #8a8a9a;
+    --text-mid: #b0b0bf;
+    --critical: #C0392B;
+    --critical-bright: #E74C3C;
+    --amber: #E67E22;
+    --gold: #D4A256;
+    --reform: #2ECC71;
+    --inst: #3498DB;
+    --federal: #8E44AD;
+    --planned: #4a4a6a;
+
+    --serif: 'Fraunces', 'Times New Roman', serif;
+    --sans: 'Libre Franklin', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+
+    --shadow-dramatic: 0 32px 80px rgba(0,0,0,0.6), 0 8px 24px rgba(192,57,43,0.08);
+    --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  /* Grain texture overlay — forensic dossier feel */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* Scanline vibe on hero only */
+  .scanlines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0) 0px,
+      rgba(255,255,255,0) 3px,
+      rgba(255,255,255,0.015) 3px,
+      rgba(255,255,255,0.015) 4px
+    );
+  }
+
+  ::selection { background: var(--critical); color: #fff; }
+
+  /* =========================================================
+     TOP NAV
+     ========================================================= */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,20,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topnav-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 14px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    background: var(--critical);
+    color: #fff;
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    border-radius: 2px;
+  }
+  .brand-text {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+  .brand-text em {
+    color: var(--critical-bright);
+    font-style: italic;
+    font-weight: 600;
+  }
+  .nav-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-status .pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--critical-bright);
+    box-shadow: 0 0 0 0 rgba(231,76,60,0.7);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,0.7); }
+    50% { box-shadow: 0 0 0 6px rgba(231,76,60,0); }
+  }
+
+  /* =========================================================
+     VIEW SYSTEM
+     ========================================================= */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* =========================================================
+     HOME — HERO
+     ========================================================= */
+  .hero {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 32px 40px;
+    overflow: hidden;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+  .hero-meta .line { flex: 1; height: 1px; background: var(--border); align-self: center; }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: clamp(42px, 7.5vw, 108px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    margin-bottom: 20px;
+  }
+  .hero h1 .line1 { display: block; }
+  .hero h1 .line2 { display: block; color: var(--critical); font-style: italic; font-weight: 700; }
+  .hero h1 .line3 { display: block; font-size: 0.62em; color: var(--text-dim); font-weight: 400; margin-top: 8px; letter-spacing: -0.02em; }
+
+  .hero-lede {
+    max-width: 780px;
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--text-mid);
+    margin: 28px 0 40px;
+    font-weight: 300;
+  }
+  .hero-lede strong { color: var(--text); font-weight: 600; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .hero-stat {
+    background: var(--bg);
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .hero-stat-num {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 34px;
+    color: var(--critical-bright);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+  }
+
+  /* =========================================================
+     NETWORK MAP
+     ========================================================= */
+  .map-section {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 32px 60px;
+  }
+  .map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .section-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--critical);
+  }
+  .section-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+  .map-legend {
+    display: flex;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+  }
+  .map-legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .map-legend .swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .sw-complete { background: var(--critical); }
+  .sw-planned { background: var(--planned); border: 1px dashed var(--text-dim); box-sizing: border-box; }
+  .sw-core { background: var(--critical); box-shadow: 0 0 0 2px rgba(192,57,43,0.3); }
+
+  .network-map {
+    position: relative;
+    width: 100%;
+    height: 820px;
+    background:
+      radial-gradient(ellipse at center, rgba(192,57,43,0.06) 0%, rgba(0,0,0,0) 60%),
+      var(--bg-panel);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow-dramatic), var(--shadow-inset);
+  }
+  .network-map svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+  }
+  .map-node {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .map-node:hover { filter: brightness(1.2); }
+  .map-node circle { transition: all 0.3s; }
+  .map-node.dimmed { opacity: 0.22; }
+  .map-node.highlighted circle { filter: drop-shadow(0 0 14px currentColor); }
+  .map-edge { transition: opacity 0.3s, stroke-width 0.3s; }
+  .map-edge.dimmed { opacity: 0.06; }
+  .map-edge.highlighted { opacity: 1; stroke-width: 3 !important; }
+
+  .map-node-label {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 13px;
+    fill: var(--text);
+    pointer-events: none;
+    text-anchor: middle;
+    letter-spacing: -0.01em;
+  }
+  .map-node-sublabel {
+    font-family: var(--mono);
+    font-size: 9px;
+    fill: var(--text-dim);
+    pointer-events: none;
+    text-anchor: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .map-tooltip {
+    position: absolute;
+    background: var(--bg-panel-3);
+    border: 1px solid var(--border-bright);
+    padding: 14px 16px;
+    max-width: 320px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 10;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+  .map-tooltip.visible { opacity: 1; }
+  .map-tooltip h4 {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .map-tooltip p {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .map-tooltip .tt-status {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 6px;
+    margin-top: 8px;
+    border: 1px solid var(--border-bright);
+  }
+  .tt-status.complete { color: var(--critical-bright); border-color: var(--critical); }
+  .tt-status.planned { color: var(--text-dim); }
+
+  /* =========================================================
+     TOPIC GRID (backup nav)
+     ========================================================= */
+  .grid-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .topic-card {
+    background: var(--bg-panel);
+    padding: 28px 24px 24px;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.25s;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .topic-card:hover {
+    background: var(--bg-panel-2);
+    transform: translateY(-2px);
+  }
+  .topic-card:hover .topic-number {
+    color: var(--critical-bright);
+  }
+  .topic-number {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.14em;
+    margin-bottom: 14px;
+    transition: color 0.2s;
+  }
+  .topic-card-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .topic-card-sub {
+    font-size: 13px;
+    color: var(--text-mid);
+    margin-bottom: 18px;
+    line-height: 1.45;
+  }
+  .topic-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .status-badge {
+    padding: 2px 6px;
+    border: 1px solid;
+    line-height: 1.4;
+  }
+  .status-complete { color: var(--critical-bright); border-color: var(--critical); }
+  .status-planned { color: var(--text-dim); border-color: var(--border-bright); }
+  .status-inprogress { color: var(--amber); border-color: var(--amber); }
+  .topic-card-arrow {
+    color: var(--text-dim);
+    transition: transform 0.2s;
+  }
+  .topic-card:hover .topic-card-arrow {
+    color: var(--critical-bright);
+    transform: translateX(3px);
+  }
+
+  /* =========================================================
+     METHODOLOGY STRIP
+     ========================================================= */
+  .method-strip {
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 32px;
+  }
+  .method-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .method-title {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  .method-title em { font-style: italic; color: var(--critical); font-weight: 400; }
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 40px;
+  }
+  .method-item h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--critical-bright);
+    margin-bottom: 10px;
+  }
+  .method-item p {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* =========================================================
+     MASTER PDF STRIP
+     ========================================================= */
+  .master-strip {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 80px 32px;
+    text-align: center;
+  }
+  .master-strip h2 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .master-strip h2 em { font-style: italic; color: var(--critical); font-weight: 700; }
+  .master-strip p {
+    font-size: 16px;
+    color: var(--text-mid);
+    max-width: 620px;
+    margin: 0 auto 32px;
+  }
+  .btn-master {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--critical);
+    color: #fff;
+    padding: 18px 32px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-master:hover { background: var(--critical-bright); transform: translateY(-1px); }
+  .btn-master .planned-tag {
+    font-size: 9px;
+    opacity: 0.8;
+    background: rgba(0,0,0,0.25);
+    padding: 2px 6px;
+  }
+
+  /* =========================================================
+     FOOTER
+     ========================================================= */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 32px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /* =========================================================
+     TOPIC PAGE
+     ========================================================= */
+  .topic-page { padding-bottom: 80px; }
+
+  .topic-hero {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 32px 32px;
+    position: relative;
+  }
+  .breadcrumb {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .breadcrumb a:hover { color: var(--critical-bright); }
+  .topic-hero-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+    align-items: end;
+  }
+  .topic-number-lg {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--critical-bright);
+    margin-bottom: 16px;
+  }
+  .topic-title {
+    font-family: var(--serif);
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    margin-bottom: 14px;
+  }
+  .topic-title em { font-style: italic; color: var(--critical); font-weight: 700; }
+  .topic-subtitle {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-mid);
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .topic-thesis {
+    font-size: 17px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    max-width: 680px;
+    border-left: 2px solid var(--critical);
+    padding-left: 18px;
+    margin-top: 24px;
+    font-weight: 300;
+  }
+  .topic-thesis strong { color: var(--text); font-weight: 600; }
+  .topic-status-panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+  .topic-status-panel h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .topic-status-panel .status-line {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-mid);
+    margin-bottom: 6px;
+  }
+  .topic-status-panel .status-line strong { color: var(--text); }
+
+  /* =========================================================
+     STAT BAR
+     ========================================================= */
+  .stat-bar {
+    max-width: 1400px;
+    margin: 48px auto 0;
+    padding: 0 32px;
+  }
+  .stat-bar-inner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .stat-cell {
+    background: var(--bg-panel);
+    padding: 22px 20px;
+  }
+  .stat-cell-num {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--critical-bright);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-cell-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+
+  /* =========================================================
+     SNAPSHOT SECTION
+     ========================================================= */
+  .snapshot-section {
+    max-width: 1400px;
+    margin: 80px auto 0;
+    padding: 0 32px;
+  }
+  .snapshot-header {
+    margin-bottom: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .snapshot-title {
+    font-family: var(--serif);
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  /* Evidence wall grid */
+  .evidence-wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .evidence-tile {
+    background: var(--bg-panel);
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .evidence-tile:hover { background: var(--bg-panel-2); }
+  .evidence-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--critical-bright);
+  }
+  .evidence-big {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .evidence-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .evidence-source {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+
+  /* Claim vs Evidence */
+  .claim-matrix {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .claim-row {
+    display: contents;
+  }
+  .claim-cell, .evidence-cell {
+    background: var(--bg-panel);
+    padding: 20px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .claim-cell {
+    border-left: 3px solid var(--amber);
+  }
+  .evidence-cell {
+    border-left: 3px solid var(--critical);
+    color: var(--text-mid);
+  }
+  .claim-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .claim-cell .claim-tag { color: var(--amber); }
+  .evidence-cell .claim-tag { color: var(--critical-bright); }
+
+  /* Mini timeline */
+  .mini-timeline {
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    padding: 0;
+  }
+  .mini-timeline-row {
+    display: grid;
+    grid-template-columns: 100px 90px 1fr;
+    gap: 16px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .mini-timeline-row:last-child { border-bottom: 0; }
+  .mini-timeline-row:hover { background: var(--bg-panel-2); }
+  .mtl-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+  .mtl-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    align-self: start;
+    text-align: center;
+  }
+  .mtl-tag.critical { background: var(--critical); }
+  .mtl-tag.amber { background: var(--amber); }
+  .mtl-tag.inst { background: var(--inst); }
+  .mtl-tag.fed { background: var(--federal); }
+  .mtl-content {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .mtl-content strong { color: var(--text); }
+  .mtl-content .cost {
+    display: inline-block;
+    font-family: var(--mono);
+    color: var(--critical-bright);
+    font-weight: 700;
+    margin-left: 8px;
+  }
+
+  /* Filter toggle */
+  .filter-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 6px 12px;
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border-bright);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { color: var(--text); border-color: var(--text-mid); }
+  .filter-btn.active { background: var(--critical); color: #fff; border-color: var(--critical); }
+
+  /* =========================================================
+     CONNECTIONS STRIP
+     ========================================================= */
+  .connections-strip {
+    max-width: 1400px;
+    margin: 80px auto 0;
+    padding: 0 32px;
+  }
+  .connections-header {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .connections-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .connections-chips {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .connection-chip {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-bright);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 220px;
+  }
+  .connection-chip:hover {
+    border-color: var(--critical);
+    background: var(--bg-panel-2);
+    transform: translateY(-1px);
+  }
+  .connection-chip-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .connection-chip-title {
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .connection-chip-relation {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-left: auto;
+  }
+
+  /* =========================================================
+     WRITE-UP SECTION
+     ========================================================= */
+  .writeup-section {
+    max-width: 780px;
+    margin: 100px auto 0;
+    padding: 0 32px;
+  }
+  .writeup-header {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--critical-bright);
+    margin-bottom: 14px;
+  }
+  .writeup-title {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 36px;
+  }
+  .writeup-title em { font-style: italic; color: var(--critical); font-weight: 400; }
+  .writeup-body {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text);
+    font-weight: 400;
+  }
+  .writeup-body p { margin-bottom: 24px; }
+  .writeup-body p:first-of-type::first-letter {
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--critical);
+    float: left;
+    line-height: 0.9;
+    padding: 6px 10px 0 0;
+    margin-top: 4px;
+  }
+  .writeup-body h3 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    margin: 48px 0 16px;
+    color: var(--text);
+  }
+  .writeup-body h3::before {
+    content: "§ ";
+    color: var(--critical);
+    font-style: italic;
+  }
+  .writeup-body ul { margin: 0 0 24px 20px; }
+  .writeup-body ul li { margin-bottom: 10px; line-height: 1.6; font-size: 17px; }
+  .writeup-body strong { color: var(--text); font-weight: 700; }
+  .writeup-body em { color: var(--critical-bright); font-style: italic; }
+  .writeup-body .callout {
+    border-left: 3px solid var(--critical);
+    padding: 4px 0 4px 20px;
+    margin: 32px 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .writeup-body .data-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin: 32px 0;
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .writeup-body .data-box .lbl {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--critical-bright);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .writeup-planned-note {
+    padding: 40px;
+    border: 1px dashed var(--border-bright);
+    background: var(--bg-panel);
+    font-family: var(--sans);
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+  .writeup-planned-note h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--amber);
+    margin-bottom: 12px;
+    font-style: normal;
+  }
+
+  /* =========================================================
+     PDF DOWNLOAD SECTION
+     ========================================================= */
+  .pdf-section {
+    max-width: 1400px;
+    margin: 100px auto 0;
+    padding: 60px 32px;
+    border-top: 1px solid var(--border);
+  }
+  .pdf-section-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .pdf-section-header h3 {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .pdf-section-header p {
+    font-size: 14px;
+    color: var(--text-mid);
+  }
+  .pdf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .pdf-tile {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s;
+  }
+  .pdf-tile:hover { border-color: var(--critical); background: var(--bg-panel-2); }
+  .pdf-tile-name {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .pdf-tile-meta {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+  .pdf-tile-arrow {
+    font-family: var(--mono);
+    color: var(--critical-bright);
+    font-size: 18px;
+  }
+
+  /* =========================================================
+     TOPIC-PAGE FOOTER NAV
+     ========================================================= */
+  .topic-footer-nav {
+    max-width: 1400px;
+    margin: 60px auto 0;
+    padding: 40px 32px 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .footer-nav-link {
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: color 0.2s;
+    min-width: 200px;
+    cursor: pointer;
+  }
+  .footer-nav-link:hover { color: var(--critical-bright); }
+  .footer-nav-link .fnl-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+  }
+  .footer-nav-link .fnl-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .footer-nav-link.next { text-align: right; align-items: flex-end; }
+
+  /* =========================================================
+     RESPONSIVE
+     ========================================================= */
+  @media (max-width: 960px) {
+    .hero { padding: 40px 20px 30px; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .map-section, .grid-section, .master-strip, .stat-bar, .snapshot-section, .connections-strip, .writeup-section, .pdf-section, .topic-hero { padding-left: 20px; padding-right: 20px; }
+    .method-inner { grid-template-columns: 1fr; gap: 30px; }
+    .method-grid { grid-template-columns: 1fr; }
+    .topic-hero-grid { grid-template-columns: 1fr; gap: 30px; }
+    .network-map { height: 600px; }
+    .topnav-inner { padding: 12px 20px; }
+    .claim-matrix { grid-template-columns: 1fr; }
+    .mini-timeline-row { grid-template-columns: 80px 1fr; }
+    .mini-timeline-row .mtl-tag { grid-column: 1; grid-row: 2; }
+  }
+  @media (max-width: 600px) {
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    .nav-status { display: none; }
+    .section-title { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== TOP NAV ========== -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="#home" class="brand" data-nav="home">
+      <div class="brand-mark">W</div>
+      <div class="brand-text">THE WEB <em>/ Alberta</em></div>
+    </a>
+    <div class="nav-status">
+      <a href="the_ledger.html" style="color: var(--amber); text-decoration: none; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-right: 20px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">↗ The Ledger</a>
+      <span class="pulse"></span>
+      <span>Forensic Dossier · v1.0 · April 2026</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HOME VIEW
+     ============================================================ -->
+<section id="home" class="view active">
+
+  <div class="hero scanlines">
+    <div class="hero-meta">
+      <span>Forensic Documentation</span>
+      <span class="line"></span>
+      <span>17 Research Branches</span>
+      <span class="line"></span>
+      <span>2019 — 2026</span>
+    </div>
+
+    <h1>
+      <span class="line1">Everything,</span>
+      <span class="line2">Everywhere,</span>
+      <span class="line3">All at Once.</span>
+    </h1>
+
+    <p class="hero-lede">
+      A forensic documentation project examining the governance, policy, and institutional changes of the United Conservative Party of Alberta, 2019&ndash;2026. <strong>Every claim is cross-verified across multiple sources.</strong> Every justification gets a counter-test. The thesis is simple: the individual policy changes documented across seventeen branches are not independent decisions&mdash;they constitute a coordinated project of institutional capture where every action enables the next.
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">$180B+</div>
+        <div class="hero-stat-label">Total Documented Cost</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">1,120+</div>
+        <div class="hero-stat-label">Evidence Items</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">36+</div>
+        <div class="hero-stat-label">Subjects Profiled</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">17</div>
+        <div class="hero-stat-label">Research Branches</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">7</div>
+        <div class="hero-stat-label">Years Covered</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NETWORK MAP -->
+  <div class="map-section">
+    <div class="map-header">
+      <div>
+        <div class="section-title">The <em>Web</em> of Connections</div>
+        <div class="section-sub">Click any node · Hover to isolate connections</div>
+      </div>
+      <div class="map-legend">
+        <span><span class="swatch sw-core"></span> Core Driver</span>
+        <span><span class="swatch sw-complete"></span> Complete</span>
+        <span><span class="swatch sw-planned"></span> Research in Progress</span>
+      </div>
+    </div>
+
+    <div class="network-map" id="networkMap">
+      <svg viewBox="0 0 1400 820" preserveAspectRatio="xMidYMid meet" id="networkSvg">
+        <defs>
+          <radialGradient id="nodeGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#1a1a2e" />
+            <stop offset="100%" stop-color="#0a0a14" />
+          </radialGradient>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+          </marker>
+        </defs>
+        <!-- Edges and nodes are rendered via JS -->
+        <g id="edgesGroup"></g>
+        <g id="nodesGroup"></g>
+      </svg>
+      <div class="map-tooltip" id="mapTooltip">
+        <h4 id="ttTitle"></h4>
+        <p id="ttDesc"></p>
+        <span class="tt-status" id="ttStatus"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- METHODOLOGY -->
+  <div class="method-strip">
+    <div class="method-inner">
+      <div class="method-title">
+        How this <em>works.</em>
+      </div>
+      <div class="method-grid">
+        <div class="method-item">
+          <h4>01 · Cross-Verification</h4>
+          <p>Multiple AI systems (Claude, Grok, Gemini, Perplexity) run parallel searches. Findings only enter the record when independent sources converge. Every claim carries a version tag.</p>
+        </div>
+        <div class="method-item">
+          <h4>02 · Unbiased but Absolute in Logic</h4>
+          <p>No political party is genuine 100% of the time. All political statements are treated as potentially disingenuous until primary sources confirm otherwise.</p>
+        </div>
+        <div class="method-item">
+          <h4>03 · Every Justification Gets a Counter-Test</h4>
+          <p>For each government claim, the strongest possible defence is identified and stress-tested against evidence. Legitimate grievances are acknowledged before proposed solutions are examined.</p>
+        </div>
+        <div class="method-item">
+          <h4>04 · Primary Sources First</h4>
+          <p>CIHI, StatsCan, Elections Alberta, Hansard, court filings, peer-reviewed research. Investigative journalism as secondary. Social media only for context, never as sole source.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC GRID — backup nav -->
+  <div class="grid-section">
+    <div class="map-header">
+      <div>
+        <div class="section-title">All <em>Seventeen</em> Branches</div>
+        <div class="section-sub">Browse by topic · Five complete · Twelve under active research</div>
+      </div>
+    </div>
+    <div class="topic-grid" id="topicGrid"></div>
+  </div>
+
+  <!-- MASTER PDF STRIP -->
+  <div class="master-strip">
+    <h2>The <em>Master</em> Compilation.</h2>
+    <p>When all seventeen branches are complete, they consolidate into a single forensic dossier&mdash;every paper, every visual, every data point in one printable file. This button goes live at end-state.</p>
+    <a href="#" class="btn-master" id="masterPdfBtn">
+      <span>Download Master PDF</span>
+      <span class="planned-tag">End-Game</span>
+    </a>
+  </div>
+
+  <footer>
+    Calgary · Independent Research · Evidence-First · No Affiliation
+  </footer>
+</section>
+
+
+<!-- ============================================================
+     TOPIC VIEWS — rendered via JS template into this container
+     ============================================================ -->
+<section id="topicContainer"></section>
+
+
+<!-- =========================================================
+     DATA + SCRIPT
+     ========================================================= -->
+<script>
+/* ============================================================
+   TOPIC DATA — 17 branches + home metadata
+   Each topic owns its node position, connections, content.
+   ============================================================ */
+
+const TOPICS = [
+  {
+    id: 'web',
+    num: '01',
+    title: 'The Web',
+    subtitle: 'UCP Corruption / State Capture',
+    status: 'complete',
+    nodeColor: '#C0392B',
+    nodeSize: 56,
+    corePosition: true,
+    pos: { x: 700, y: 410 },
+    thesis: 'A small activist base captured the UCP, then captured the government. What followed is not scandal in the ordinary sense—it is a reorganisation of Alberta so that the ordinary machinery of accountability cannot function.',
+    lede: '1,120+ documented items. 36+ individual profiles. $10B+ in traceable financial consequences. Nine investigators or scrutineers removed. Thirty-two rule changes. One pattern.',
+    stats: [
+      { num: '$614M', label: 'MHCare-related contracts' },
+      { num: '1,120+', label: 'evidence items' },
+      { num: '36+', label: 'subjects profiled' },
+      { num: '9', label: 'investigators removed' },
+      { num: '32+', label: 'rule changes' },
+      { num: '$10B+', label: 'traceable cost' }
+    ],
+    snapshots: ['timeline', 'evidence'],
+    timeline: [
+      { date: '2017-07', tag: 'critical', title: 'Kamikaze Campaign', desc: 'Callaway ran fake campaign for Kenney. $60K+ funnelled. $200K+ fines issued.', cost: '$260K' },
+      { date: '2019-06', tag: 'critical', title: 'Election Commissioner Fired (Bill 22)', desc: 'Gibson office eliminated mid-investigation. Foundational precedent.', cost: null },
+      { date: '2022-10', tag: 'critical', title: 'Ethics Commissioner Not Renewed', desc: 'After finding Smith in violation. Replaced by UCP nominee.', cost: null },
+      { date: '2022-12', tag: 'critical', title: '$70M Turkish Meds', desc: 'AHS directed to buy. No Health Canada approval. 6× market price. <1% ever used.', cost: '$70M' },
+      { date: '2023-08-11', tag: 'critical', title: 'Triple Coincidence', desc: 'Same day: Mraiche sister buys $1.6M house, Marshall Smith moves in, nephew hired.', cost: null },
+      { date: '2024-10', tag: 'amber', title: 'Wyant Report', desc: 'No subpoena power. Key people not interviewed. Cited as "vindication."', cost: null },
+      { date: '2024-11', tag: 'critical', title: 'Notwithstanding × 4', desc: 'More uses than Alberta\'s entire prior history combined. All 3 chief justices publicly objected.', cost: null },
+      { date: '2025-01', tag: 'critical', title: 'AHS CEO Fired 2 Days Before AG Meeting', desc: 'Board had voted to refer to RCMP. Board subsequently dissolved.', cost: null },
+      { date: '2025-03', tag: 'inst', title: 'RCMP Search Warrants Executed', desc: 'MHCare, Jaberson, Prasad residence. Criminal investigation active.', cost: null },
+      { date: '2026-04', tag: 'amber', title: 'Elections AB Deadline Curtailed', desc: 'Amery shortened statute while relative under investigation.', cost: null }
+    ],
+    evidenceTiles: [
+      { tag: 'Procurement', big: '$49.2M', desc: 'Paid to MHCare for second contract. Zero product delivered.', src: 'AHS letter obtained by Globe' },
+      { tag: 'Housing', big: '1,400+', desc: 'Patients on surgical waitlist after Orthopedic Centre closed; some over 3 years.', src: 'Parkland Operation Profit' },
+      { tag: 'Private surgery', big: '2×+', desc: 'Alberta Surgical Group bills more than double public hospital costs. Mraiche is 25% stakeholder.', src: 'Parkland / Tyee' },
+      { tag: 'Revolving door', big: '0', desc: 'Emails, briefings, or policy documents produced by Mraiche nephews hired as "advisors" across 3 combined years.', src: 'FOI returns' },
+      { tag: 'Oversight', big: '4×', desc: 'Uses of the notwithstanding clause under Smith—more than Alberta\'s entire prior history.', src: 'Hansard' },
+      { tag: 'Investigation', big: '9', desc: 'Individuals removed from positions while investigating UCP-linked matters.', src: 'Cross-referenced dismissals' }
+    ],
+    connections: ['health', 'democracy', 'wyant', 'media', 'social', 'municipal'],
+    writeup: 'full',
+    pdfs: [
+      { name: 'The Web — Comprehensive Complete', file: 'THE_WEB_COMPREHENSIVE_COMPLETE.pdf', meta: '54 pages · Master dossier' },
+      { name: 'The Timeline', file: 'THE_TIMELINE.pdf', meta: 'One-pager · Chronological' },
+      { name: 'Who Got Punished', file: 'WHO_GOT_PUNISHED.pdf', meta: 'One-pager · Accountability record' },
+      { name: 'By The Numbers', file: 'BY_THE_NUMBERS.pdf', meta: 'One-pager · Financial summary' },
+      { name: 'What Would You Have to Believe', file: 'WHAT_WOULD_YOU_HAVE_TO_BELIEVE.pdf', meta: 'Coincidence test' }
+    ]
+  },
+  {
+    id: 'energy',
+    num: '02',
+    title: 'The Energy Paradox',
+    subtitle: 'Deregulation, Moratoriums, Rights',
+    status: 'complete',
+    nodeColor: '#E67E22',
+    nodeSize: 40,
+    pos: { x: 1150, y: 250 },
+    thesis: 'A province that brands itself on free markets has produced the highest electricity prices in Canada through deregulation, then restricted private landowners from entering the renewable market—inverting the freedom argument that was used to justify it.',
+    lede: 'Twenty-four billion dollars overpaid since 2001. A renewable moratorium that restricts landowners. A grid reliability problem the free market was supposed to solve.',
+    stats: [
+      { num: '$24B', label: 'overpaid since 2001' },
+      { num: '$690/yr', label: 'per household extra' },
+      { num: '7mo', label: 'renewable moratorium (2023)' },
+      { num: '#1', label: 'electricity cost in Canada' }
+    ],
+    snapshots: ['claim-matrix'],
+    claimMatrix: [
+      { claim: '"Deregulation delivered competitive pricing."', tag: 'UCP position', evidence: 'Alberta households pay the highest electricity rates in Canada. AFL-commissioned Sepulveda study finds $24B overpaid since 2001—roughly $690/year/household in excess cost.', etag: 'Counter-evidence' },
+      { claim: '"The moratorium protected prime agricultural land and viewscapes."', tag: 'UCP position', evidence: 'The moratorium blocked *landowner-approved* projects on private land. The "pristine viewscape" rule restricts what landowners can do with their own property—the opposite of the property-rights framing used to justify oil & gas development.', etag: 'Counter-evidence' },
+      { claim: '"The grid is reliable; we don\'t need federal programs."', tag: 'UCP position', evidence: 'Multiple AESO emergency alerts during cold snaps. Alberta remains one of the only provinces without federal-program integration on grid modernisation funding.', etag: 'Counter-evidence' },
+      { claim: '"Low royalty rates keep Alberta competitive."', tag: 'UCP position', evidence: 'Norway collects ~78% effective rate on oil production and has built a $1.6T sovereign fund. Alberta collects ~8% effective and has a $24B Heritage Fund after 50 years of production.', etag: 'Counter-evidence' }
+    ],
+    connections: ['democracy', 'web', 'mines'],
+    writeup: 'full',
+    pdfs: [
+      { name: 'Alberta Energy Paradox v3', file: 'alberta_energy_paradox_v3.md', meta: 'Research document · Complete' },
+      { name: 'Electricity Deregulation Cost Model', file: 'COST_MODEL_ELECTRICITY_DEREGULATION.md', meta: 'Financial model' }
+    ]
+  },
+  {
+    id: 'separation',
+    num: '03',
+    title: 'The Great Unravelling',
+    subtitle: 'Alberta Separation, Nine Scenarios',
+    status: 'complete',
+    nodeColor: '#C0392B',
+    nodeSize: 44,
+    pos: { x: 250, y: 250 },
+    thesis: 'Separation trades a manageable fiscal grievance—real, documentable, and correctible within Confederation—for catastrophic structural costs that have no precedent in a peaceful industrialised democracy. Nine scenarios modeled; none avoid the core economic problem.',
+    lede: 'Sixty-four pages. Nine scenarios. Seven rounds of adversarial validation against Grok—all major concessions eventually granted. The October 2026 referendum makes the question live in a way it has not been before.',
+    stats: [
+      { num: '$6.6B', label: 'annual CHT at risk' },
+      { num: '$2.1B', label: 'annual CST at risk' },
+      { num: '9', label: 'economic scenarios modeled' },
+      { num: '7+', label: 'adversarial validation rounds' },
+      { num: '64pp', label: 'main paper' },
+      { num: 'Oct 2026', label: 'referendum date' }
+    ],
+    snapshots: ['claim-matrix'],
+    claimMatrix: [
+      { claim: '"Albertans pay $20B+/yr to Ottawa in net transfers."', tag: 'Separatist claim', evidence: 'The figure is gross contribution minus spending, not "tribute." Albertans as individuals pay high federal tax because Albertans earn high incomes. The funds pay for services Albertans also use (CPP, OAS, EI, defence, passports, RCMP, border services).', etag: 'Counter-evidence' },
+      { claim: '"A sovereign Alberta would keep the CPP and the Canadian dollar."', tag: 'Separatist claim', evidence: 'The CPP is governed by federal legislation. A separated Alberta would have to negotiate continued participation—the same negotiations Quebec has conducted for half a century on the QPP side. Currency union without political union is rarely granted.', etag: 'Counter-evidence' },
+      { claim: '"Treaties are with the Crown—they survive separation."', tag: 'Separatist claim', evidence: 'Treaties 6, 7, and 8 are with the federal Crown. Alberta First Nations have filed court challenges stating explicitly that any separation vote must have their free, prior, and informed consent. UNDRIP applies.', etag: 'Counter-evidence' },
+      { claim: '"Alberta could join the United States."', tag: 'Separatist claim', evidence: 'US State Dept. SCIF meeting in April 2025 is the only formal interaction documented. Admission requires (a) a congressional majority currently not interested and (b) Alberta giving up its healthcare system, oil royalty regime, firearms regulation, and currency. No framework exists.', etag: 'Counter-evidence' }
+    ],
+    connections: ['democracy', 'indigenous', 'web', 'international'],
+    writeup: 'full',
+    pdfs: [
+      { name: 'The Great Unravelling — Complete', file: 'The_Great_Unravelling_Complete.pdf', meta: '64 pages · Main paper' },
+      { name: 'Complete Collection', file: 'The_Great_Unravelling_Complete_Collection.pdf', meta: 'Main paper + all visuals' }
+    ]
+  },
+  {
+    id: 'housing',
+    num: '04',
+    title: 'The Great Downloading',
+    subtitle: 'Housing Crisis & Municipal Cost-Shift',
+    status: 'complete',
+    nodeColor: '#3498DB',
+    nodeSize: 40,
+    pos: { x: 250, y: 550 },
+    thesis: 'Federal and provincial governments progressively downloaded housing responsibility onto municipalities while starving them of revenue tools. An oligopolistic building-materials market extracted margin upward as affordability collapsed downward. Alberta is a case study in the model.',
+    lede: 'The crisis was not an accident—it was a cost-shift, from federal to provincial to municipal, each tier blaming the next, with a small number of corporate actors profiting at every stage of downloading.',
+    stats: [
+      { num: '~90%', label: 'reduction in federal housing starts (1980s → 2010s)' },
+      { num: '50pp', label: 'main paper' },
+      { num: '4', label: 'oligopolistic supply sectors examined' }
+    ],
+    snapshots: ['claim-matrix'],
+    claimMatrix: [
+      { claim: '"The housing crisis is a demand problem—too much immigration."', tag: 'Common framing', evidence: 'Per-capita housing starts in Canada have been structurally declining since federal direct-build programs were wound down in the 1980s and 1990s. Demand-side explanations cannot account for supply-side collapses that predate the demand argument by decades.', etag: 'Counter-evidence' },
+      { claim: '"Municipalities need to approve more development."', tag: 'Provincial line', evidence: 'Municipalities approve development; they do not build it. Alberta Bill 20 simultaneously weakens councils\' regulatory authority while the province removes provincial revenue tools—making municipalities weaker *and* more blamed.', etag: 'Counter-evidence' }
+    ],
+    connections: ['municipal', 'web', 'democracy'],
+    writeup: 'full',
+    pdfs: [
+      { name: 'The Great Downloading — Complete', file: 'The_Great_Downloading_Complete.pdf', meta: '50+ pages · Main paper' }
+    ]
+  },
+  {
+    id: 'health',
+    num: '05',
+    title: 'AHS Healthcare',
+    subtitle: 'The Evidence Against Restructuring',
+    status: 'complete',
+    nodeColor: '#E74C3C',
+    nodeSize: 48,
+    pos: { x: 480, y: 270 },
+    thesis: 'Alberta Health Services was, by the government\'s own cited metrics, one of the best-performing integrated health systems in the world. The restructuring was not driven by performance evidence; it was driven by ideological, political, and procurement considerations. The J-curve cost will last a decade.',
+    lede: 'Pre-restructuring AHS ranked #1 in Canada on ER wait times and hip-fracture treatment. EY\'s own 2019 performance review—commissioned by the UCP—found AHS efficient relative to peers. Snowdon ranked it top-5 globally. Then the case was rebuilt.',
+    stats: [
+      { num: '#1', label: 'ER wait times (CIHI, pre-restructuring)' },
+      { num: '#1', label: 'hip fracture treatment (CIHI)' },
+      { num: '89%', label: 'patient satisfaction (pre-split)' },
+      { num: '47.7%', label: 'nurse attrition under 35' },
+      { num: '800K', label: 'Albertans without a family doctor' },
+      { num: '3,000%', label: 'agency nurse cost increase' }
+    ],
+    snapshots: ['claim-matrix', 'evidence'],
+    claimMatrix: [
+      { claim: '"AHS was too big, bureaucratic, and inefficient."', tag: 'Restructuring rationale', evidence: 'EY 2019 performance review (commissioned by Kenney government) found AHS administrative costs in line with or below peer systems. Snowdon analysis ranked AHS top-5 globally on integration. CIHI data showed AHS leading on multiple clinical metrics.', etag: 'Counter-evidence' },
+      { claim: '"Private delivery reduces wait times."', tag: 'Restructuring rationale', evidence: 'After expansion of private surgical contracts, lung cancer waits rose 48%, colorectal 8%, hip benchmark compliance fell 65%→38%, knee 62%→27%. Private facilities took lowest-complexity cases; public system absorbed complex cases with fewer resources.', etag: 'Counter-evidence' },
+      { claim: '"Covenant transition protects faith-based care."', tag: 'Restructuring rationale', evidence: 'Covenant operates under Catholic ethical directives that restrict abortion, MAID, and gender-affirming care. In communities where Covenant is the only provider, this is de facto removal of access, not protection of choice.', etag: 'Counter-evidence' },
+      { claim: '"Agency nurses cost less than building capacity."', tag: 'Restructuring rationale', evidence: 'Agency costs rose approximately 3,000%. Quebec and Ontario are phasing agency reliance *out*. Replacing a permanent nurse costs $40K–$88K; a physician, $500K–$1.2M. Alberta replaced thousands.', etag: 'Counter-evidence' }
+    ],
+    evidenceTiles: [
+      { tag: 'Wait times', big: '+48%', desc: 'Lung cancer surgery wait increase, 2019 → 2024', src: 'Parkland' },
+      { tag: 'Private cost', big: '+225%', desc: 'Public payments to for-profit facilities increase, 2019 → 2024', src: 'Parkland Operation Profit' },
+      { tag: 'Public spending', big: '−11%', desc: 'Per-capita public hospital spending; Alberta only large province to cut', src: 'CCPA' },
+      { tag: 'Volume floors', big: '100%', desc: 'Of private contracts include guaranteed minimum payments regardless of surgeries delivered', src: 'AHS contracts' },
+      { tag: 'Workforce', big: '47.7%', desc: 'Under-35 nurse attrition rate post-restructuring', src: 'NSI Staffing' },
+      { tag: 'Family medicine', big: '800K', desc: 'Albertans without a family physician', src: 'AMA' }
+    ],
+    connections: ['web', 'social', 'wyant', 'indigenous'],
+    writeup: 'full',
+    pdfs: [
+      { name: 'AHS Healthcare — Complete', file: 'AHS_HEALTHCARE_COMPLETE.pdf', meta: 'Full dossier · Paper + visuals' }
+    ]
+  },
+
+  /* ========= PLANNED BRANCHES ========= */
+  {
+    id: 'wyant',
+    num: '06',
+    title: 'Manufactured Legitimacy',
+    subtitle: 'Wyant, MacKinnon & the Circular Review Pattern',
+    status: 'planned',
+    nodeColor: '#8E44AD',
+    nodeSize: 32,
+    pos: { x: 850, y: 620 },
+    thesis: 'Limited-scope reviews—Wyant, MacKinnon, COVID panels—serve as political cover while criminal and investigative probes escalate separately. The pattern is circular: believe → appoint believer → believer validates → cite as exoneration. Wyant had no subpoena power, did not interview ministers, and was then cited as proof of innocence.',
+    lede: 'This branch documents the methodology by which legitimacy is manufactured when independent scrutiny is refused.',
+    stats: [
+      { num: '0', label: 'subpoena power granted to Wyant' },
+      { num: '0', label: 'ministers interviewed' },
+      { num: '1', label: 'Auditor General who disagreed' },
+      { num: '1', label: 'RCMP criminal probe running in parallel' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Scope', big: 'Limited', desc: 'Wyant could not compel witnesses. Indexing of documents incomplete. Key actors not interviewed.', src: 'Wyant Report + Addendum' },
+      { tag: 'Sequence', big: 'Pre-empt', desc: 'Internal review announced shortly after AG investigation became public.', src: 'OAG correspondence' },
+      { tag: 'Citation', big: '"Vindicated"', desc: 'Smith cited the limited-scope Wyant report as clearing the record, despite ongoing criminal investigation.', src: 'Press conference, Oct 2024' }
+    ],
+    connections: ['web', 'health', 'media'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'municipal',
+    num: '07',
+    title: 'Municipal Interference',
+    subtitle: 'Bills 20, 28, 50, 21 & the Provincial Priorities Act',
+    status: 'planned',
+    nodeColor: '#3498DB',
+    nodeSize: 34,
+    pos: { x: 150, y: 410 },
+    thesis: 'Provincial-municipal relations have been systematically restructured to centralise power in the cabinet: councillors can be fired, bylaws repealed, tax tools removed, and utilities seized. Local democracy becomes advisory.',
+    lede: 'Bill 20 (cabinet can fire councillors and repeal bylaws). Bill 21 (political parties in municipal politics). Bill 50 (vacancy tax override). Bill 28 (EPCOR/Enmax powers). The Chestermere precedent. The Canmore override. The Green Line betrayal.',
+    stats: [
+      { num: '4+', label: 'bills restructuring municipal authority' },
+      { num: '1', label: 'council removed outright (Chestermere)' },
+      { num: '$1.5B', label: 'Green Line downtown segment cancelled' },
+      { num: '2', label: 'major utilities threatened with seizure' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Bill 20', big: 'Cabinet veto', desc: 'Provincial cabinet gains authority to dismiss elected councillors and strike municipal bylaws.', src: 'Royal Assent 2024' },
+      { tag: 'Chestermere', big: 'Removed', desc: 'Sitting council dismissed by provincial order. First use of enhanced authority.', src: 'Municipal Affairs' },
+      { tag: 'Bill 21', big: 'Parties', desc: 'Partisan municipal politics introduced over objections of urban mayors.', src: 'Hansard' },
+      { tag: 'Green Line', big: '$1.5B cut', desc: 'Provincial re-scoping of Calgary downtown transit segment after municipal approval.', src: 'Province correspondence' }
+    ],
+    connections: ['web', 'housing', 'democracy'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'education',
+    num: '08',
+    title: 'Education Purge',
+    subtitle: 'Bill 25, Charter Network & Curriculum Control',
+    status: 'planned',
+    nodeColor: '#E67E22',
+    nodeSize: 34,
+    pos: { x: 1000, y: 550 },
+    thesis: 'Public education is being starved while a charter school network—with documented family and AGM connections to UCP leadership—is rapidly expanded. Curriculum and flag rules are imposed over professional objection. Teachers struck in October 2025; notwithstanding was invoked.',
+    lede: 'Bill 25 imposed flag bans, superintendent veto, and anthem mandate. Charter school funding grew 18.6% while public grew 6.83%. ATA Pulse Survey: 95% stressed, 8% happy. Strike overridden.',
+    stats: [
+      { num: '18.6%', label: 'charter funding increase' },
+      { num: '6.83%', label: 'public funding increase' },
+      { num: '95%', label: 'teachers reporting high stress (ATA)' },
+      { num: '8%', label: 'teachers reporting job happiness' },
+      { num: 'Oct 2025', label: 'teachers\' strike' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Funding gap', big: '18.6 vs 6.83', desc: 'Charter vs public percentage funding growth, most recent cycle.', src: 'Alberta Education' },
+      { tag: 'Bill 25', big: 'Flag ban', desc: 'Provincial rules on which flags may be flown in classrooms; anthem mandate; superintendent veto powers.', src: 'Hansard' },
+      { tag: 'Network', big: 'Connected', desc: 'Multiple documented MLA/family connections to charter school boards (Anderson/Footprints, others).', src: 'Corporate registry cross-reference' }
+    ],
+    connections: ['web', 'social', 'democracy'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'mines',
+    num: '09',
+    title: 'Environment & Regulatory Capture',
+    subtitle: 'Grassy Mountain, Kearl, Orphan Wells',
+    status: 'planned',
+    nodeColor: '#2ECC71',
+    nodeSize: 34,
+    pos: { x: 1250, y: 410 },
+    thesis: 'Environmental regulation in Alberta is subject to recurring capture: Grassy Mountain coal was rejected by federal review, then quietly revived. Kearl tailings leaked for nine months before First Nations were notified. Orphan well liability has grown faster than security deposits.',
+    lede: 'Grassy Mountain is the canary. Kearl is the warning. The orphan-well liability—estimated $89B–$260B—is the structural risk no one wants to price.',
+    stats: [
+      { num: '$89–260B', label: 'orphan well liability estimate' },
+      { num: '$2.6B', label: 'industry security deposits held' },
+      { num: '9mo', label: 'Kearl tailings delay in notification' },
+      { num: '$137M', label: 'federal cleanup funds returned unused' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Grassy Mountain', big: 'Revived', desc: 'Coal project rejected by joint federal-provincial review; revived through provincial side-door after political transition.', src: 'AER / Hansard' },
+      { tag: 'Kearl', big: '9 months', desc: 'Tailings pond leaks went unreported to Mikisew Cree First Nation; known to regulator and operator.', src: 'AER investigation' },
+      { tag: 'Liability gap', big: '98%+', desc: 'Estimated unfunded share of cleanup liability relative to held industry security deposits.', src: 'PBO / CBC analysis' }
+    ],
+    connections: ['indigenous', 'web', 'energy'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'international',
+    num: '10',
+    title: 'International Comparisons',
+    subtitle: 'Orbán, DeSantis, Trump, Erdoğan',
+    status: 'planned',
+    nodeColor: '#8E44AD',
+    nodeSize: 32,
+    pos: { x: 130, y: 100 },
+    thesis: 'The Alberta pattern—institutional capture via legal-looking means—is not novel. It is the now-familiar international playbook: replace civil-service with loyalists, attack media, restructure education, override courts selectively, rewrite electoral rules. Comparisons are structural, not rhetorical.',
+    lede: 'Hungary under Orbán. Florida under DeSantis. Turkey under Erdoğan. The parallels are not decorative—they predict what comes next.',
+    stats: [
+      { num: '4', label: 'comparative jurisdictions framed' },
+      { num: 'Disney/Reedy Creek', label: 'DeSantis parallel to Chestermere' },
+      { num: 'EU funds frozen', label: 'Orbán parallel to federal opt-outs' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Hungary', big: 'Orbán', desc: 'Electoral rule rewrites, media consolidation, judicial packing, opt-out of EU anti-corruption oversight.', src: 'Freedom House / V-Dem' },
+      { tag: 'Florida', big: 'DeSantis', desc: 'Municipal seizure (Disney/Reedy Creek), curriculum control, book bans, higher-education takeovers.', src: 'NYT / WaPo' },
+      { tag: 'Turkey', big: 'Erdoğan', desc: 'Investigator removal pattern, state media expansion, judicial restructuring.', src: 'Academic comparative' }
+    ],
+    connections: ['web', 'democracy', 'media'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'media',
+    num: '11',
+    title: 'Propaganda & Narrative Control',
+    subtitle: 'The Breakdown, Postmedia, Western Standard',
+    status: 'planned',
+    nodeColor: '#C0392B',
+    nodeSize: 36,
+    pos: { x: 480, y: 550 },
+    thesis: 'The architecture of public discourse in Alberta is being restructured: government-paid narrative infrastructure (town halls, partnerships, advertising), friendly outlets funded, unfriendly outlets sued, and online intimidation networks operating adjacent to but never officially connected to the state.',
+    lede: 'The Breakdown\'s $6M Mraiche SLAPP suit. The Wallace/DiFiore Anton Piller order. Western Standard decoded. Postmedia\'s editorial posture. The pattern of funding, suing, amplifying, and silencing.',
+    stats: [
+      { num: '$6M', label: 'SLAPP suit against The Breakdown' },
+      { num: 'Dec 2025', label: 'Anton Piller order, Wallace/DiFiore' },
+      { num: '$120M+', label: 'War Room (CEC) spending' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'SLAPP', big: '$6M', desc: 'Mraiche defamation filing against The Breakdown podcast. Survives early procedural stages.', src: 'Court of King\'s Bench' },
+      { tag: 'Intimidation', big: 'Seized', desc: 'Wallace/DiFiore electronics seized under Anton Piller order after harassment of AHS board member; Wallace admitted being retained by Mraiche counsel.', src: 'Court filing' },
+      { tag: 'War Room', big: '$120M+', desc: 'Canadian Energy Centre total spending; plagiarised logo; zero measurable impact on oil sentiment.', src: 'Treasury Board / OAG' }
+    ],
+    connections: ['web', 'democracy', 'international'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'insurance',
+    num: '12',
+    title: 'Insurance Capture',
+    subtitle: 'Auto Insurance, Bill 47 & Rate Control',
+    status: 'planned',
+    nodeColor: '#3498DB',
+    nodeSize: 30,
+    pos: { x: 1250, y: 140 },
+    thesis: 'Alberta auto insurance costs roughly ten times Quebec\'s, with structural capture documented through donor records, rate-cap removal, and the suppression of a public-option comparison. It is the single starkest cost-per-citizen metric in the entire project.',
+    lede: '$7,080/year AB vs $717/year QC. $600K+ in industry donations. Bill 47 protections. No public-option comparator permitted.',
+    stats: [
+      { num: '$7,080', label: 'average AB auto premium' },
+      { num: '$717', label: 'average QC auto premium' },
+      { num: '9.87×', label: 'multiplier' },
+      { num: '$600K+', label: 'insurance-industry political donations' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Ratio', big: '9.87×', desc: 'Alberta auto insurance cost vs Quebec (public). Saskatchewan, Manitoba, BC all lower than AB.', src: 'IBC / provincial rate filings' },
+      { tag: 'Donations', big: '$600K+', desc: 'Industry political donations traceable in Elections Alberta filings.', src: 'Elections AB' },
+      { tag: 'Bill 47', big: 'Protection', desc: 'Legislative protections limiting consumer recourse and rate-challenge pathways.', src: 'Hansard' }
+    ],
+    connections: ['web', 'democracy'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'democracy',
+    num: '13',
+    title: 'Democratic Erosion',
+    subtitle: 'Notwithstanding, Bill 54 & Electoral Rewrites',
+    status: 'planned',
+    nodeColor: '#C0392B',
+    nodeSize: 44,
+    corePosition: true,
+    pos: { x: 700, y: 170 },
+    thesis: 'Electoral rules, court override, election oversight, campaign finance, and even party-name law have been rewritten in a compressed window. The notwithstanding clause has been used four times—more than in the province\'s entire prior history combined. All three chief justices spoke out.',
+    lede: 'Bill 54. Bill 22. Bill 14. Notwithstanding × 4. Tabulator bans. Corporate donations re-legalised. Recall threshold design. October 2026 referendum architecture. Time-allocation half since 1971.',
+    stats: [
+      { num: '4', label: 'uses of notwithstanding clause' },
+      { num: '50%', label: 'of all time-allocation motions since 1971' },
+      { num: '3', label: 'chief justices speaking out publicly' },
+      { num: '1', label: 'AG replaced before election' },
+      { num: '1', label: 'Election Commissioner office eliminated' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Bill 22', big: 'Eliminated', desc: 'Election Commissioner office dissolved mid-investigation. Fines had been issued against UCP-linked entities.', src: 'Legislative record' },
+      { tag: 'Bill 54', big: 'Threshold', desc: 'Recall and citizen-initiative thresholds restructured; referendum architecture redesigned ahead of separation vote.', src: 'Hansard' },
+      { tag: 'Time allocation', big: '50%+', desc: 'Of all Alberta time-allocation motions since 1971 occurred in 6 UCP years.', src: 'Jared Wesley / Hansard' },
+      { tag: 'Tabulators', big: 'Banned', desc: 'Provincial move to ban voting tabulators in favour of hand-count amid election-administration changes.', src: 'Hansard' }
+    ],
+    connections: ['web', 'separation', 'education', 'media'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'indigenous',
+    num: '14',
+    title: 'Indigenous Relations',
+    subtitle: 'Treaty Rights, Kearl, Sovereignty',
+    status: 'planned',
+    nodeColor: '#D4A256',
+    nodeSize: 32,
+    pos: { x: 1000, y: 270 },
+    thesis: 'The Sovereignty Act, the separation referendum, Kearl, and Covenant Health all intersect with treaty obligations. First Nations have filed formal court challenges arguing that any separation vote requires free, prior, and informed consent. The constitutional and moral dimension of institutional capture is here.',
+    lede: 'Treaties 6, 7, 8 are with the federal Crown. UNDRIP is law. The province is proceeding as though neither applies.',
+    stats: [
+      { num: '3', label: 'treaty territories affected' },
+      { num: '9mo', label: 'Kearl delay in notification' },
+      { num: '1', label: 'active court challenge re: referendum' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Court', big: 'Filed', desc: 'Court challenge filed on referendum legality without First Nations consent.', src: 'Court filing' },
+      { tag: 'Kearl', big: '9 months', desc: 'Tailings pond leaks known to operator and regulator before Mikisew Cree were notified.', src: 'AER investigation' },
+      { tag: 'Covenant', big: 'MAID/AB', desc: 'Catholic-directive health facilities restrict MAID, abortion, and gender care in communities where they are the sole provider.', src: 'Covenant ERD' }
+    ],
+    connections: ['separation', 'mines', 'health', 'social'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'social',
+    num: '15',
+    title: 'Social Conservative Agenda',
+    subtitle: 'The AGM Pipeline, Covenant, TBA',
+    status: 'planned',
+    nodeColor: '#8E44AD',
+    nodeSize: 42,
+    corePosition: true,
+    pos: { x: 700, y: 650 },
+    thesis: 'Policy affecting 4.6 million Albertans is being generated by roughly 6,000 AGM delegates whose motions are then enacted. Take Back Alberta captured the party board; the party board directs the caucus; the caucus legislates. The pipeline is documented.',
+    lede: 'AGM resolutions → policy. TBA controls UCP board. Bill 18 (MAID), Bills 26/27/29/9 (parental rights/trans), curriculum, Peterson Law naming, Covenant expansion.',
+    stats: [
+      { num: '6,000', label: 'AGM delegates' },
+      { num: '4.6M', label: 'Albertans affected' },
+      { num: '$120K', label: 'TBA foreign-donation fines (unpaid)' },
+      { num: '18+', label: 'separatists retained in caucus' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Pipeline', big: 'AGM → law', desc: 'Documented path: AGM resolution passes → adopted by UCP policy → introduced as legislation.', src: 'AGM records' },
+      { tag: 'TBA', big: 'Captured', desc: 'Take Back Alberta controls UCP board post-2022. Co-founder has outstanding fines.', src: 'Elections AB' },
+      { tag: 'Guthrie', big: 'Expelled', desc: 'For calling for a public inquiry. Eighteen-plus separatists kept in caucus over same period.', src: 'Caucus communications' }
+    ],
+    connections: ['web', 'health', 'education', 'safeinj', 'indigenous'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'cpc',
+    num: '16',
+    title: 'CPC Federal Parallel',
+    subtitle: 'Poilievre, Shadow Ministers, RBC Spin',
+    status: 'planned',
+    nodeColor: '#8E44AD',
+    nodeSize: 30,
+    pos: { x: 1270, y: 100 },
+    thesis: 'The same forensic framework applied federally. Shadow minister profiles, donor networks, media posture, democratic-erosion proposals, and American adjacencies, compared side-by-side with the UCP record.',
+    lede: 'The Alberta project is not an Alberta project. The federal parallel is where the pattern either generalises or stops.',
+    stats: [
+      { num: '~120+', label: 'federal Conservative MPs / shadow cabinet' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'Method', big: 'Mirror', desc: 'Same forensic methodology (cross-verification, loyalist test, evidence tagging) applied to federal Conservative policy, donors, and media.', src: 'Project methodology' }
+    ],
+    connections: ['web', 'international', 'media'],
+    writeup: 'planned',
+    pdfs: []
+  },
+  {
+    id: 'safeinj',
+    num: '17',
+    title: 'Safe Injection & Homeless Policy',
+    subtitle: 'Forced Treatment, SCS Closures, Data Control',
+    status: 'planned',
+    nodeColor: '#E67E22',
+    nodeSize: 30,
+    pos: { x: 480, y: 700 },
+    thesis: 'Supervised consumption sites closed. Forced-treatment legislation proposed. Overdose data collection altered. The "Alberta Model" exported. The policy has ideological, not empirical, foundations—and its Klein-era parallels deserve historical reckoning.',
+    lede: 'SCS closures. Forced treatment. Data methodology changes. Drug Data Decoded\'s Euan Thomson has documented each.',
+    stats: [
+      { num: 'Multiple', label: 'SCS closures since 2019' },
+      { num: 'Proposed', label: 'compulsory-treatment legislation' }
+    ],
+    snapshots: ['evidence'],
+    evidenceTiles: [
+      { tag: 'SCS', big: 'Closed', desc: 'Multiple supervised consumption sites closed across the province under the "recovery model" rebrand.', src: 'AHS records' },
+      { tag: 'Data', big: 'Changed', desc: 'Overdose data methodology and publication schedule altered during the same window.', src: 'Drug Data Decoded' }
+    ],
+    connections: ['social', 'health'],
+    writeup: 'planned',
+    pdfs: []
+  }
+];
+
+/* ============================================================
+   EDGES — connections between topics
+   weight: 3 = primary, 2 = secondary, 1 = tertiary
+   dashed: pattern-context connection (international/federal comparators)
+   ============================================================ */
+const EDGES = [
+  // Primary thick connections — core thesis spine
+  { from: 'web', to: 'health', weight: 3, color: '#C0392B', label: 'Mraiche procurement' },
+  { from: 'web', to: 'democracy', weight: 3, color: '#C0392B', label: 'Investigator removal' },
+  { from: 'web', to: 'wyant', weight: 3, color: '#C0392B', label: 'Manufactured legitimacy' },
+  { from: 'web', to: 'social', weight: 3, color: '#8E44AD', label: 'TBA capture' },
+  { from: 'democracy', to: 'separation', weight: 3, color: '#C0392B', label: 'Bill 54 referendum design' },
+  { from: 'social', to: 'health', weight: 3, color: '#8E44AD', label: 'Covenant / MAID' },
+  { from: 'social', to: 'education', weight: 3, color: '#8E44AD', label: 'Bill 25 / charters' },
+
+  // Secondary
+  { from: 'web', to: 'media', weight: 2, color: '#C0392B', label: 'Narrative control' },
+  { from: 'web', to: 'municipal', weight: 2, color: '#3498DB', label: 'Bill 20 centralisation' },
+  { from: 'media', to: 'democracy', weight: 2, color: '#C0392B', label: 'Information manipulation' },
+  { from: 'housing', to: 'municipal', weight: 2, color: '#3498DB', label: 'Cost downloading' },
+  { from: 'energy', to: 'democracy', weight: 2, color: '#E67E22', label: 'Landowner rights inversion' },
+  { from: 'mines', to: 'indigenous', weight: 2, color: '#D4A256', label: 'Kearl / consultation' },
+  { from: 'safeinj', to: 'social', weight: 2, color: '#E67E22', label: 'Forced-treatment ideology' },
+  { from: 'separation', to: 'indigenous', weight: 2, color: '#D4A256', label: 'Treaty challenge' },
+  { from: 'wyant', to: 'health', weight: 2, color: '#8E44AD', label: 'AHS reviews' },
+  { from: 'wyant', to: 'media', weight: 2, color: '#8E44AD', label: 'Cited as exoneration' },
+  { from: 'education', to: 'democracy', weight: 2, color: '#E67E22', label: 'Bill 25 notwithstanding' },
+  { from: 'insurance', to: 'web', weight: 2, color: '#3498DB', label: 'Donor capture' },
+  { from: 'social', to: 'indigenous', weight: 2, color: '#8E44AD', label: 'Covenant / MAID restriction' },
+
+  // Tertiary / thin
+  { from: 'energy', to: 'mines', weight: 1, color: '#E67E22', label: 'Regulatory capture' },
+  { from: 'housing', to: 'democracy', weight: 1, color: '#3498DB', label: 'Weakened municipal oversight' },
+  { from: 'insurance', to: 'democracy', weight: 1, color: '#3498DB', label: 'Bill 47 rate law' },
+  { from: 'safeinj', to: 'health', weight: 1, color: '#E67E22', label: 'SCS closures' },
+
+  // Context / dashed — pattern comparators
+  { from: 'international', to: 'web', weight: 2, color: '#8E44AD', dashed: true, label: 'Pattern comparator' },
+  { from: 'international', to: 'democracy', weight: 2, color: '#8E44AD', dashed: true, label: 'Pattern comparator' },
+  { from: 'international', to: 'media', weight: 1, color: '#8E44AD', dashed: true, label: 'Pattern comparator' },
+  { from: 'cpc', to: 'web', weight: 2, color: '#8E44AD', dashed: true, label: 'Federal mirror' },
+  { from: 'cpc', to: 'international', weight: 1, color: '#8E44AD', dashed: true, label: 'Shared comparator' },
+  { from: 'cpc', to: 'media', weight: 1, color: '#8E44AD', dashed: true, label: 'Federal mirror' }
+];
+
+
+/* ============================================================
+   NETWORK MAP RENDER
+   ============================================================ */
+function renderNetworkMap() {
+  const svg = document.getElementById('networkSvg');
+  const edgesGroup = document.getElementById('edgesGroup');
+  const nodesGroup = document.getElementById('nodesGroup');
+  edgesGroup.innerHTML = '';
+  nodesGroup.innerHTML = '';
+
+  const nodeMap = {};
+  TOPICS.forEach(t => nodeMap[t.id] = t);
+
+  // EDGES first (so they render behind nodes)
+  EDGES.forEach((e, i) => {
+    const a = nodeMap[e.from], b = nodeMap[e.to];
+    if (!a || !b) return;
+
+    // Slight curve using quadratic
+    const midX = (a.pos.x + b.pos.x) / 2;
+    const midY = (a.pos.y + b.pos.y) / 2;
+    const dx = b.pos.x - a.pos.x, dy = b.pos.y - a.pos.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const offsetFactor = 0.06 + (i % 3) * 0.02;
+    const perpX = -dy * offsetFactor;
+    const perpY = dx * offsetFactor;
+    const cx = midX + perpX;
+    const cy = midY + perpY;
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${a.pos.x} ${a.pos.y} Q ${cx} ${cy} ${b.pos.x} ${b.pos.y}`);
+    path.setAttribute('stroke', e.color);
+    path.setAttribute('stroke-width', e.weight === 3 ? 2.5 : e.weight === 2 ? 1.6 : 1);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('opacity', e.weight === 3 ? 0.65 : e.weight === 2 ? 0.42 : 0.28);
+    if (e.dashed) path.setAttribute('stroke-dasharray', '4 4');
+    path.setAttribute('class', 'map-edge');
+    path.setAttribute('data-from', e.from);
+    path.setAttribute('data-to', e.to);
+    edgesGroup.appendChild(path);
+  });
+
+  // NODES
+  TOPICS.forEach(t => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'map-node');
+    g.setAttribute('data-id', t.id);
+    g.setAttribute('transform', `translate(${t.pos.x} ${t.pos.y})`);
+    g.style.color = t.nodeColor;
+
+    // Glow ring for core drivers
+    if (t.corePosition) {
+      const glow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      glow.setAttribute('r', t.nodeSize + 10);
+      glow.setAttribute('fill', 'none');
+      glow.setAttribute('stroke', t.nodeColor);
+      glow.setAttribute('stroke-width', '1');
+      glow.setAttribute('opacity', '0.35');
+      glow.setAttribute('stroke-dasharray', '2 4');
+      g.appendChild(glow);
+    }
+
+    // Main circle
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('r', t.nodeSize);
+    c.setAttribute('fill', t.status === 'planned' ? '#1a1a2e' : t.nodeColor);
+    c.setAttribute('stroke', t.nodeColor);
+    c.setAttribute('stroke-width', t.status === 'planned' ? 1.5 : 2);
+    if (t.status === 'planned') c.setAttribute('stroke-dasharray', '3 3');
+    c.setAttribute('opacity', t.status === 'planned' ? 0.8 : 0.95);
+    g.appendChild(c);
+
+    // Number inside
+    const num = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    num.setAttribute('y', -4);
+    num.setAttribute('text-anchor', 'middle');
+    num.setAttribute('dominant-baseline', 'middle');
+    num.setAttribute('font-family', 'JetBrains Mono, monospace');
+    num.setAttribute('font-size', Math.max(10, t.nodeSize * 0.24));
+    num.setAttribute('font-weight', '700');
+    num.setAttribute('fill', t.status === 'planned' ? t.nodeColor : '#fff');
+    num.setAttribute('opacity', '0.85');
+    num.textContent = t.num;
+    g.appendChild(num);
+
+    // Label below circle
+    const labelLines = t.title.split(' / ');
+    labelLines.forEach((line, i) => {
+      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('y', t.nodeSize + 18 + i * 14);
+      label.setAttribute('class', 'map-node-label');
+      label.textContent = line;
+      g.appendChild(label);
+    });
+
+    // Status sublabel
+    const sub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    sub.setAttribute('y', t.nodeSize + 18 + labelLines.length * 14);
+    sub.setAttribute('class', 'map-node-sublabel');
+    sub.textContent = t.status === 'complete' ? 'complete' : 'in progress';
+    g.appendChild(sub);
+
+    // Interactions
+    g.addEventListener('mouseenter', (ev) => highlightNode(t.id, ev));
+    g.addEventListener('mouseleave', () => clearHighlight());
+    g.addEventListener('click', () => navigate(t.id));
+
+    nodesGroup.appendChild(g);
+  });
+}
+
+function highlightNode(id, ev) {
+  document.querySelectorAll('.map-node').forEach(n => {
+    n.classList.remove('highlighted');
+    if (n.getAttribute('data-id') !== id) n.classList.add('dimmed');
+    else n.classList.add('highlighted');
+  });
+  document.querySelectorAll('.map-edge').forEach(e => {
+    const from = e.getAttribute('data-from');
+    const to = e.getAttribute('data-to');
+    if (from === id || to === id) {
+      e.classList.add('highlighted');
+      e.classList.remove('dimmed');
+      // Also light up connected nodes
+      document.querySelectorAll(`.map-node[data-id="${from}"], .map-node[data-id="${to}"]`).forEach(cn => cn.classList.remove('dimmed'));
+    } else {
+      e.classList.add('dimmed');
+    }
+  });
+
+  // Tooltip
+  const t = TOPICS.find(x => x.id === id);
+  if (t) {
+    const tt = document.getElementById('mapTooltip');
+    document.getElementById('ttTitle').textContent = t.title;
+    document.getElementById('ttDesc').textContent = t.lede || t.subtitle;
+    const statusEl = document.getElementById('ttStatus');
+    statusEl.textContent = t.status === 'complete' ? 'Complete' : 'In progress';
+    statusEl.className = 'tt-status ' + (t.status === 'complete' ? 'complete' : 'planned');
+
+    // Position tooltip near mouse, clamp to container
+    const container = document.getElementById('networkMap');
+    const rect = container.getBoundingClientRect();
+    let x = ev.clientX - rect.left + 16;
+    let y = ev.clientY - rect.top + 16;
+    const ttRect = tt.getBoundingClientRect();
+    if (x + 340 > rect.width) x = ev.clientX - rect.left - 340;
+    if (y + 120 > rect.height) y = ev.clientY - rect.top - 120;
+    tt.style.left = x + 'px';
+    tt.style.top = y + 'px';
+    tt.classList.add('visible');
+  }
+}
+function clearHighlight() {
+  document.querySelectorAll('.map-node').forEach(n => n.classList.remove('highlighted', 'dimmed'));
+  document.querySelectorAll('.map-edge').forEach(e => e.classList.remove('highlighted', 'dimmed'));
+  document.getElementById('mapTooltip').classList.remove('visible');
+}
+
+/* ============================================================
+   TOPIC GRID RENDER (home backup nav)
+   ============================================================ */
+function renderTopicGrid() {
+  const grid = document.getElementById('topicGrid');
+  grid.innerHTML = '';
+  TOPICS.forEach(t => {
+    const card = document.createElement('a');
+    card.className = 'topic-card';
+    card.setAttribute('data-nav', t.id);
+    card.href = '#' + t.id;
+    const statusClass = t.status === 'complete' ? 'status-complete' : t.status === 'planned' ? 'status-planned' : 'status-inprogress';
+    const statusLabel = t.status === 'complete' ? 'Complete' : t.status === 'planned' ? 'Research' : 'Building';
+    card.innerHTML = `
+      <div class="topic-number">Branch ${t.num}</div>
+      <div class="topic-card-title">${t.title}</div>
+      <div class="topic-card-sub">${t.subtitle}</div>
+      <div class="topic-card-footer">
+        <span class="status-badge ${statusClass}">${statusLabel}</span>
+        <span class="topic-card-arrow">Enter →</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+/* ============================================================
+   TOPIC PAGE TEMPLATE RENDER
+   ============================================================ */
+function renderTopicPage(topic) {
+  const container = document.getElementById('topicContainer');
+
+  // Find prev/next
+  const idx = TOPICS.findIndex(t => t.id === topic.id);
+  const prev = idx > 0 ? TOPICS[idx - 1] : null;
+  const next = idx < TOPICS.length - 1 ? TOPICS[idx + 1] : null;
+
+  // Build connections chips
+  const connectionChips = (topic.connections || []).map(cid => {
+    const c = TOPICS.find(t => t.id === cid);
+    if (!c) return '';
+    const edge = EDGES.find(e => (e.from === topic.id && e.to === cid) || (e.to === topic.id && e.from === cid));
+    const relation = edge ? edge.label : 'connected';
+    return `
+      <a class="connection-chip" data-nav="${c.id}" href="#${c.id}">
+        <div>
+          <div class="connection-chip-num">BRANCH ${c.num}</div>
+          <div class="connection-chip-title">${c.title}</div>
+        </div>
+        <div class="connection-chip-relation">${relation}</div>
+      </a>
+    `;
+  }).join('');
+
+  // Build stats
+  const statsHTML = (topic.stats || []).map(s => `
+    <div class="stat-cell">
+      <div class="stat-cell-num">${s.num}</div>
+      <div class="stat-cell-label">${s.label}</div>
+    </div>
+  `).join('');
+
+  // Build snapshots (one or more per topic)
+  const snapshotsHTML = buildSnapshots(topic);
+
+  // Build writeup
+  const writeupHTML = topic.writeup === 'full' ? buildWriteup(topic) : buildPlannedWriteup(topic);
+
+  // Build PDFs
+  const pdfsHTML = (topic.pdfs || []).length > 0 ? `
+    <div class="pdf-section">
+      <div class="pdf-section-header">
+        <h3>Download · Share · Print</h3>
+        <p>Each document is independently shareable. Link to PDF assets; final-state live site hosts these directly.</p>
+      </div>
+      <div class="pdf-grid">
+        ${topic.pdfs.map(p => `
+          <a class="pdf-tile" href="${p.file}" target="_blank" rel="noopener">
+            <div>
+              <div class="pdf-tile-name">${p.name}</div>
+              <div class="pdf-tile-meta">${p.meta}</div>
+            </div>
+            <div class="pdf-tile-arrow">→</div>
+          </a>
+        `).join('')}
+      </div>
+    </div>
+  ` : `
+    <div class="pdf-section">
+      <div class="pdf-section-header">
+        <h3>Documents · Pending</h3>
+        <p>This branch is under active research. Deliverables (paper + visuals + PDFs) will appear here at build-out.</p>
+      </div>
+    </div>
+  `;
+
+  const statusBadgeClass = topic.status === 'complete' ? 'status-complete' : 'status-planned';
+  const statusText = topic.status === 'complete' ? 'Research & Build · Complete' : 'Research · In Progress';
+
+  container.innerHTML = `
+    <div id="topic-${topic.id}" class="view active topic-page">
+      <div class="topic-hero">
+        <div class="breadcrumb">
+          <a href="#home" data-nav="home">Home</a>
+          <span>/</span>
+          <span>Branch ${topic.num}</span>
+          <span>/</span>
+          <span>${topic.title}</span>
+        </div>
+        <div class="topic-hero-grid">
+          <div>
+            <div class="topic-number-lg">Branch ${topic.num}${topic.corePosition ? ' · Core Driver' : ''}</div>
+            <h1 class="topic-title">${topic.title.startsWith('The ') ? 'The <em>' + topic.title.slice(4) + '</em>' : '<em>' + topic.title + '</em>'}</h1>
+            <div class="topic-subtitle">${topic.subtitle}</div>
+            <div class="topic-thesis">${topic.thesis}</div>
+          </div>
+          <div class="topic-status-panel">
+            <h4>Status</h4>
+            <div class="status-line"><strong>${statusText}</strong></div>
+            <div class="status-line">Documents: <strong>${topic.pdfs ? topic.pdfs.length : 0}</strong></div>
+            <div class="status-line">Core connections: <strong>${(topic.connections || []).length}</strong></div>
+            <div class="status-line">Evidence surface: <strong>${topic.snapshots.length} interactive${topic.snapshots.length > 1 ? 's' : ''}</strong></div>
+          </div>
+        </div>
+      </div>
+
+      ${topic.stats && topic.stats.length > 0 ? `
+        <div class="stat-bar">
+          <div class="stat-bar-inner">${statsHTML}</div>
+        </div>
+      ` : ''}
+
+      ${snapshotsHTML}
+
+      <div class="connections-strip">
+        <div class="connections-header">Connected <em style="color:var(--critical);font-style:italic;">branches</em></div>
+        <div class="connections-sub">Where this topic touches the rest of the web</div>
+        <div class="connections-chips">${connectionChips}</div>
+      </div>
+
+      ${writeupHTML}
+
+      ${pdfsHTML}
+
+      <div class="topic-footer-nav">
+        ${prev ? `
+          <a class="footer-nav-link" data-nav="${prev.id}" href="#${prev.id}">
+            <span class="fnl-label">← Previous · Branch ${prev.num}</span>
+            <span class="fnl-title">${prev.title}</span>
+          </a>
+        ` : `<a class="footer-nav-link" data-nav="home" href="#home">
+            <span class="fnl-label">← Back to</span>
+            <span class="fnl-title">Home</span>
+          </a>`}
+        ${next ? `
+          <a class="footer-nav-link next" data-nav="${next.id}" href="#${next.id}">
+            <span class="fnl-label">Next · Branch ${next.num} →</span>
+            <span class="fnl-title">${next.title}</span>
+          </a>
+        ` : `<a class="footer-nav-link next" data-nav="home" href="#home">
+            <span class="fnl-label">Return to →</span>
+            <span class="fnl-title">Home</span>
+          </a>`}
+      </div>
+
+      <div class="master-strip" style="margin-top:60px;">
+        <h2 style="font-size:clamp(28px,4vw,48px);">The <em>Master</em> Compilation.</h2>
+        <a href="#" class="btn-master"><span>Download Master PDF</span><span class="planned-tag">End-Game</span></a>
+      </div>
+    </div>
+  `;
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+/* ============================================================
+   SNAPSHOT BUILDERS — interactive visuals per topic
+   ============================================================ */
+function buildSnapshots(topic) {
+  let html = '';
+
+  if (topic.snapshots.includes('timeline') && topic.timeline) {
+    html += `
+      <div class="snapshot-section">
+        <div class="snapshot-header">
+          <div>
+            <div class="snapshot-title">Chronological <em style="color:var(--critical);font-style:italic;">evidence chain</em></div>
+            <div class="section-sub">Key events · Tap a row for source reference</div>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="critical">Critical</button>
+            <button class="filter-btn" data-filter="amber">Oversight</button>
+            <button class="filter-btn" data-filter="inst">Institutional</button>
+          </div>
+        </div>
+        <div class="mini-timeline">
+          ${topic.timeline.map(row => `
+            <div class="mini-timeline-row" data-tag="${row.tag}">
+              <span class="mtl-date">${row.date}</span>
+              <span class="mtl-tag ${row.tag}">${row.tag.toUpperCase()}</span>
+              <span class="mtl-content"><strong>${row.title}</strong> — ${row.desc}${row.cost ? `<span class="cost">${row.cost}</span>` : ''}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  if (topic.snapshots.includes('evidence') && topic.evidenceTiles) {
+    html += `
+      <div class="snapshot-section">
+        <div class="snapshot-header">
+          <div>
+            <div class="snapshot-title">The <em style="color:var(--critical);font-style:italic;">numbers</em> that matter</div>
+            <div class="section-sub">Each figure is sourced and cross-verified</div>
+          </div>
+        </div>
+        <div class="evidence-wall">
+          ${topic.evidenceTiles.map(tile => `
+            <div class="evidence-tile">
+              <div class="evidence-tag">${tile.tag}</div>
+              <div class="evidence-big">${tile.big}</div>
+              <div class="evidence-desc">${tile.desc}</div>
+              <div class="evidence-source">${tile.src}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  if (topic.snapshots.includes('claim-matrix') && topic.claimMatrix) {
+    html += `
+      <div class="snapshot-section">
+        <div class="snapshot-header">
+          <div>
+            <div class="snapshot-title">Claim <em style="color:var(--critical);font-style:italic;">vs.</em> evidence</div>
+            <div class="section-sub">Every justification stress-tested against primary sources</div>
+          </div>
+        </div>
+        <div class="claim-matrix">
+          ${topic.claimMatrix.map(row => `
+            <div class="claim-cell">
+              <span class="claim-tag">${row.tag}</span>
+              ${row.claim}
+            </div>
+            <div class="evidence-cell">
+              <span class="claim-tag">${row.etag}</span>
+              ${row.evidence}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+/* ============================================================
+   WRITE-UP BUILDERS
+   ============================================================ */
+function buildWriteup(topic) {
+  // Per-topic full writeups. For efficiency, these are hand-drafted per completed branch.
+  const writeups = {
+    web: `
+      <p>The first thing that strikes anyone reviewing the Alberta record of 2019–2026 is not any single scandal. It is the <strong>pattern</strong>. A committee fires an investigator the week an investigation matures. An outside review is commissioned the day public pressure peaks. A commissioner\u2019s contract is not renewed the month after they rule against the government. A health authority\u2019s board is dissolved two days before it briefs the Auditor General.</p>
+      <p>Taken one at a time, each event has a rationalisation. Taken together, they form a <em>consciousness-of-guilt</em> pattern that no ordinary political record exhibits.</p>
+      <div class="callout">"The question is not whether any single event is a scandal. It is whether the totality is consistent with a government that believes it has something to hide, acting accordingly."</div>
+      <h3>Procurement as mechanism</h3>
+      <p>The MHCare line is the clearest. A single family-office network received upwards of <strong>$614 million</strong> in government and AHS-linked contracts across a period in which its principal attended social events with the Premier, housed the Premier\u2019s Chief of Staff\u2019s residence in a sibling\u2019s property, and whose relatives were hired as policy advisers with <em>zero documented work product</em> across three combined years of FOI returns.</p>
+      <p>The $70M Turkish medication purchase proceeded despite bureaucratic warnings about the absence of Health Canada approval, the excessive quantity ordered, and a purchase price approximately six times market. Less than 1% of the product was ever used. The follow-up $49.2M payment produced zero delivered product—AHS\u2019s own letter noted the company had been holding "public funds for well over a year."</p>
+      <h3>The accountability architecture was specifically targeted</h3>
+      <p>Alberta\u2019s Election Commissioner office was <strong>dissolved by statute</strong> in the middle of an active UCP-related investigation (Bill 22, 2019). The Ethics Commissioner who found the Premier in violation in 2022 was not renewed. The AHS CEO who referred matters to the RCMP was fired two days before her scheduled Auditor General meeting. The board that voted to support her was itself dissolved.</p>
+      <p>This is not a list of unlucky timing. It is a list of what happens when the instruments of oversight are recognised as threats.</p>
+      <h3>What the Wyant Report did and did not do</h3>
+      <p>The Wyant Report is frequently cited as vindication. It had <em>no subpoena power</em>. Key ministers were not interviewed. Documentation review was incomplete. The Auditor General\u2019s parallel review, which did have statutory authority, stated publicly that matters were <em>not anywhere near finalisation</em>. In March 2026, RCMP search warrants were executed against MHCare and associated addresses.</p>
+      <div class="data-box">
+        <span class="lbl">Documented cost (financial only, lower bound)</span>
+        $614M MHCare-linked · $70M Turkish meds (&lt;1% used) · $49.2M payment for zero product · $430M × 2× private surgical premium · $24B electricity overcharge · $2.1B AIMCo loss · $12–15B corporate tax foregone revenue. <em>Non-financial costs — democratic erosion, healthcare degradation, treaty strain — are separately inventoried.</em>
+      </div>
+      <h3>Why this branch is the centre of the web</h3>
+      <p>Healthcare procurement funds the donors who run the AGM that drafts the resolutions that become the bills that the cabinet invokes notwithstanding to protect. Media who report on it are sued or harassed by contractors related to the Premier\u2019s office. Municipalities who try to resist are subject to Bill 20. The court challenges are answered with Bill 54. Every other branch in this dossier touches this branch.</p>
+      <p>It is not a scandal. It is a governing method.</p>
+    `,
+    energy: `
+      <p>Alberta brands itself as the Canadian free-market province. Its electricity market—among the most thoroughly deregulated in North America—has produced the <strong>highest household electricity prices in Canada</strong>. The AFL-commissioned Sepulveda analysis estimates consumers have overpaid approximately <em>$24 billion since 2001</em>, or roughly $690 per year per household in excess cost relative to a public or hybrid comparator.</p>
+      <p>At the same time, the UCP government imposed a moratorium on new renewable-energy projects in 2023, citing concerns about agricultural land and "pristine viewscapes." The moratorium blocked <strong>landowner-approved projects</strong> on <em>private land</em>—the precise situation in which the province\u2019s standard property-rights argument would normally apply.</p>
+      <div class="callout">"A province that grants oil and gas development access through surface rights it does not own, and simultaneously blocks wind development that landowners themselves approved, is not operating on a property-rights principle. It is operating on a sector preference."</div>
+      <h3>The grid reliability argument</h3>
+      <p>During cold snaps in 2023 and 2024, AESO issued multiple emergency alerts. The grid reliability argument advanced to restrict renewables was not matched by a plan to solve the underlying capacity adequacy problem. Alberta continues to opt out of federal grid-modernisation funding programs.</p>
+      <h3>The royalty comparison</h3>
+      <p>Norway collects an effective royalty rate of approximately 78% on oil production, and has built a sovereign wealth fund of approximately <strong>$1.6 trillion</strong>. Alberta collects approximately 8% effective, and has a Heritage Fund of approximately $24 billion after a half-century of production. The difference is not geological—both are mature oil jurisdictions. The difference is policy.</p>
+      <p>The energy paradox is not a market failure. It is the <em>absence</em> of a market—specifically, the absence of public-option competition that could discipline private rates.</p>
+    `,
+    separation: `
+      <p>The case for Alberta separation, when it is made seriously, rests on three pillars: (1) Alberta pays more to Ottawa than it receives; (2) the federal government regulates Alberta\u2019s primary industry hostilely; (3) Alberta could negotiate better terms outside Confederation. Each pillar contains a real and documentable <strong>grievance</strong>—and a separate, catastrophically wrong <strong>conclusion</strong>.</p>
+      <div class="callout">"The honest acknowledgment of a grievance is the precondition for dismantling a proposed solution. Skipping the first step forfeits the second."</div>
+      <h3>The fiscal imbalance is real. Separation is not its solution.</h3>
+      <p>Alberta did contribute, in net terms, more to federal revenue than it received in federal spending across most years since the 1960s. This reflects, largely, that Albertans have <em>earned more money</em> than the national average—federal income tax is progressive, so higher-income provinces contribute more. It does not reflect "tribute." It reflects arithmetic.</p>
+      <p>Separation does not capture the fiscal gap—it replaces it with structural costs that are an order of magnitude larger: the loss of $6.6B CHT, $2.1B CST, pension-portfolio separation, currency arrangement negotiation, border infrastructure, and trade-access renegotiation with the United States as a small non-NAFTA jurisdiction.</p>
+      <h3>The nine scenarios</h3>
+      <p>Across nine modeled scenarios—ranging from "Alberta as sovereign state with Canadian currency" to "Alberta as US 51st state"—<strong>none</strong> improve the net fiscal position of the median Albertan. The best scenarios hold roughly flat; the central scenarios lose $4,000–$11,000 per household per year; the worst scenarios (collapsed US negotiation, First Nations court success against referendum) cascade into territorial non-recognition.</p>
+      <h3>The constitutional wall</h3>
+      <p>Section 35 and the Crown treaties are not a technicality. Treaties 6, 7, and 8 were signed with the federal Crown. First Nations have filed formal court challenges stating the referendum requires free, prior, and informed consent. UNDRIP is federal law. The Supreme Court has never recognised unilateral provincial secession. Clarity Act thresholds apply.</p>
+      <h3>The US comparison</h3>
+      <p>The Alberta Prosperity Project\u2019s April 2025 SCIF meeting at the US State Department is the <em>only</em> formal interaction on record. Admission to the United States requires congressional majorities that do not exist, surrender of Alberta\u2019s healthcare and firearms regimes, adoption of the US dollar, and re-negotiation of every international trade agreement. There is no framework.</p>
+      <p>The Crimea parallel raised in the adversarial validation rounds is not rhetorical. It describes a structural pattern: a national minority in a resource-rich region invites a larger power to intervene, receives promises, and loses both sovereignty and prosperity.</p>
+    `,
+    housing: `
+      <p>The Canadian housing crisis is often presented as a demand-side story—too much immigration, not enough builders. The per-capita housing-starts curve does not support this story. Canadian per-capita starts have been structurally declining since the <strong>federal government wound down direct-build programs in the 1980s and 1990s</strong>. Provinces inherited the file with inadequate funding. Provinces, in turn, downloaded it to municipalities with even less.</p>
+      <div class="callout">"The crisis was not an accident. It was a cost-shift, from federal to provincial to municipal, each tier blaming the next for a result that each tier\u2019s disinvestment produced."</div>
+      <h3>The oligopolistic supply side</h3>
+      <p>The story is not only about downloading. Four building-materials sectors—cement, drywall, steel framing, and residential mortgages—are structurally oligopolistic in Canada. Margin has compounded upward as affordability has collapsed downward. The "supply problem" is also a <em>pricing power</em> problem.</p>
+      <h3>Alberta as the case study</h3>
+      <p>Alberta\u2019s Bill 20 simultaneously restricts municipal authority (cabinet can dismiss councillors, repeal bylaws) and removes revenue tools. The province refused the federal Housing Accelerator Fund structure that other jurisdictions accepted. The result: municipalities face more blame with fewer tools, while the province retains rhetorical distance from the outcome.</p>
+      <p>This is the "Great Downloading"—and Alberta is its most instructive case.</p>
+    `,
+    health: `
+      <p>Alberta Health Services, in the year preceding its break-up, ranked <strong>first in Canada on emergency-room wait times and hip-fracture treatment</strong> according to CIHI. Patient satisfaction sat at 89%. Snowdon\u2019s international analysis ranked AHS in the global top five on integration. <em>EY\u2019s own 2019 performance review</em>—commissioned by the Kenney government—found AHS administrative overhead in line with or below peer systems.</p>
+      <p>The government\u2019s subsequent case for restructuring did not cite this evidence. It cited a different framing of cost, drawn from narrower metrics, and dismissed the integrated-systems research. The restructuring proceeded.</p>
+      <div class="callout">"The question is not whether any system can be improved. It is whether <em>this</em> system was improved by <em>this</em> restructuring. The evidence is decisive: it was not."</div>
+      <h3>The cream-skimming dynamic</h3>
+      <p>Private surgical contracts were expanded. The private facilities took the <strong>lowest-complexity cases</strong>—the cases that, by volume, had previously kept public-system throughput high. Public hospitals were left with higher per-case complexity, falling throughput, and reduced resources. Lung cancer waits rose 48%. Colorectal 8%. Hip benchmark compliance fell from 65% to 38%. Knee, 62% to 27%.</p>
+      <p>The contracts contain "volume floors"—<em>guaranteed payments regardless of whether surgeries are actually performed</em>. The risk was transferred from contractor to public.</p>
+      <h3>The workforce crisis</h3>
+      <p>Nurse attrition in the under-35 cohort reached 47.7%. Replacing a nurse costs $40K–$88K. Replacing a physician, $500K–$1.2M. Alberta replaced thousands. Agency-nurse costs rose approximately 3,000%. Ontario and Quebec are phasing agency use <em>out</em>. Alberta phased it <em>in</em>.</p>
+      <h3>The Covenant question</h3>
+      <p>The transfer of specific facilities to Covenant Health, a Catholic-sponsored entity operating under the ERDs (Ethical and Religious Directives), means that in communities where Covenant becomes the sole provider, access to MAID, abortion, and gender-affirming care is structurally restricted. This is a restriction of access by institutional jurisdiction, not a protection of conscience.</p>
+      <h3>The J-curve</h3>
+      <p>Healthcare reorganisations produce a well-characterised cost curve: short-term productivity drops, long-term recovery <em>only if</em> the reorganisation was evidence-based. Alberta\u2019s is not. The J-curve here does not recover—it flattens at a lower point and stays there. The international literature (Nordic parallels, Ontario\u2019s reversal, Quebec\u2019s agency phase-out) supports this prediction.</p>
+      <p>The case against restructuring was not a case for the status quo. It was a case for evidence-based reform of a demonstrably well-performing system. What replaced it is neither.</p>
+    `
+  };
+
+  const body = writeups[topic.id] || `<p>Full write-up not yet drafted for this branch. Research is complete; drafting is next in the build queue.</p>`;
+
+  return `
+    <div class="writeup-section">
+      <div class="writeup-header">The <em>full</em> write-up · Branch ${topic.num}</div>
+      <h2 class="writeup-title">${topic.subtitle}.</h2>
+      <div class="writeup-body">${body}</div>
+    </div>
+  `;
+}
+
+function buildPlannedWriteup(topic) {
+  return `
+    <div class="writeup-section">
+      <div class="writeup-header">Branch ${topic.num} · <em>Under active research</em></div>
+      <h2 class="writeup-title">${topic.subtitle}.</h2>
+      <div class="writeup-body">
+        <div class="writeup-planned-note">
+          <h4>Research In Progress</h4>
+          <p><strong>${topic.lede || topic.thesis}</strong></p>
+          <p>The evidence items above are a partial surface; the full write-up is being drafted from ongoing cross-platform research (Claude for synthesis, Grok for social/X, Gemini for academic/Google, Perplexity for verification). When build-out is complete, this section will be expanded to the depth of the completed branches.</p>
+          <p>Until then, the interactive snapshot above represents the current state of documented evidence, and the connections panel identifies the branches this topic touches.</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function navigate(viewId) {
+  if (!viewId || viewId === 'home') {
+    // Show home, clear topic container
+    document.getElementById('home').classList.add('active');
+    document.getElementById('topicContainer').innerHTML = '';
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    if (location.hash !== '#home' && location.hash !== '') {
+      history.replaceState(null, '', '#home');
+    }
+    return;
+  }
+
+  const topic = TOPICS.find(t => t.id === viewId);
+  if (!topic) {
+    navigate('home');
+    return;
+  }
+
+  document.getElementById('home').classList.remove('active');
+  renderTopicPage(topic);
+  if (location.hash !== '#' + viewId) {
+    history.replaceState(null, '', '#' + viewId);
+  }
+}
+
+/* ============================================================
+   EVENT WIRING
+   ============================================================ */
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('[data-nav]');
+  if (link) {
+    e.preventDefault();
+    const target = link.getAttribute('data-nav');
+    navigate(target);
+  }
+  // Filter buttons (timeline)
+  if (e.target.classList.contains('filter-btn')) {
+    const filter = e.target.getAttribute('data-filter');
+    const parent = e.target.closest('.filter-bar');
+    parent.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    const timeline = parent.closest('.snapshot-section').querySelector('.mini-timeline');
+    if (timeline) {
+      timeline.querySelectorAll('.mini-timeline-row').forEach(row => {
+        const tag = row.getAttribute('data-tag');
+        row.style.display = (filter === 'all' || tag === filter) ? '' : 'none';
+      });
+    }
+  }
+});
+
+window.addEventListener('hashchange', () => {
+  const id = location.hash.slice(1) || 'home';
+  navigate(id);
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderNetworkMap();
+renderTopicGrid();
+// Load initial view based on hash
+const initialHash = location.hash.slice(1) || 'home';
+navigate(initialHash);
+
+</script>
+</body>
+</html>

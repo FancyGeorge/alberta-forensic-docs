@@ -1,0 +1,3706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Ledger — Accounts, Claims, Counter-Evidence</title>
+<meta name="description" content="A live registry of the claims pushed by Alberta's separation / pro-UCP ecosystem, with primary-source counter-evidence adjacent to each claim." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Libre+Franklin:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a14;
+    --bg-panel: #11111f;
+    --bg-panel-2: #16162a;
+    --bg-panel-3: #1a1a2e;
+    --border: #22223a;
+    --border-bright: #3a3a5a;
+    --text: #e8e6e3;
+    --text-dim: #8a8a9a;
+    --text-mid: #b0b0bf;
+    --critical: #C0392B;
+    --critical-bright: #E74C3C;
+    --amber: #E67E22;
+    --amber-bright: #F39C12;
+    --gold: #D4A256;
+    --reform: #2ECC71;
+    --inst: #3498DB;
+    --federal: #8E44AD;
+
+    --serif: 'Fraunces', 'Times New Roman', serif;
+    --sans: 'Libre Franklin', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  ::selection { background: var(--critical); color: #fff; }
+
+  /* ===== NAV ===== */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,20,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topnav-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 14px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    background: var(--amber);
+    color: #0a0a14;
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 18px;
+    border-radius: 2px;
+  }
+  .brand-text {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+  .brand-text em {
+    color: var(--amber-bright);
+    font-style: italic;
+    font-weight: 600;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .nav-back {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--amber-bright); }
+  .nav-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-status .pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber-bright);
+    box-shadow: 0 0 0 0 rgba(243,156,18,0.7);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(243,156,18,0.7); }
+    50% { box-shadow: 0 0 0 6px rgba(243,156,18,0); }
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 32px 40px;
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+  .hero-meta .line { flex: 1; height: 1px; background: var(--border); align-self: center; }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: clamp(42px, 7vw, 96px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    margin-bottom: 20px;
+  }
+  .hero h1 .line1 { display: block; }
+  .hero h1 .line2 { display: block; color: var(--amber); font-style: italic; font-weight: 700; }
+
+  .hero-lede {
+    max-width: 820px;
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--text-mid);
+    margin: 28px 0 40px;
+    font-weight: 300;
+  }
+  .hero-lede strong { color: var(--text); font-weight: 600; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .hero-stat {
+    background: var(--bg);
+    padding: 20px;
+  }
+  .hero-stat-num {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--amber-bright);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* ===== METHODOLOGY DISCLOSURE ===== */
+  .method-disclosure {
+    background: var(--bg-panel);
+    border: 1px solid var(--amber);
+    border-left: 4px solid var(--amber);
+    padding: 28px 32px;
+    margin-bottom: 40px;
+  }
+  .method-disclosure .lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--amber-bright);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .method-disclosure .lbl::before {
+    content: "§";
+    font-family: var(--serif);
+    font-size: 20px;
+    font-style: italic;
+  }
+  .method-disclosure h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .method-disclosure ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .method-disclosure li {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.55;
+    padding-left: 20px;
+    position: relative;
+  }
+  .method-disclosure li::before {
+    content: counter(rule, decimal-leading-zero);
+    counter-increment: rule;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--amber-bright);
+    letter-spacing: 0.1em;
+  }
+  .method-disclosure ul { counter-reset: rule; }
+  .method-disclosure li strong { color: var(--text); font-weight: 600; }
+
+  /* ===== VIEW TOGGLE ===== */
+  .view-toggle {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .view-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    padding: 16px 24px 20px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .view-btn em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--amber);
+  }
+  .view-btn .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-dim);
+    margin-left: 8px;
+    letter-spacing: 0.1em;
+    vertical-align: middle;
+  }
+  .view-btn:hover { color: var(--text); }
+  .view-btn.active {
+    color: var(--text);
+    border-bottom-color: var(--amber);
+  }
+
+  /* ===== VIEW CONTAINERS ===== */
+  .view-panel { display: none; }
+  .view-panel.active { display: block; }
+
+  .section-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+  .filter-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-right: 8px;
+  }
+  .filter-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 6px 12px;
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border-bright);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-chip:hover { color: var(--text); border-color: var(--text-mid); }
+  .filter-chip.active {
+    background: var(--amber);
+    color: #0a0a14;
+    border-color: var(--amber);
+    font-weight: 600;
+  }
+  .search-box {
+    margin-left: auto;
+    position: relative;
+  }
+  .search-box input {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-bright);
+    color: var(--text);
+    padding: 8px 14px 8px 32px;
+    font-family: var(--mono);
+    font-size: 12px;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box input:focus { border-color: var(--amber); }
+  .search-box::before {
+    content: "⌕";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  /* ===== CLAIM CARD ===== */
+  .claim-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    margin-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .claim-card.expanded { border-color: var(--amber); }
+  .claim-header {
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .claim-header:hover { background: var(--bg-panel-2); }
+  .claim-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.14em;
+  }
+  .claim-short {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .claim-short em { color: var(--amber); font-style: italic; font-weight: 400; }
+  .claim-verdict-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 4px 10px;
+    white-space: nowrap;
+  }
+  .verdict-misleading { background: rgba(231,76,60,0.15); color: var(--critical-bright); border: 1px solid var(--critical); }
+  .verdict-cherry { background: rgba(230,126,34,0.15); color: var(--amber-bright); border: 1px solid var(--amber); }
+  .verdict-debunked { background: var(--critical); color: #fff; }
+  .verdict-contradicted { background: var(--critical); color: #fff; }
+
+  .claim-toggle {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    margin-left: 8px;
+  }
+  .claim-card.expanded .claim-toggle { transform: rotate(45deg); color: var(--amber-bright); }
+
+  .claim-body {
+    display: none;
+    padding: 0 28px 28px 118px;
+    border-top: 1px solid var(--border);
+  }
+  .claim-card.expanded .claim-body { display: block; padding-top: 24px; }
+
+  .claim-full {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-style: italic;
+    color: var(--text-mid);
+    line-height: 1.55;
+    margin-bottom: 28px;
+    border-left: 2px solid var(--amber);
+    padding: 4px 0 4px 18px;
+  }
+
+  .claim-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .claim-block {
+    background: var(--bg-panel-2);
+    padding: 20px;
+    border-top: 2px solid var(--border);
+  }
+  .claim-block.their-sources { border-top-color: var(--amber); }
+  .claim-block.counter-sources { border-top-color: var(--critical); }
+  .claim-block.what-accurate { border-top-color: var(--reform); }
+  .claim-block.what-omitted { border-top-color: var(--critical); }
+
+  .claim-block h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 14px;
+  }
+  .claim-block.their-sources h4 { color: var(--amber-bright); }
+  .claim-block.counter-sources h4 { color: var(--critical-bright); }
+  .claim-block.what-accurate h4 { color: var(--reform); }
+  .claim-block.what-omitted h4 { color: var(--critical-bright); }
+
+  .source-list {
+    list-style: none;
+  }
+  .source-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+  .source-list li:last-child { border-bottom: 0; }
+  .source-stars {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--amber-bright);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    width: 44px;
+  }
+  .source-star-3 { color: #E74C3C; }
+  .source-star-2 { color: var(--amber-bright); }
+  .source-star-1 { color: var(--text-dim); }
+  .source-name { flex: 1; color: var(--text-mid); }
+  .source-name strong { color: var(--text); font-weight: 600; }
+  .source-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 6px;
+    background: var(--bg-panel-3);
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  .bullet-list {
+    list-style: none;
+  }
+  .bullet-list li {
+    padding: 6px 0 6px 16px;
+    position: relative;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-mid);
+  }
+  .bullet-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--text-dim);
+    font-family: var(--mono);
+  }
+  .bullet-list li strong { color: var(--text); }
+
+  .verdict-block {
+    background: var(--bg);
+    border: 1px solid var(--critical);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .verdict-block h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--critical-bright);
+    margin-bottom: 10px;
+  }
+  .verdict-block p {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.55;
+    font-weight: 500;
+  }
+  .verdict-block p em { color: var(--critical-bright); font-style: italic; }
+
+  .amplifiers-block {
+    padding: 18px 0 0;
+    border-top: 1px solid var(--border);
+  }
+  .amplifiers-block h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .amplifiers-block h4 em { color: var(--amber); font-style: italic; font-weight: 500; }
+  .amplifier-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .amplifier-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 4px 10px;
+    background: var(--bg-panel-3);
+    color: var(--text-mid);
+    border: 1px solid var(--border-bright);
+    letter-spacing: 0.05em;
+  }
+  .amplifier-tag.tier-1 { border-color: var(--amber); color: var(--amber-bright); }
+  .amplifier-tag.tier-2 { border-color: var(--federal); color: #b07cd4; }
+  .amplifier-tag.tier-3 { border-color: var(--inst); color: #6ebfff; }
+  .amplifier-tag.tier-4 { opacity: 0.75; }
+
+  /* ===== ACCOUNT CARDS ===== */
+  .tier-section {
+    margin-bottom: 60px;
+  }
+  .tier-header {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .tier-header em { color: var(--amber); font-style: italic; font-weight: 400; }
+  .tier-header .count-badge {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .tier-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 20px;
+  }
+
+  .account-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .account-card {
+    background: var(--bg-panel);
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: background 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .account-card:hover { background: var(--bg-panel-2); }
+  .account-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .account-handle {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    word-break: break-all;
+  }
+  .account-handle.pseudonymous { color: var(--text-mid); }
+  .account-badge {
+    font-family: var(--mono);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 2px 6px;
+    border: 1px solid;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+  .badge-org { color: var(--amber-bright); border-color: var(--amber); }
+  .badge-media { color: #b07cd4; border-color: var(--federal); }
+  .badge-public { color: var(--reform); border-color: var(--reform); }
+  .badge-pseudo { color: var(--text-dim); border-color: var(--border-bright); }
+  .badge-official { color: var(--inst); border-color: var(--inst); }
+
+  .account-name {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+  .account-role {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .account-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+  .account-meta strong { color: var(--text-mid); font-weight: 500; }
+  .account-claims {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .claim-pill {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    background: var(--bg-panel-3);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .claim-pill:hover { color: var(--amber-bright); border-color: var(--amber); }
+
+  .account-card.pseudonymous-card {
+    background: var(--bg);
+    opacity: 0.85;
+  }
+  .account-card.pseudonymous-card:hover { opacity: 1; background: var(--bg-panel); }
+
+  .directory-note {
+    background: var(--bg-panel);
+    border: 1px dashed var(--border-bright);
+    padding: 24px 28px;
+    margin-bottom: 32px;
+  }
+  .directory-note h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--amber-bright);
+    margin-bottom: 10px;
+  }
+  .directory-note p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+  .directory-note p strong { color: var(--text); }
+
+  /* ===== SOURCE HIERARCHY STRIP ===== */
+  .source-hierarchy {
+    max-width: 1400px;
+    margin: 60px auto 0;
+    padding: 60px 32px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .source-hierarchy h3 {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .source-hierarchy h3 em { color: var(--amber); font-style: italic; font-weight: 400; }
+  .source-hierarchy .sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 24px;
+  }
+  .hierarchy-table {
+    display: grid;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .hierarchy-row {
+    display: grid;
+    grid-template-columns: 50px 70px 1fr 2fr;
+    gap: 20px;
+    padding: 14px 20px;
+    background: var(--bg);
+    align-items: baseline;
+  }
+  .hierarchy-row.head {
+    background: var(--bg-panel-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+  }
+  .hierarchy-rank {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--amber-bright);
+    font-weight: 700;
+  }
+  .hierarchy-stars {
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .hierarchy-source {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .hierarchy-note {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+
+  /* ===== CONVICTION PIPELINE ===== */
+  .pipeline {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+  .pipeline-header {
+    margin-bottom: 32px;
+  }
+  .pipeline-header h3 {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .pipeline-header h3 em { color: var(--amber); font-style: italic; font-weight: 400; }
+  .pipeline-header .sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .pipeline-stages {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .pipeline-stage {
+    background: var(--bg-panel);
+    padding: 22px 20px;
+    border-top: 3px solid;
+    position: relative;
+  }
+  .pipeline-stage:nth-child(1) { border-top-color: #8A9AB0; }
+  .pipeline-stage:nth-child(2) { border-top-color: var(--amber); }
+  .pipeline-stage:nth-child(3) { border-top-color: var(--amber-bright); }
+  .pipeline-stage:nth-child(4) { border-top-color: var(--critical); }
+  .pipeline-stage:nth-child(5) { border-top-color: var(--critical-bright); }
+  .pipeline-stage .year {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.14em;
+    margin-bottom: 10px;
+  }
+  .pipeline-stage .stage-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .pipeline-stage .stage-desc {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 32px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 960px) {
+    .topnav-inner { padding: 12px 20px; }
+    .hero, .view-toggle, .section-wrap, .source-hierarchy, .pipeline { padding-left: 20px; padding-right: 20px; }
+    .view-btn { font-size: 18px; padding: 12px 16px 16px; }
+    .claim-header { grid-template-columns: 1fr auto; }
+    .claim-num { display: none; }
+    .claim-body { padding: 0 20px 24px; }
+    .claim-grid { grid-template-columns: 1fr; }
+    .pipeline-stages { grid-template-columns: 1fr; }
+    .hierarchy-row { grid-template-columns: 40px 50px 1fr; }
+    .hierarchy-note { grid-column: 1 / -1; padding-top: 4px; }
+    .search-box { width: 100%; margin-left: 0; margin-top: 8px; }
+    .search-box input { width: 100%; }
+  }
+  @media (max-width: 600px) {
+    .account-grid { grid-template-columns: 1fr; }
+    .nav-status { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========= NAV ========= -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="#" class="brand">
+      <div class="brand-mark">L</div>
+      <div class="brand-text">THE LEDGER <em>/ Claims &amp; Accounts</em></div>
+    </a>
+    <div class="nav-right">
+      <a href="alberta_forensic_roadmap.html" class="nav-back">← Back to The Web</a>
+      <div class="nav-status">
+        <span class="pulse"></span>
+        <span>Living Registry · April 2026</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ========= HERO ========= -->
+<section class="hero">
+  <div class="hero-meta">
+    <span>Claim Registry</span>
+    <span class="line"></span>
+    <span>Ecosystem Directory</span>
+    <span class="line"></span>
+    <span>Counter-Evidence</span>
+  </div>
+
+  <h1>
+    <span class="line1">Every claim,</span>
+    <span class="line2">fact-checked.</span>
+  </h1>
+
+  <p class="hero-lede">
+    A structured registry of the core talking points pushed by Alberta's separation and pro-UCP ecosystem, with <strong>primary-source counter-evidence placed directly adjacent to each claim</strong>. Below that, a directory of the ecosystem itself—organisations, media outlets, and individual amplifier accounts—grouped by tier and function. The target of this document is not any individual; it is the <strong>claim</strong>. The accounts are catalogued because they amplify the claims, and the ecosystem's structure is itself evidence.
+  </p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">27</div>
+      <div class="hero-stat-label">Core talking points</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">73</div>
+      <div class="hero-stat-label">Accounts catalogued</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">7</div>
+      <div class="hero-stat-label">Claim categories</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">★★★</div>
+      <div class="hero-stat-label">Primary source hierarchy</div>
+    </div>
+  </div>
+
+  <!-- METHODOLOGY DISCLOSURE -->
+  <div class="method-disclosure">
+    <div class="lbl">Methodology &amp; Standards</div>
+    <h3>How this document is built, and what it will not do.</h3>
+    <ul>
+      <li><strong>The target is the claim, not the person.</strong> The same claim is pushed by dozens of accounts; the counter-evidence exists independently of who says it. This page is structured around the claim as the primary unit; accounts are the amplifier map.</li>
+      <li><strong>Direct attribution only for public figures and registered organisations.</strong> Elected officials, registered political entities, media outlets, and accounts that have branded themselves as public political actors. Their statements are public acts.</li>
+      <li><strong>Pseudonymous accounts stay pseudonymous.</strong> Handles are catalogued as they appear; no attempt is made to unmask. Their role in the ecosystem is recorded at the tier level, not the individual-identity level.</li>
+      <li><strong>Counter-evidence requires sources rated ★★☆ or higher.</strong> Government data, peer-reviewed research, and court rulings are the backbone. Advocacy documents and anecdotes are marked as such on both sides.</li>
+      <li><strong>This is a living document.</strong> Individual-account specific-claim attribution requires dated screenshot / URL evidence collected through the project's cross-platform research pipeline. Slots marked <em>"attribution pending"</em> are intentional—they get filled as evidence arrives, not before.</li>
+      <li><strong>Legitimate grievances are acknowledged.</strong> On every talking point, the "what's accurate" block goes <em>first</em>. Credibility depends on conceding what is real before examining what is exaggerated or false.</li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- ========= VIEW TOGGLE ========= -->
+<div class="view-toggle">
+  <button class="view-btn active" data-view="claims">
+    By <em>Claim</em><span class="count" id="claimCount">· 8 talking points</span>
+  </button>
+  <button class="view-btn" data-view="accounts">
+    By <em>Account</em><span class="count" id="accountCount">· directory</span>
+  </button>
+</div>
+
+<!-- ========= CLAIMS VIEW ========= -->
+<section class="view-panel active" id="viewClaims">
+  <div class="section-wrap">
+    <div class="filter-bar" id="claimFilterBar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-chip active" data-category="all">All</button>
+      <button class="filter-chip" data-category="separation">Separation</button>
+      <button class="filter-chip" data-category="fiscal">Fiscal</button>
+      <button class="filter-chip" data-category="health">Health</button>
+      <button class="filter-chip" data-category="energy">Energy</button>
+      <button class="filter-chip" data-category="social">Social / Education</button>
+      <button class="filter-chip" data-category="democracy">Democracy</button>
+      <button class="filter-chip" data-category="governance">Governance</button>
+    </div>
+
+    <div id="claimsContainer"></div>
+  </div>
+</section>
+
+<!-- ========= ACCOUNTS VIEW ========= -->
+<section class="view-panel" id="viewAccounts">
+  <div class="section-wrap">
+
+    <div class="directory-note">
+      <h4>About this directory</h4>
+      <p><strong>Tiers 1&ndash;3 are registered organisations and public media outlets.</strong> Their positions are documented from official statements, platform content, and public records. Tier 4 is an index of individual amplifier accounts as they appear in the ecosystem; their role is recorded (convoy-pipeline, APP-adjacent, separation-amplifier, etc.) but individual specific-claim attribution is marked as <em>"attribution pending"</em> until screenshot-level evidence is captured through the project's cross-platform research workflow.</p>
+    </div>
+
+    <div class="filter-bar" id="accountFilterBar">
+      <span class="filter-label">Tier:</span>
+      <button class="filter-chip active" data-tier="all">All</button>
+      <button class="filter-chip" data-tier="1">1 · Political</button>
+      <button class="filter-chip" data-tier="2">2 · Media</button>
+      <button class="filter-chip" data-tier="3">3 · Social Conservative</button>
+      <button class="filter-chip" data-tier="4">4 · Individual</button>
+      <button class="filter-chip" data-tier="official">Official UCP/CPC</button>
+      <div class="search-box">
+        <input type="text" id="accountSearch" placeholder="search handle or name...">
+      </div>
+    </div>
+
+    <div id="accountsContainer"></div>
+  </div>
+</section>
+
+<!-- ========= SOURCE HIERARCHY ========= -->
+<section class="source-hierarchy">
+  <h3>The source <em>hierarchy</em>.</h3>
+  <div class="sub">Every counter-evidence item on this page is ranked against this standard. Their strongest sources are at the top; their weakest, at the bottom.</div>
+
+  <div class="hierarchy-table">
+    <div class="hierarchy-row head">
+      <div>#</div><div>Rating</div><div>Source</div><div>Note</div>
+    </div>
+    <div class="hierarchy-row">
+      <div class="hierarchy-rank">1</div>
+      <div class="hierarchy-stars source-star-3">★★★</div>
+      <div class="hierarchy-source">SCC Quebec Secession Reference (1998)</div>
+      <div class="hierarchy-note">Binding jurisprudence. Omits: "no unilateral right" + minority protection requirements.</div>
+    </div>
+    <div class="hierarchy-row">
+      <div class="hierarchy-rank">2</div>
+      <div class="hierarchy-stars source-star-3">★★★</div>
+      <div class="hierarchy-source">Elections Alberta / Citizen Initiative Act</div>
+      <div class="hierarchy-note">Procedural facts. Omits: referendum is advisory only.</div>
+    </div>
+    <div class="hierarchy-row">
+      <div class="hierarchy-rank">3</div>
+      <div class="hierarchy-stars source-star-3">★★★</div>
+      <div class="hierarchy-source">StatsCan / Alberta Finance data</div>
+      <div class="hierarchy-note">Baselines accurate. Interpretation as "theft" is ideological framing.</div>
+    </div>
+    <div class="hierarchy-row">
+      <div class="hierarchy-rank">4</div>
+      <div class="hierarchy-stars source-star-2">★★☆</div>
+      <div class="hierarchy-source">Reputable polls (Angus Reid, Pollara, Abacus)</div>
+      <div class="hierarchy-note">Numbers accurate. They cite minority "yes" and omit majority "no."</div>
+    </div>
+    <div class="hierarchy-row">
+      <div class="hierarchy-rank">5</div>
+      <div class="hierarchy-stars source-star-2">★★☆</div>
+      <div class="hierarchy-source">Fraser Institute net contribution studies</div>
+      <div class="hierarchy-note">Data-driven but ideologically scoped; omits shared national benefits.</div>
+    </div>
+    <div class="hierarchy-row">
+      <div class="hierarchy-rank">6</div>
+      <div class="hierarchy-stars source-star-2">★★☆</div>
+      <div class="hierarchy-source">CoRE Red Deer SCS study (2026)</div>
+      <div class="hierarchy-note">Government-funded, self-described "inconclusive," contradicted by broader literature.</div>
+    </div>
+    <div class="hierarchy-row">
+      <div class="hierarchy-rank">7</div>
+      <div class="hierarchy-stars source-star-1">★☆☆</div>
+      <div class="hierarchy-source">APP "Value of Freedom" fiscal plan</div>
+      <div class="hierarchy-note">Advocacy document; not audited; contradicted by every independent analysis.</div>
+    </div>
+    <div class="hierarchy-row">
+      <div class="hierarchy-rank">8</div>
+      <div class="hierarchy-stars source-star-1">★☆☆</div>
+      <div class="hierarchy-source">Anecdotal / canvassing / "trust me"</div>
+      <div class="hierarchy-note">No verifiable backing; purely persuasive.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========= CONVICTION PIPELINE ========= -->
+<section class="pipeline">
+  <div class="pipeline-header">
+    <h3>The conviction <em>pipeline</em>.</h3>
+    <div class="sub">Convoy → Sovereignty · 2020–2026 · A five-stage ideological migration</div>
+  </div>
+  <div class="pipeline-stages">
+    <div class="pipeline-stage">
+      <div class="year">2020–2021</div>
+      <div class="stage-title">Anti-Mandate</div>
+      <div class="stage-desc">COVID mandate anger reframed as "government tyranny." Foundation for every later stage.</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="year">2022</div>
+      <div class="stage-title">Convoy / Coutts</div>
+      <div class="stage-desc">Freedom Convoy and Coutts blockade. "We stood up and won" becomes core narrative.</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="year">2022–2023</div>
+      <div class="stage-title">TBA Capture</div>
+      <div class="stage-desc">Kenney ousted at 51.4% review. Smith installed via TBA mobilisation. "We can change things."</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="year">2023–2024</div>
+      <div class="stage-title">Within → Without</div>
+      <div class="stage-desc">Sovereignty Act passed. "Within Canada" not enough. APP petition drive begins.</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="year">2025–2026</div>
+      <div class="stage-title">Referendum</div>
+      <div class="stage-desc">Petition signatures collected. October 2026 referendum architecture built. "Inevitable independence" narrative.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Calgary · Independent Research · Evidence-First · No Affiliation · Living Document
+</footer>
+
+<!-- ============================================================
+     DATA
+     ============================================================ -->
+<script>
+
+// ============================================================
+// CLAIMS — from CONSERVATIVE_TALKING_POINTS_AND_PERSONALITIES.md
+// ============================================================
+const CLAIMS = [
+  {
+    "id": "atm",
+    "num": "01",
+    "category": "fiscal",
+    "short": "Alberta is Canada's <em>ATM</em>",
+    "full": "Alberta contributed $244.6B more in federal taxes than it received in spending (2007–2022). Equalisation is theft. Independence retains this wealth.",
+    "verdict": "misleading",
+    "verdictTag": "Framing",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Fraser Institute reports",
+        "tag": "BIAS",
+        "note": "Conservative/market-oriented; corporate/energy ties"
+      },
+      {
+        "stars": 3,
+        "name": "StatsCan Provincial Economic Accounts",
+        "tag": "GOV",
+        "note": "Baselines accurate"
+      },
+      {
+        "stars": 3,
+        "name": "Alberta Finance historical estimates",
+        "tag": "GOV",
+        "note": "Baselines accurate"
+      }
+    ],
+    "accurate": [
+      "The raw net contribution figure is largely correct.",
+      "Alberta's higher incomes, employment rates, and younger demographics drive higher federal tax payments.",
+      "Alberta has received negligible equalisation since 1965."
+    ],
+    "omitted": [
+      "Much of the \"net outflow\" funds national programs Alberta also uses (defence, EI, border security, Coast Guard, diplomacy).",
+      "The gap partly reflects Alberta's own low provincial taxes (no PST), not just federal policy.",
+      "2020 showed temporary net federal inflow during COVID—conveniently excluded.",
+      "Equalisation is a small fraction of total federal spending—framing as \"direct transfer to Quebec\" is misleading."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Trevor Tombe (UCalgary School of Public Policy)",
+        "tag": "PR",
+        "note": "Imbalance attributed to economic success + structural factors, not \"theft.\""
+      },
+      {
+        "stars": 3,
+        "name": "IRPP / Policy Options analyses",
+        "tag": "PR",
+        "note": "Per-capita federal spending comparable when adjusted for demographics."
+      }
+    ],
+    "verdictText": "Raw numbers accurate. <em>Interpretation as \"exploitation\" is ideological framing that omits shared national benefits and Alberta's own fiscal choices.</em>",
+    "amplifiers": {
+      "tier1": [
+        "@ABProsperityPrj",
+        "@stayfreealberta",
+        "@Alberta_UCP"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard",
+        "The Canadian Story"
+      ],
+      "tier4": "Most Tier-4 sovereignty amplifiers"
+    }
+  },
+  {
+    "id": "prosperity",
+    "num": "02",
+    "category": "fiscal",
+    "short": "Independence makes Alberta <em>rich</em>",
+    "full": "The \"Value of Freedom\" draft fiscal plan (APP, July 2025) projects $23–45B surplus, tax elimination, and prosperity through retained federal revenue + oil growth.",
+    "verdict": "debunked",
+    "verdictTag": "Fantasy Math",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "\"Value of Freedom\" Draft Fiscal Plan (APP, July 2025)",
+        "tag": "ADV",
+        "note": "Promotional; not audited or peer-reviewed"
+      },
+      {
+        "stars": 3,
+        "name": "StatsCan baseline data",
+        "tag": "GOV",
+        "note": "Used selectively—baselines only"
+      }
+    ],
+    "accurate": [
+      "Current federal revenue collected in Alberta (~$68–75B) and provincial budget figures are real."
+    ],
+    "omitted": [
+      "<strong>National debt share:</strong> Alberta's proportional share would be $75–238B (Tombe)—completely absent from plan.",
+      "<strong>New institutional costs:</strong> military, borders, diplomacy, currency, central bank, foreign service, coast guard—dramatically underestimated.",
+      "<strong>Trade disruption:</strong> Canada handles ~80%+ of Alberta's exports; landlocked renegotiation would take years.",
+      "<strong>Credit downgrade:</strong> new sovereign would face massive borrowing cost increases.",
+      "<strong>CPP transfer:</strong> plan claims 53% ($167–183B); Chief Actuary says 20–25% ($5–10B overestimate).",
+      "Oil growth to 9.5M bbl/day by 2045 ignores energy transition, global demand shifts, ESG pressures.",
+      "<strong>Double-counting:</strong> treats pension investment returns as general revenue."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Trevor Tombe (Hub / Macdonald-Laurier 2025)",
+        "tag": "PR",
+        "note": "\"Fantasy math\"; surplus evaporates under realistic assumptions."
+      },
+      {
+        "stars": 3,
+        "name": "Chief Actuary of Canada (2024)",
+        "tag": "GOV",
+        "note": "CPP transfer would be 20–25%, not 53%."
+      },
+      {
+        "stars": 2,
+        "name": "CSIS / security analyses",
+        "tag": "GOV",
+        "note": "Separation risks ~$130B GDP loss over a decade."
+      },
+      {
+        "stars": 2,
+        "name": "Calgary Chamber of Commerce survey",
+        "tag": "SURVEY",
+        "note": "28% of businesses say operations impacted."
+      }
+    ],
+    "verdictText": "<em>Advocacy document with optimistic assumptions contradicted by every independent economic analysis.</em> No peer-reviewed support exists for the surplus claims.",
+    "amplifiers": {
+      "tier1": [
+        "@ABProsperityPrj",
+        "@JeffreyRWRath",
+        "@MitchSylvestre6",
+        "@stayfreealberta"
+      ],
+      "tier2": [
+        "The Canadian Story",
+        "APP Podcast",
+        "FACTSMTR Substack"
+      ],
+      "tier4": "APP core amplifiers"
+    }
+  },
+  {
+    "id": "legal",
+    "num": "03",
+    "category": "separation",
+    "short": "We have the <em>legal right</em> to separate",
+    "full": "SCC Quebec Secession Reference (1998) confirms the right. Petition + referendum = path to independence.",
+    "verdict": "cherry",
+    "verdictTag": "Cherry-Picked",
+    "theirSources": [
+      {
+        "stars": 3,
+        "name": "SCC Reference re Secession of Quebec (1998)",
+        "tag": "GOV",
+        "note": "Binding advisory opinion"
+      },
+      {
+        "stars": 3,
+        "name": "Elections Alberta / Citizen Initiative Act",
+        "tag": "GOV",
+        "note": "Process mechanics"
+      },
+      {
+        "stars": 2,
+        "name": "Rath court arguments",
+        "tag": "ADV",
+        "note": "Selective emphasis"
+      }
+    ],
+    "accurate": [
+      "A clear majority on a clear question triggers a duty to negotiate.",
+      "Alberta courts have allowed the petition process to proceed."
+    ],
+    "omitted": [
+      "<strong>SCC explicitly ruled NO unilateral secession right</strong>—requires constitutional amendment with consent of other provinces.",
+      "Negotiations must include <strong>all parties including Indigenous peoples</strong> (Treaty 6/7/8, predating Alberta's existence).",
+      "Clarity Act (federal) sets additional bars.",
+      "<strong>Even a successful referendum is advisory only</strong>—does not force separation.",
+      "First Nations court challenge filed April 2026 argues violation of treaty rights and duty to consult.",
+      "Lukaszuk counter-petition: 456K signatures (2.5× the separation threshold)—government stalled in committee."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "SCC Reference itself (full text)",
+        "tag": "GOV",
+        "note": "Emphasises federalism, rule of law, minority protections."
+      },
+      {
+        "stars": 3,
+        "name": "Justice Feasby ruling (Dec 2025)",
+        "tag": "GOV",
+        "note": "Found separation petition unconstitutional. Bill 14 overrode."
+      },
+      {
+        "stars": 3,
+        "name": "Constitutional scholars (Adams, Hardcastle)",
+        "tag": "PR",
+        "note": "\"Unprecedented\" Cabinet power; bypassing courts."
+      }
+    ],
+    "verdictText": "Right to ask exists. <em>Right to unilaterally leave does not.</em> Bill 14 was engineered specifically to bypass a court ruling that found the petition unconstitutional.",
+    "amplifiers": {
+      "tier1": [
+        "@ABProsperityPrj",
+        "@JeffreyRWRath",
+        "@stayfreealberta"
+      ],
+      "tier2": [
+        "Keith Wilson YouTube",
+        "Western Standard",
+        "Rebel News"
+      ],
+      "tier4": "Separation-dedicated amplifiers"
+    }
+  },
+  {
+    "id": "polls",
+    "num": "04",
+    "category": "separation",
+    "short": "Polls show <em>growing momentum</em>",
+    "full": "Support is rising and unstoppable—27–29% yes, 55% of UCP voters.",
+    "verdict": "cherry",
+    "verdictTag": "Cherry-Picked",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Angus Reid (Feb 2026): 29% yes/lean",
+        "tag": "POLL",
+        "note": "Professional polling"
+      },
+      {
+        "stars": 2,
+        "name": "Pollara (Mar 2026): 27% decided yes",
+        "tag": "POLL",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Abacus Data (Mar 2026): 26% support",
+        "tag": "POLL",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "The poll numbers themselves are accurately reported."
+    ],
+    "omitted": [
+      "<strong>64–73% oppose separation across all polls</strong>—this is the headline, not the minority \"yes.\"",
+      "Support drops significantly when transition costs are mentioned.",
+      "Some movement graphics have been fact-checked as misleading (flipping results).",
+      "\"Soft leaners\" disappear under scrutiny.",
+      "Angus Reid: 57% <strong>definite stay</strong> vs 8% definite yes.",
+      "Abacus: opposition is \"rock solid.\""
+    ],
+    "counterSources": [
+      {
+        "stars": 2,
+        "name": "The same polls (read in full)",
+        "tag": "POLL",
+        "note": "Show overwhelming opposition. No polling firm has found majority support."
+      }
+    ],
+    "verdictText": "<em>Minority support accurately reported but selectively framed.</em> The story is that ~70%+ of Albertans oppose separation.",
+    "amplifiers": {
+      "tier1": [
+        "@ABProsperityPrj",
+        "@stayfreealberta"
+      ],
+      "tier2": [
+        "Rebel News",
+        "The Canadian Story",
+        "Western Standard"
+      ],
+      "tier4": "All Tier-4 separation amplifiers"
+    }
+  },
+  {
+    "id": "smith-not-sep",
+    "num": "05",
+    "category": "separation",
+    "short": "Smith is <em>not a separatist</em>",
+    "full": "The Premier publicly supports a sovereign Alberta within Canada. The APP is independent civil society. She cannot control what private citizens advocate for.",
+    "verdict": "contradicted",
+    "verdictTag": "Actions Contradict",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Smith public statements",
+        "tag": "GOV",
+        "note": "On-record denials"
+      },
+      {
+        "stars": 1,
+        "name": "UCP messaging",
+        "tag": "ADV",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Smith has made on-record statements supporting Alberta within Canada."
+    ],
+    "omitted": [
+      "<strong>18 UCP MLAs (8 cabinet ministers)</strong> appear on separatist activity lists. NONE denied. NONE removed.",
+      "MLA Stephan called Canada \"a fake team\"—kept. MLA Guthrie demanded accountability—expelled.",
+      "<strong>Mitch Sylvestre is simultaneously APP CEO AND UCP constituency president.</strong> Not \"separate.\"",
+      "<strong>Bill 14 killed the pro-Canada petition (456K signatures) AND revived the separation petition</strong> courts had ruled unconstitutional.",
+      "Nathan Cooper (on separatist list) appointed Alberta's Washington representative.",
+      "<strong>Taxpayer money was used to hire lawyers fighting FOR the separatists in court.</strong>",
+      "Rob Anderson (Smith's Chief of Staff since October 2024) co-authored the Free Alberta Strategy. Every major item is now government policy.",
+      "Smith on record: \"The 'or else' is Dennis Modry. I talked to him as one of my first steps.\""
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "UCP caucus composition / Legislative Assembly records",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Hansard — Bill 14 debates",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Free Alberta Strategy (original document)",
+        "tag": "ADV",
+        "note": "Pre-existing blueprint now enacted as policy."
+      },
+      {
+        "stars": 3,
+        "name": "Elections Alberta constituency association filings",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "verdictText": "The APP <em>is</em> the UCP at the constituency level. The Chief of Staff's pre-existing blueprint is the current policy. <em>Every rhetorical denial is contradicted by a specific, documentable action.</em>",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "UCP-aligned amplifiers"
+    }
+  },
+  {
+    "id": "tax-cuts",
+    "num": "06",
+    "category": "fiscal",
+    "short": "Tax cuts <em>created jobs</em> and growth",
+    "full": "Alberta has the lowest taxes in Canada. The corporate tax reduction (12%→8%) drove economic growth and in-migration.",
+    "verdict": "contradicted",
+    "verdictTag": "Contradicted",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "UCP campaign material",
+        "tag": "ADV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Fraser Institute tax-competitiveness reports",
+        "tag": "BIAS",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "StatsCan interprovincial migration data",
+        "tag": "GOV",
+        "note": "Used selectively"
+      }
+    ],
+    "accurate": [
+      "Alberta's corporate tax rate is the lowest in Canada.",
+      "Net interprovincial in-migration is real and measurable.",
+      "Nominal GDP rose after 2022 (oil price recovery)."
+    ],
+    "omitted": [
+      "During the tax-cut period, Alberta ranked <strong>LAST</strong> among provinces on earnings, wages, employment growth, non-residential investment, GDP per capita.",
+      "The <strong>ONLY metric Alberta led nationally</strong> during the period: corporate profits (+145%).",
+      "Non-residential business investment: <strong>lowest since 1981</strong>.",
+      "The UCP itself created a $600M \"Alberta at Work\" program—implicit admission the cut didn't deliver.",
+      "Post-2022 GDP growth tracks global oil price recovery (Russia-Ukraine), not provincial tax policy.",
+      "Personal income-tax <strong>de-indexation (Bill 20, 2019)</strong> quietly raised taxes on AISH and low-income earners.",
+      "Budget 2026 projects a <strong>$9.4B deficit</strong>—during claimed \"growth.\""
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "StatsCan interprovincial comparisons",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Parkland Institute tax-cut analyses",
+        "tag": "BIAS",
+        "note": "Progressive academic"
+      },
+      {
+        "stars": 3,
+        "name": "Trevor Tombe analyses on Alberta fiscal structure",
+        "tag": "PR",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Budget 2026 deficit projection",
+        "tag": "GOV",
+        "note": "$9.4B during claimed growth"
+      }
+    ],
+    "verdictText": "The cut enriched corporate profits while failing every other indicator. <em>Migration is real but driven by labour-market pull and housing affordability, not tax rates.</em> The government's own \"Alberta at Work\" spending is the admission.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith",
+        "@CPC_HQ"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard",
+        "The Canadian Story"
+      ],
+      "tier4": "Pro-UCP fiscal amplifiers"
+    }
+  },
+  {
+    "id": "trillion-fled",
+    "num": "07",
+    "category": "fiscal",
+    "short": "$1 trillion <em>fled Canada</em> under Liberals",
+    "full": "The April 2026 RBC \"Capital Gains\" report proves over $1 trillion exited Canada due to Liberal policies. Tax cuts and deregulation are needed.",
+    "verdict": "misleading",
+    "verdictTag": "Misrepresented",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "RBC \"Capital Gains\" report (Apr 14 2026)",
+        "tag": "PRIMARY",
+        "note": "Misrepresented by political users"
+      },
+      {
+        "stars": 1,
+        "name": "Poilievre / CPC messaging",
+        "tag": "ADV",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "The net FDI outflow figure (~$1T over 2015–2024) is real as reported.",
+      "Canada does face investment-attraction challenges."
+    ],
+    "omitted": [
+      "<strong>RBC explicitly states</strong> the barriers are \"execution, predictability, and risk tolerance\"—<strong>NOT lack of money</strong>.",
+      "Canadian companies are sitting on <strong>$1 trillion+ in cash</strong>. The money exists.",
+      "Period includes external shocks unrelated to Canadian policy: 2015–16 oil collapse, 2018 Keystone leak, 2020–22 COVID, global tech/AI capital reallocation.",
+      "RBC explicitly refuses to forecast demand, prices, or labour—the variables the political argument depends on.",
+      "<strong>2024–25 FDI into Canada hit ~$100B—highest since 2015</strong> and the first year in a decade where inflow exceeded outflow.",
+      "RBC CEO Dave McKay publicly: \"I see more interest in Canada than I've seen in two decades.\"",
+      "RBC itself is committing $1B to Canadian-company investment.",
+      "The RBC report cites the Canada–Alberta MOU <strong>positively</strong> as reducing \"political sequencing risk.\"",
+      "Under IEA's most likely scenario, global oil demand peaks by 2030. RBC's \"step change\" oil scenario depends on demand IEA contradicts."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "RBC Capital Gains report — full text",
+        "tag": "PRIMARY",
+        "note": "Read honestly, not selectively."
+      },
+      {
+        "stars": 3,
+        "name": "Trevor Tombe, The Hub (Oct 2025)",
+        "tag": "PR",
+        "note": "Canadian US investment is NOT a \"gift\"—normal integration."
+      },
+      {
+        "stars": 2,
+        "name": "Markham Hislop / Thoughtful Energy Journalism (Apr 2026)",
+        "tag": "INV",
+        "note": "Detailed methodology critique."
+      },
+      {
+        "stars": 3,
+        "name": "IEA World Energy Outlook scenarios",
+        "tag": "INTL",
+        "note": "Oil demand peak by 2030 contradicts bullish RBC scenario."
+      }
+    ],
+    "verdictText": "The report does not say what the political framing claims. <em>It is forward-looking, partially praises current government direction, and refuses to forecast the variables the political argument depends on.</em> Tombe: \"That framing misses the mark.\"",
+    "amplifiers": {
+      "tier1": [
+        "@CPC_HQ",
+        "@Alberta_UCP"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "CPC-aligned fiscal amplifiers"
+    }
+  },
+  {
+    "id": "scs",
+    "num": "08",
+    "category": "health",
+    "short": "Safe injection sites <em>increase crime</em>",
+    "full": "SCS cause community disorder, enable addiction, and don't save lives. The \"Alberta Model\" is working—deaths dropped 39% from 2023 peak.",
+    "verdict": "debunked",
+    "verdictTag": "Debunked",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "UCP government 2020 impact report",
+        "tag": "GOV",
+        "note": "Methodology debunked"
+      },
+      {
+        "stars": 2,
+        "name": "CoRE Red Deer study (2026)",
+        "tag": "GOV",
+        "note": "Self-described \"inconclusive\""
+      },
+      {
+        "stars": 3,
+        "name": "Alberta death data",
+        "tag": "GOV",
+        "note": "Raw numbers only"
+      }
+    ],
+    "accurate": [
+      "Deaths did decline from the 2023 record peak.",
+      "The Red Deer study found no immediate death spike after closure."
+    ],
+    "omitted": [
+      "<strong>Andresen &amp; Boyd (2020)</strong> debunked the UCP's own 2020 report: \"flawed methodology\" and \"selective data.\"",
+      "<strong>InSite (Vancouver)</strong>—SCC-endorsed, extensively peer-reviewed: SCS reduce deaths.",
+      "Lethbridge (ARCHES closed Aug 2020): <strong>highest per-capita overdose rate in Canada</strong>.",
+      "Edmonton hit worst single month ever in March 2025 (87 deaths)—<strong>during</strong> the recovery model.",
+      "Carfentanil involvement jumped 10%→68% (2024–2025)—drug supply change, not policy success.",
+      "<strong>The 2023 record of 1,874 deaths happened after 4 years of UCP recovery-focused policy.</strong>"
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Cochrane Review (Werb et al., 2016)",
+        "tag": "PR",
+        "note": "No evidence compulsory treatment effective."
+      },
+      {
+        "stars": 3,
+        "name": "McMaster Forum systematic review (2023)",
+        "tag": "PR",
+        "note": "Involuntary treatment increases post-discharge death risk."
+      },
+      {
+        "stars": 3,
+        "name": "PMC systematic review (2022)",
+        "tag": "PR",
+        "note": "71.6 per 1,000 person-years overdose death rate 14 days post-discharge."
+      },
+      {
+        "stars": 3,
+        "name": "Alberta government's own data",
+        "tag": "GOV",
+        "note": "54,700 deaths prevented by naloxone, SCS, OAT (2019–2024)."
+      }
+    ],
+    "verdictText": "The \"crime\" claim is <em>debunked by peer-reviewed research</em>. The \"recovery model works\" claim is <em>contradicted by Alberta's own worst-ever death year occurring under that model</em>.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Pro-UCP health amplifiers"
+    }
+  },
+  {
+    "id": "ahs-bloated",
+    "num": "09",
+    "category": "health",
+    "short": "AHS was <em>bloated</em>—needed breaking up",
+    "full": "Alberta Health Services was a wasteful bureaucracy with too many managers. Restructuring into four agencies was necessary to fix wait times.",
+    "verdict": "contradicted",
+    "verdictTag": "Globally Praised",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Fraser Institute reports on Alberta healthcare",
+        "tag": "BIAS",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Shandro / Smith / LaGrange speeches",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      },
+      {
+        "stars": 1,
+        "name": "Manning Centre papers",
+        "tag": "ADV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "UCP AGM resolutions",
+        "tag": "PARTY",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Wait times were a real concern pre-restructuring.",
+      "The 2019 EY performance review did identify potential savings of $600M–$1.9B."
+    ],
+    "omitted": [
+      "<strong>Snowdon / GS1 Canada (2018):</strong> AHS ranked TOP 5 globally for supply-chain integration—alongside NHS England.",
+      "<strong>EY 2019 review praised AHS integration</strong>: \"many successes.\" Recommended OPTIMISING, not dismantling.",
+      "<strong>CIHI 2018–19:</strong> Alberta ranked #1 nationally for ER wait times AND #1 for hip-fracture surgeries within 48 hours.",
+      "<strong>89% public confidence</strong> (AHS Annual Report 2018–19).",
+      "AHS admin overhead was <strong>3.3%—the LOWEST in Canada</strong>.",
+      "<strong>Barker &amp; Church (2022):</strong> AHS outperformed Ontario's 14 LHINs on admin cost, ED waits, avoidable admissions.",
+      "<strong>Ontario is MOVING IN THE OPPOSITE DIRECTION</strong>—consolidating 14 LHINs into Ontario Health, copying Alberta.",
+      "Post-restructuring: admin spending RISING ($544M→$604M projected). $30M+ severance. 47.7% of new nurses under 35 leaving.",
+      "Scotland and New Zealand studied the AHS model as a reform benchmark.",
+      "Hospital FTEs per 1,000: Alberta DECREASED 4.1% while Canada INCREASED 8.6%."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "CIHI NACRS 2018–19",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "AHS Annual Report 2018–19",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "EY Performance Review (Feb 2020)",
+        "tag": "GOV",
+        "note": "Recommended optimisation, not dismantlement."
+      },
+      {
+        "stars": 3,
+        "name": "Barker &amp; Church (2022)",
+        "tag": "PR",
+        "note": "AHS outperformed Ontario fragmented model."
+      },
+      {
+        "stars": 2,
+        "name": "Snowdon / GS1 Canada integration study (2018)",
+        "tag": "INTL",
+        "note": "Top-5 globally."
+      },
+      {
+        "stars": 3,
+        "name": "CCPA / IRIS Mortality Study (Nov 2025)",
+        "tag": "PR",
+        "note": "25-country—higher private = higher mortality."
+      }
+    ],
+    "verdictText": "AHS was a model, not a mess. <em>International benchmarks, the government's own commissioned review, CIHI data, and comparative academic analysis all support this.</em> Ontario is rebuilding what Alberta is destroying.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Pro-restructuring amplifiers"
+    }
+  },
+  {
+    "id": "private-healthcare",
+    "num": "10",
+    "category": "health",
+    "short": "<em>Private healthcare</em> reduces wait times",
+    "full": "Bill 11 (parallel private system) and Bill 29 (private-pay diagnostics) give patients choice. Competition reduces public wait times.",
+    "verdict": "debunked",
+    "verdictTag": "Debunked",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Fraser Institute wait-time reports",
+        "tag": "BIAS",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "UCP government messaging",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      },
+      {
+        "stars": 1,
+        "name": "Alberta Enterprise Group papers",
+        "tag": "ADV",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Wait times ARE a real problem.",
+      "Some mixed systems internationally do function."
+    ],
+    "omitted": [
+      "<strong>Alberta's own data:</strong> hip-replacement benchmark compliance fell from <strong>65% to 38%</strong> since private expansion began.",
+      "<strong>UK 20-year study:</strong> every 1% private-sector expansion = <strong>2% increase in public wait times</strong>.",
+      "<strong>Ontario private surgeries cost 3.5× public</strong> equivalents (Parkland Institute).",
+      "<strong>Saskatchewan MRI:</strong> public waitlist DOUBLED in 4 years after private MRI opened.",
+      "<strong>Australia</strong> (closest Bill 11 analog): LONGER public waits than Canada's.",
+      "<strong>CMA position:</strong> \"Where parallel private system operates, both outcomes and access are worse.\"",
+      "Bill 11 creates ZERO new doctors or nurses. Private facilities poach from public.",
+      "Cancer wait times up 8–48% as result of staff shift to private.",
+      "Government DIRECTED preferential scheduling in private facilities—not market competition.",
+      "Agency nurse spend up <strong>3,000%</strong> under UCP."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "CCPA / IRIS Mortality Study (Nov 2025)",
+        "tag": "PR",
+        "note": "25 OECD countries—higher private delivery = HIGHER preventable mortality, LOWER life expectancy."
+      },
+      {
+        "stars": 3,
+        "name": "Alberta AHS hip-benchmark compliance data",
+        "tag": "GOV",
+        "note": "Fell 65%→38%."
+      },
+      {
+        "stars": 3,
+        "name": "Canadian Medical Association position statements",
+        "tag": "PROF",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Parkland Institute analyses (Longhurst)",
+        "tag": "BIAS",
+        "note": "Academic/Progressive"
+      },
+      {
+        "stars": 3,
+        "name": "UK NHS 20-year privatisation outcomes",
+        "tag": "PR",
+        "note": ""
+      }
+    ],
+    "verdictText": "Every comparable jurisdiction, every systematic review, and the CMA say the same: <em>privatisation INCREASES public waits</em>. The CCPA 25-country mortality study is the definitive evidence base.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard",
+        "The Canadian Story"
+      ],
+      "tier4": "Pro-privatisation amplifiers"
+    }
+  },
+  {
+    "id": "dynalife",
+    "num": "11",
+    "category": "health",
+    "short": "DynaLife privatisation <em>saved money</em>",
+    "full": "Outsourcing community lab services to DynaLife was efficient. Private operators deliver better service at lower cost.",
+    "verdict": "debunked",
+    "verdictTag": "$109M Loss",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "UCP government press releases",
+        "tag": "ADV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Original EY report projecting $102M savings",
+        "tag": "CONTRACTED",
+        "note": "Later found flawed by AG"
+      }
+    ],
+    "accurate": [
+      "The stated rationale was cost savings.",
+      "EY did project $102M in savings initially."
+    ],
+    "omitted": [
+      "<strong>Auditor General Wylie (Nov 2025)</strong> confirmed the privatisation cost <strong>$109 MILLION</strong> ($32M buyout + $77M sunk).",
+      "The <strong>EY report contained a MASSIVE calculation error</strong>—AG identified the flaw.",
+      "AHS <strong>internally re-ran the numbers</strong> before proceeding. Real savings: $18–36M, not $102M.",
+      "<strong>Government ordered AHS to proceed anyway</strong>, ignoring the internal math.",
+      "AG noted <strong>\"scope limitation\"</strong>—<strong>cabinet privilege</strong> suppressed documents, blocking the investigation.",
+      "Post-privatisation: <strong>145 patient-impacting errors in one month</strong> vs fewer than 25 previously.",
+      "<strong>EY has been awarded further Alberta contracts</strong>—including to assess Alberta Precision Laboratories (the entity bailed out after DynaLife collapsed)."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Office of the Auditor General Alberta (Nov 2025)",
+        "tag": "GOV",
+        "note": "Primary forensic review."
+      },
+      {
+        "stars": 3,
+        "name": "Global News (Nov 19, 2025)",
+        "tag": "NEWS",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Alberta Precision Laboratories bailout docs",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "verdictText": "Not a cost overrun—<em>a decision made in defiance of internal math, then shielded from investigation by cabinet privilege</em>. The consulting firm responsible for the error keeps getting contracts.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP"
+      ],
+      "tier2": [
+        "Pro-UCP outlets"
+      ],
+      "tier4": "Privatisation-aligned amplifiers"
+    }
+  },
+  {
+    "id": "recovery-model",
+    "num": "12",
+    "category": "health",
+    "short": "The <em>Alberta Recovery Model</em> works",
+    "full": "Overdose deaths declined from the 2023 peak. This proves abstinence-focused recovery works. The Compassionate Intervention Act will extend the success.",
+    "verdict": "contradicted",
+    "verdictTag": "Supply-Change Driven",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Alberta government statements",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      },
+      {
+        "stars": 3,
+        "name": "Raw death data (1,874 → ~1,189)",
+        "tag": "GOV",
+        "note": "Numbers only"
+      },
+      {
+        "stars": 2,
+        "name": "CoRE Red Deer study",
+        "tag": "GOV",
+        "note": "Limited, inconclusive"
+      }
+    ],
+    "accurate": [
+      "Deaths declined from the 2023 peak.",
+      "Some people do recover through abstinence-focused programs."
+    ],
+    "omitted": [
+      "<strong>The 2023 record of 1,874 deaths happened DURING the recovery model</strong>—the 4th year of UCP policy. Their own model produced Alberta's worst year.",
+      "Edmonton hit its worst single month ever (87 deaths, March 2025)—<strong>during</strong> the recovery model.",
+      "<strong>Carfentanil involvement jumped 10%→68% (2024–2025)</strong>. The decline is a supply-composition shift, not policy success.",
+      "<strong>ROSC / Cedars / Marshall Smith pipeline:</strong> $22M sole-source to ROSC Solutions; CEO McPherson formerly ran Cedars (BC) where Marshall Smith worked. Smith later became Alberta CoS and steered policy to the ROSC model.",
+      "Compassionate Intervention Act (effective May 2025): <strong>NO comprehensive post-implementation data released</strong>.",
+      "PChAD (youth forced-abstinence predecessor): ZERO tracked outcomes after 19 years.",
+      "<strong>CMAJ (Nov 2025):</strong> involuntary treatment = <strong>27× post-release overdose risk</strong>.",
+      "CBA Alberta formal warning: Act's broad \"family member\" definition creates weaponisation loopholes."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "CMAJ \"Involuntary treatment and risk\" (Nov 2025)",
+        "tag": "PR",
+        "note": "27× post-release fatal-poisoning risk."
+      },
+      {
+        "stars": 3,
+        "name": "CBA Alberta formal legal warning (May 2025)",
+        "tag": "PROF",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Drug Data Decoded FOI investigation",
+        "tag": "INV",
+        "note": "ROSC pipeline documentation."
+      },
+      {
+        "stars": 3,
+        "name": "Alberta Substance Use Surveillance System",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "McMaster Forum / PMC systematic reviews",
+        "tag": "PR",
+        "note": ""
+      }
+    ],
+    "verdictText": "Claiming credit for a drug-supply-driven decline while replacing peer-reviewed tools with unproven forced-treatment legislation the medical literature says <em>increases overdose risk 27-fold post-release</em>. The contractor-to-staffer-to-policy pipeline is documented.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Recovery-model amplifiers"
+    }
+  },
+  {
+    "id": "energy",
+    "num": "13",
+    "category": "energy",
+    "short": "Alberta energy <em>under attack</em>—deregulation works",
+    "full": "Federal carbon policies, pipeline blocks, and environmental regulations are killing Alberta's economy. Deregulation unleashes prosperity.",
+    "verdict": "contradicted",
+    "verdictTag": "Contradicted",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "Industry talking points",
+        "tag": "ADV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "UCP government statements",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      }
+    ],
+    "accurate": [
+      "Federal frustrations have some basis—pipeline delays were real."
+    ],
+    "omitted": [
+      "<strong>AFL / Sepulveda (Oct 2024):</strong> $24B in excess electricity costs since deregulation—unrefuted methodology.",
+      "<strong>TransAlta</strong> fined $56M for market manipulation (2010–2011), $150M USD California, $32.7M Brazeau (2025).",
+      "<strong>AESO data</strong> shows natural gas outages caused the Jan 2024 grid crisis—not renewables (Smith blamed renewables; AESO CEO replaced).",
+      "<strong>11 GW renewable projects cancelled</strong> ($30B+ lost investment, 24,000 job-years).",
+      "Farmers/landowners denied right to host wind/solar while O&amp;G access can't be refused.",
+      "NDP's carbon pricing KEPT 100% of revenue in Alberta—the approach that secured TMX."
+    ],
+    "counterSources": [
+      {
+        "stars": 2,
+        "name": "AFL / Sepulveda study (Oct 2024)",
+        "tag": "THINK",
+        "note": "$24B excess costs, unrefuted."
+      },
+      {
+        "stars": 3,
+        "name": "AESO official reports",
+        "tag": "GOV",
+        "note": "Contradicts renewable-blame narrative."
+      },
+      {
+        "stars": 3,
+        "name": "TransAlta regulatory findings",
+        "tag": "GOV",
+        "note": "Market manipulation across jurisdictions."
+      },
+      {
+        "stars": 2,
+        "name": "Pembina Institute + industry data",
+        "tag": "THINK",
+        "note": "11 GW cancelled, $30B lost."
+      }
+    ],
+    "verdictText": "Federal frustrations have some basis. But <em>Alberta's own deregulation has cost consumers $24B+, and the renewable moratorium destroyed $30B in investment</em>.",
+    "amplifiers": {
+      "tier1": [
+        "@ABDanielleSmith",
+        "@Alberta_UCP"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Pro-UCP energy amplifiers"
+    }
+  },
+  {
+    "id": "renewables-freedom",
+    "num": "14",
+    "category": "energy",
+    "short": "Renewable moratorium <em>protects farmland</em>",
+    "full": "The August 2023 moratorium on renewable energy development protects agricultural land, viewshed, and landowner choice.",
+    "verdict": "contradicted",
+    "verdictTag": "Inverse of Claim",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "UCP government press releases",
+        "tag": "ADV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Smith speeches / UCP rural caucus",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Curated examples of renewable-project disputes",
+        "tag": "ANECDOTE",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Some landowner concerns about reclamation bonds, setbacks, and consultation are legitimate and shared across jurisdictions."
+    ],
+    "omitted": [
+      "<strong>INVERSE of stated rationale:</strong> the moratorium DENIES landowners the right to host wind or solar on their own property.",
+      "<strong>Meanwhile, oil and gas surface access CANNOT be refused</strong> under the Surface Rights Act. A landowner can be forced to host an O&amp;G well but cannot choose to host a wind turbine.",
+      "11 GW of renewable projects cancelled. <strong>$30B+ in lost investment. 24,000 job-years</strong> destroyed.",
+      "<strong>AESO CEO replaced</strong> for publicly confirming the January 2024 grid crisis was caused by natural-gas generator outages, not renewables.",
+      "The \"freedom\" party's core policy <strong>prohibits private landowners from making their own property decisions</strong> in one domain while forcing acceptance in another.",
+      "The \"agricultural protection\" rationale is not applied to oil and gas infrastructure on the same farmland."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Alberta Surface Rights Act (text)",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "AESO Jan 2024 grid event reports",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Pembina Institute renewable investment analysis",
+        "tag": "THINK",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "AUC submissions and rulings",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "verdictText": "The stated justification is contradicted by the specific policy structure. <em>Landowners have LESS freedom over their land under the moratorium.</em> This is a restriction on landowner rights branded as their protection.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Energy-policy amplifiers"
+    }
+  },
+  {
+    "id": "parental",
+    "num": "15",
+    "category": "social",
+    "short": "<em>Parental rights</em>—government shouldn't tell parents how to raise kids",
+    "full": "Parents must be notified about name/pronoun changes, gender discussions, and school content. Schools are \"indoctrinating\" children with \"gender ideology.\"",
+    "verdict": "contradicted",
+    "verdictTag": "Contradicted",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "TBA / PCE / Liberty Coalition talking points",
+        "tag": "ADV",
+        "note": "Advocacy framing"
+      },
+      {
+        "stars": 2,
+        "name": "UCP AGM resolutions",
+        "tag": "PARTY",
+        "note": "~6,000 members directing policy for 4.6M Albertans"
+      }
+    ],
+    "accurate": [
+      "Some parents express genuine concern about school communications.",
+      "School board policies on notification vary and have been inconsistent."
+    ],
+    "omitted": [
+      "<strong>Medical/psychological consensus:</strong> forced disclosure to unsupportive parents increases suicide risk for trans youth.",
+      "<strong>CMA, AMA, Alberta Medical Association</strong> all oppose government interference in clinical decisions.",
+      "<strong>Justice Allison Kuntz injunction (June 2025):</strong> found \"irreparable harm to gender-diverse youth\"—overridden by notwithstanding clause.",
+      "<strong>Notwithstanding clause used 4 times in December 2025</strong>—including to override Alberta's own Bill of Rights and Human Rights Act.",
+      "Alberta suspended its own human rights protections at 2:20 AM \"under cover of darkness.\""
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Peer-reviewed research on trans youth outcomes",
+        "tag": "PR",
+        "note": "Forced disclosure increases suicide risk."
+      },
+      {
+        "stars": 3,
+        "name": "Justice Kuntz injunction (June 2025)",
+        "tag": "GOV",
+        "note": "\"Irreparable harm.\""
+      },
+      {
+        "stars": 3,
+        "name": "CMA / AMA / Alberta Medical Association",
+        "tag": "PROF",
+        "note": ""
+      }
+    ],
+    "verdictText": "\"Parental rights\" framing omits the medical consensus on harm. <em>The government used constitutional override powers to bypass a judge who found its own policies would cause \"irreparable harm.\"</em>",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP"
+      ],
+      "tier3": [
+        "TBA",
+        "PCE",
+        "Liberty Coalition Canada",
+        "Action4Canada",
+        "Alberta Parents' Union"
+      ],
+      "tier4": "Social-conservative network"
+    }
+  },
+  {
+    "id": "charter-schools",
+    "num": "16",
+    "category": "social",
+    "short": "Charter schools improve education via <em>choice</em>",
+    "full": "Charter school expansion gives parents options, drives quality through competition, and delivers better outcomes at lower cost.",
+    "verdict": "contradicted",
+    "verdictTag": "Insider Benefit",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "UCP Education Ministry statements",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      },
+      {
+        "stars": 2,
+        "name": "Fraser Institute school rankings",
+        "tag": "BIAS",
+        "note": ""
+      },
+      {
+        "stars": 1,
+        "name": "TBA / PCE materials",
+        "tag": "ADV",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Some parents want educational alternatives for legitimate reasons.",
+      "Some individual charter schools have strong academic outcomes.",
+      "Parental choice is a defensible principle in isolation."
+    ],
+    "omitted": [
+      "<strong>Rajan Sawhney's daughter Raman</strong> served on the STEM Innovation Academy board—which received <strong>$118M in taxpayer funding</strong>.",
+      "<strong>Rob Anderson</strong> (Smith's Chief of Staff): his family runs a charter school.",
+      "<strong>Caylan Ford and Lisa Davis</strong> (failed UCP candidates): both run charter schools, both benefited from UCP funding expansion.",
+      "<strong>ATA Budget 2025:</strong> public education underfunded by $910M; <strong>$66M specifically directed to charter/collegiate infrastructure</strong>.",
+      "Extensive UCP-connected <strong>lobbying pipeline</strong>: Jeff Wilson (ex-Wildrose MLA→FFCA→lobbyist), Monte Solberg (ex-federal Con MP), Sonia Kont + Christine Myatt (ex-UCP comms), Clancy Bouwman (ex-Kenney assistant), Peter Csillag (ex-UCP caucus).",
+      "Charters serve <strong>~8% of students but receive disproportionate capital funding</strong>.",
+      "Rob Anderson's <strong>mother</strong> (Jane Anderson) funded 1994 charter school legislation."
+    ],
+    "counterSources": [
+      {
+        "stars": 2,
+        "name": "ATA Budget 2025 analysis",
+        "tag": "PROF",
+        "note": "Teachers' union analysis."
+      },
+      {
+        "stars": 2,
+        "name": "IJF investigation (Angela Amato)",
+        "tag": "INV",
+        "note": "Charter lobbying documentation."
+      },
+      {
+        "stars": 3,
+        "name": "Alberta Lobbyist Registry",
+        "tag": "GOV",
+        "note": "Primary record of lobbyist filings."
+      },
+      {
+        "stars": 3,
+        "name": "STEM Innovation Academy funding records",
+        "tag": "GOV",
+        "note": "$118M taxpayer funding."
+      }
+    ],
+    "verdictText": "Structured rhetorically as public choice; operates as <em>subsidised benefit to UCP-connected families and their lobbyist-represented network</em>. Money flows from 92% of students (public) toward 8% (charter) via a lobbying pipeline dominated by UCP insiders.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP"
+      ],
+      "tier3": [
+        "TBA",
+        "PCE",
+        "Alberta Parents' Union"
+      ],
+      "tier4": "Charter-school advocacy amplifiers"
+    }
+  },
+  {
+    "id": "bill-25-neutrality",
+    "num": "17",
+    "category": "social",
+    "short": "Bill 25 removes <em>politics and ideology</em> from classrooms",
+    "full": "Schools should be ideologically neutral. Bill 25 (March 2026, Minister Nicolaides) protects students from activist teachers and curricular bias.",
+    "verdict": "contradicted",
+    "verdictTag": "Ministerial Control",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "UCP Education Ministry statements",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      },
+      {
+        "stars": 2,
+        "name": "UCP AGM resolutions on curriculum",
+        "tag": "PARTY",
+        "note": ""
+      },
+      {
+        "stars": 1,
+        "name": "Parents' rights advocacy materials",
+        "tag": "ADV",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Legitimate debates exist about curriculum content, age-appropriateness, and teacher conduct."
+    ],
+    "omitted": [
+      "Bill 25 <strong>bans ALL flags except Canadian, Albertan, and Franco-Albertan</strong> in schools—effectively banning Pride flags while permitting three designated flags.",
+      "Mandates <strong>national anthem playing</strong> in schools.",
+      "Grants the Minister <strong>veto power over school superintendent hiring</strong>.",
+      "Grants the Minister <strong>power over school naming</strong>.",
+      "<strong>Same structural template as Bill 20</strong> (municipal councillor dismissal), <strong>Bill 28</strong> (utility seizure), <strong>Bill 14</strong> (justice capture)—strip local democracy, vest authority in the minister.",
+      "OECD TALIS: Alberta teachers report highest global stress. ATA Pulse: 95% stressed, 94% pessimistic, 8% happy.",
+      "17–20% of teachers under 30 intend to leave within 5 years (OECD).",
+      "Despite promise of 3,000 new teachers, 86% of teachers saw NO extra staff.",
+      "<strong>Used the notwithstanding clause to end the teacher strike (Bill 2, 2025)</strong>, stripping collective bargaining."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Bill 25 statutory text",
+        "tag": "GOV",
+        "note": "Primary document."
+      },
+      {
+        "stars": 2,
+        "name": "Alberta Teachers' Association Pulse Survey",
+        "tag": "PROF",
+        "note": "5,700+ respondents."
+      },
+      {
+        "stars": 3,
+        "name": "Hansard debate record",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "OECD TALIS comparative teacher data",
+        "tag": "INTL",
+        "note": ""
+      }
+    ],
+    "verdictText": "Removing \"politics\" from classrooms by <em>embedding ministerial political control at every level</em>—hiring, naming, symbols, content. The specific flag ban plus compulsory anthem tells you which politics and which ideology are being removed, and which are being installed.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP"
+      ],
+      "tier3": [
+        "TBA",
+        "PCE",
+        "Alberta Parents' Union"
+      ],
+      "tier4": "Social-conservative amplifiers"
+    }
+  },
+  {
+    "id": "gerrymandering",
+    "num": "18",
+    "category": "democracy",
+    "short": "Just a <em>normal electoral boundary review</em>",
+    "full": "The 2026 electoral boundary reset is a routine review. The UCP is following the judge's advice. The process is independent and legitimate.",
+    "verdict": "contradicted",
+    "verdictTag": "Textbook Gerrymander",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Rob Anderson (UCP MLA) public statements",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      },
+      {
+        "stars": 1,
+        "name": "UCP caucus messaging",
+        "tag": "ADV",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Electoral boundary reviews do occur periodically in all Canadian jurisdictions."
+    ],
+    "omitted": [
+      "The independent Electoral Boundaries Commission delivered a <strong>majority report the UCP has chosen to ignore</strong> in favour of the minority report.",
+      "<strong>Greg Clark</strong>, commissioner on the most recent review, publicly responded to \"shocking events\"—a commissioner on record disagreeing.",
+      "<strong>Judge Miller's ruling explicitly stated it was NOT the commission's view</strong> that the UCP's approach was appropriate—yet UCP framed the ruling as \"the judge's advice.\"",
+      "<strong>Shaun Fluker (U of C law):</strong> \"Really bad for democracy. Once a majority government puts elected officials on the committee, you're entering the drain of gerrymandering.\"",
+      "The minority report would <strong>dilute urban votes</strong> in Red Deer, Lethbridge, Edmonton, and Calgary.",
+      "<strong>Section 3 of the Charter</strong> guarantees \"effective representation.\" Sec 3 <strong>cannot be bypassed using the notwithstanding clause</strong>—court review is inevitable.",
+      "Nenshi characterised the process as \"election rigging.\"",
+      "Pattern: UCP-dominated committee → sets aside commission report → creates special select MLA committee → redrawing lines ahead of next election.",
+      "Fixed election date was also <strong>changed from May to October</strong> (2024)."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Electoral Boundaries Commission majority report",
+        "tag": "GOV",
+        "note": "Primary document."
+      },
+      {
+        "stars": 2,
+        "name": "Greg Clark public statements",
+        "tag": "NAMED",
+        "note": "Commissioner on record."
+      },
+      {
+        "stars": 3,
+        "name": "Shaun Fluker (U of C law) public analysis",
+        "tag": "PR",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Charter of Rights, Section 3 jurisprudence",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Judge Miller ruling (full text)",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "verdictText": "The UCP is ignoring the commission's own majority report and replacing it with an MLA-majority committee redrawing lines—<em>the textbook definition of gerrymandering</em>. Section 3 means this ends up in court no matter what.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "UCP-aligned amplifiers"
+    }
+  },
+  {
+    "id": "notwithstanding",
+    "num": "19",
+    "category": "democracy",
+    "short": "The <em>notwithstanding clause</em> is legal—every province can use it",
+    "full": "Section 33 of the Charter is a legitimate constitutional tool. Its use is legal, democratic, and available to every province. Critics are partisan.",
+    "verdict": "contradicted",
+    "verdictTag": "Legal Establishment Opposed",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Smith and Amery public statements",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Sovereignty-side commentators",
+        "tag": "BIAS",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Section 33 is constitutional and exists.",
+      "Other provinces have invoked it (Quebec, Saskatchewan, Ontario notably)."
+    ],
+    "omitted": [
+      "<strong>All three Alberta Chief Justices</strong> issued an unprecedented <strong>joint public statement</strong> on judicial independence.",
+      "<strong>180+ Alberta lawyers</strong> signed an open letter.",
+      "<strong>CBA (Canadian Bar Association—40,000 members)</strong> publicly opposed the use pattern.",
+      "<strong>Former Alberta AG Jim Foster</strong> called for a <strong>criminal probe</strong>.",
+      "<strong>TWO former Justice Ministers</strong> co-wrote an open letter condemning Bill 14's AG-immunity.",
+      "Criminal Trial Lawyers Association, Democracy Watch, two law-school deans—all on record against.",
+      "<strong>Bill 14 attempted to legislate a court proceeding out of existence while the judge was hearing it</strong>—Justice Feasby: \"contrary to the rule of law,\" \"the Court cannot be silenced.\"",
+      "<strong>Used FOUR times in December 2025</strong>—to override Alberta's own Bill of Rights and Human Rights Act as applied to trans youth, end a teacher strike, insulate gender-care restrictions from judicial review.",
+      "Used at <strong>2:20 AM \"under cover of darkness\"</strong>.",
+      "<strong>Justice Kuntz injunction</strong> found \"irreparable harm to gender-diverse youth\"—the clause was then used to override that judicial finding."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Joint statement of the three Alberta Chief Justices",
+        "tag": "GOV",
+        "note": "Unprecedented."
+      },
+      {
+        "stars": 3,
+        "name": "Justice Feasby ruling (Dec 2025)",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Justice Kuntz injunction (June 2025)",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "CBA Alberta public statements",
+        "tag": "PROF",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Open letter from former AGs",
+        "tag": "NAMED",
+        "note": "Including Foster, Olson."
+      },
+      {
+        "stars": 3,
+        "name": "Constitutional law faculty (Adams, Hardcastle, Macfarlane)",
+        "tag": "PR",
+        "note": ""
+      }
+    ],
+    "verdictText": "The clause is legal. <em>Its specific pattern of use—four times in one month, including to override a ruling that would have protected children from harm—is what every level of the legal system has publicly opposed.</em> When the chief justices, the bar association, former AGs, and constitutional scholars all oppose a use of a tool, the problem is not with the legal profession.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Pro-notwithstanding amplifiers"
+    }
+  },
+  {
+    "id": "oversight-works",
+    "num": "20",
+    "category": "democracy",
+    "short": "Ethics oversight is <em>working</em>—no findings against Smith",
+    "full": "Institutional checks exist. No formal ethics findings have gone against the Premier. No criminal charges have been laid. Accusations are partisan.",
+    "verdict": "contradicted",
+    "verdictTag": "Investigators All Removed",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "UCP government messaging",
+        "tag": "ADV",
+        "note": ""
+      },
+      {
+        "stars": 1,
+        "name": "Absence of final rulings (cited as exoneration)",
+        "tag": "FALLACY",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Smith has not been criminally charged as of April 2026.",
+      "Some regulatory institutions continue to operate."
+    ],
+    "omitted": [
+      "<strong>NINE investigators and oversight figures have been removed or blocked since 2019. 100% of investigators removed. 100% of enablers promoted.</strong>",
+      "1. <strong>Lorne Gibson</strong>—Election Commissioner. Office ELIMINATED mid-investigation (Bill 22, 2019).",
+      "2. <strong>Marguerite Trussler</strong>—Ethics Commissioner. Contract NOT RENEWED after she found Smith in violation.",
+      "3. <strong>Dr. Deena Hinshaw</strong>—CMOH. Fired twice. Two senior physicians resigned in protest of political interference.",
+      "4. <strong>Athana Mentzelopoulos</strong>—AHS CEO. Fired by Zoom, 2 days before her scheduled AG briefing. Now subject of $12M SLAPP.",
+      "5. <strong>AHS Board</strong>—Dissolved twice. Replaced by single-person Official Administrator.",
+      "6. <strong>Peter Guthrie</strong>—Cabinet minister. Expelled for demanding procurement accountability.",
+      "7. <strong>Scott Sinclair</strong>—MLA. Expelled.",
+      "8. <strong>Doug Wylie</strong>—Auditor General. Extension DENIED. Replaced April 28–29, 2026.",
+      "9. <strong>Shawn McLeod</strong> (replacement Ethics Commissioner)—former deputy minister, sought UCP nomination.",
+      "<strong>Enabler promotions:</strong> Kaycee Madu (attempted police interference) → Deputy Premier. Dale McFee (police chief who received Madu's call; in $44K Mraiche luxury box) → top bureaucrat. Tyler Shandro (wife co-owned health-insurance brokerage) → Covenant Health board.",
+      "<strong>Time allocation:</strong> Half of ALL closure motions since 1971 used in 6 UCP years (Jared Wesley, U of A)."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Law Society of Alberta decisions (Madu, Shandro)",
+        "tag": "PROF",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Office of the Auditor General reports",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Kent Report on Madu interference",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Jared Wesley time-allocation data",
+        "tag": "PR",
+        "note": "U of A."
+      },
+      {
+        "stars": 3,
+        "name": "Hansard expulsion debates",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "verdictText": "The pattern IS the oversight, not the absence of findings. <em>Institutions don't fail randomly—they fail according to who's asking them the question.</em> Every investigator who asked is gone. Every actor who obstructed is promoted. The pattern is the evidence.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Pro-UCP amplifiers"
+    }
+  },
+  {
+    "id": "bill-14",
+    "num": "21",
+    "category": "democracy",
+    "short": "Bill 14 is <em>normal justice legislation</em>",
+    "full": "Bill 14 (December 2025) makes routine updates to the justice system and citizen-initiative process. Critics are politically motivated.",
+    "verdict": "contradicted",
+    "verdictTag": "Self-Protection Omnibus",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Minister Amery public statements",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 1,
+        "name": "UCP communications on the bill",
+        "tag": "ADV",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Citizen-initiative frameworks do require procedural provisions.",
+      "Legislatures update justice frameworks periodically."
+    ],
+    "omitted": [
+      "<strong>Grants the AG/Justice Minister IMMUNITY from Law Society sanctions.</strong>",
+      "<strong>Introduced ONE DAY before Justice Feasby ruled the APP separation petition unconstitutional</strong>—designed to override the ruling before it landed.",
+      "<strong>Killed the APP separation petition</strong> by treating it as \"never filed.\"",
+      "<strong>Transferred citizen-initiative control from the independent Chief Electoral Officer to the Justice Minister</strong>—partisan minister replacing non-partisan CEO.",
+      "<strong>Banned party names using \"conservative,\" \"liberal,\" \"reform,\" \"independent,\" \"wildrose\"</strong>—specifically to block Guthrie's new party.",
+      "<strong>Gave the Minister power to impose bylaws on the Alberta Law Foundation.</strong> Two directors removed → <strong>mass resignation of remaining directors followed</strong>.",
+      "Limited mandatory training the Law Society can impose on lawyers.",
+      "Increased election-candidacy signature requirements.",
+      "TWO former Justice Ministers wrote an open letter opposing it.",
+      "Former JM Olson: \"If the Law Society can't discipline a Justice Minister, there's something seriously wrong.\"",
+      "Lukaszuk: \"the most draconian, totalitarian piece of legislation I've ever seen.\"",
+      "Named <strong>\"Peterson Law\"</strong> by Smith and Amery (after Jordan Peterson)."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Bill 14 statutory text",
+        "tag": "GOV",
+        "note": "Primary document."
+      },
+      {
+        "stars": 3,
+        "name": "Justice Feasby ruling (Dec 2025)",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Alberta Law Foundation resignation statements",
+        "tag": "PROF",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Open letter from former Justice Ministers",
+        "tag": "NAMED",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "CBC coverage (Jan 2026)",
+        "tag": "NEWS",
+        "note": ""
+      }
+    ],
+    "verdictText": "A self-protection omnibus with at least eight distinct functions, dropped the day before a court ruling it was designed to overturn. <em>The man most exposed to Law Society complaints for Mraiche-related conflicts wrote the law making himself immune from Law Society complaints.</em>",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Pro-UCP amplifiers"
+    }
+  },
+  {
+    "id": "small-gov",
+    "num": "22",
+    "category": "governance",
+    "short": "UCP fights for <em>small government</em> and freedom",
+    "full": "Less government intervention, more personal freedom, Alberta sovereignty against federal overreach.",
+    "verdict": "contradicted",
+    "verdictTag": "Directly Contradicted",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "UCP messaging / campaign material",
+        "tag": "ADV",
+        "note": "Branding"
+      }
+    ],
+    "accurate": [
+      "Some UCP policies (Sovereignty Act, federal-agreement opt-outs) reduce federal authority <em>over the province</em>."
+    ],
+    "omitted": [
+      "<strong>Bill 20:</strong> provincial cabinet can dismiss elected municipal councillors.",
+      "<strong>Bill 14:</strong> killed a pro-Canada petition with 456K signatures; revived a separation petition courts ruled unconstitutional.",
+      "<strong>Provincial Priorities Act:</strong> province must approve all federal–municipal agreements.",
+      "<strong>Notwithstanding clause × 4 in one month.</strong>",
+      "<strong>Time allocation:</strong> half of all closure motions since 1971 used in 6 UCP years.",
+      "<strong>AHS restructuring:</strong> replaced elected board with single government appointee controlling $16.4B.",
+      "<strong>AG replaced:</strong> denied extension to finish investigation; replaced within 16 days.",
+      "<strong>Ethics rules:</strong> watered down gift policies; exempted political staff from Conflict of Interest Act.",
+      "<strong>Renewable moratorium:</strong> government told private landowners they <em>cannot</em> host wind/solar on their own land.",
+      "<strong>Bill 47:</strong> eliminated citizens' right to sue at-fault drivers; tribunal decisions \"not open to review in any court.\"",
+      "<strong>Bill 28:</strong> Municipal utility seizure powers.",
+      "<strong>Bill 25:</strong> Minister veto over school superintendents, flag restrictions, anthem mandate.",
+      "587 pages of FOIP records denied on recovery centre contracts."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Hansard / Alberta Legislative Assembly records",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Court filings and rulings",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Auditor General reports",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Jared Wesley (U of A)",
+        "tag": "PR",
+        "note": "Time-allocation data."
+      }
+    ],
+    "verdictText": "This is <em>the most government intervention in Alberta's modern history</em>. The \"freedom\" and \"small government\" branding is directly contradicted by documented actions across every policy area.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard",
+        "The Canadian Story"
+      ],
+      "tier4": "Most pro-UCP amplifiers"
+    }
+  },
+  {
+    "id": "municipal-reform",
+    "num": "23",
+    "category": "governance",
+    "short": "<em>Municipal reform</em> needed—cities were mismanaged",
+    "full": "Calgary and Edmonton were badly managed. Bill 20 and the Provincial Priorities Act bring needed accountability. Green Line was wasteful.",
+    "verdict": "contradicted",
+    "verdictTag": "Selective Accountability",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Smith / McIver speeches",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      },
+      {
+        "stars": 1,
+        "name": "UCP rural caucus messaging",
+        "tag": "ADV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Selective examples of municipal spending",
+        "tag": "ANECDOTE",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Municipal decisions have been legitimately controversial (Green Line, arena deals).",
+      "Property taxes are rising.",
+      "Infrastructure investment is genuinely difficult."
+    ],
+    "omitted": [
+      "<strong>Province demanded 20 years of documents</strong> from Calgary for a single water-main issue—then <strong>refused an Auditor General subpoena</strong> in the $614M AHS procurement scandal.",
+      "<strong>Independent panel on Calgary water main:</strong> ruled <strong>\"no one city council or staff member was to blame.\"</strong>",
+      "<strong>Education property tax raised 35% over 2 years by the province</strong>—cities take the public blame.",
+      "<strong>Green Line:</strong> Smith publicly \"100% committed\" August 2024—funding pulled September.",
+      "<strong>Canmore vacancy tax:</strong> upheld by courts TWICE—province <strong>overrode via Bill 28</strong>.",
+      "<strong>Municipal parties forced on Calgary/Edmonton</strong>—70% of Albertans opposed.",
+      "<strong>ABmunis:</strong> \"atmosphere of fear\" described by elected mayors.",
+      "<strong>Eric Adams (U of A):</strong> \"The province could make Edmonton and Calgary disappear if they wanted to through legislation.\"",
+      "<strong>Municipal Trilogy:</strong> Bill 20 (governance) + Bill 18 / Provincial Priorities Act (funding) + Bill 28 (assets) = complete provincial authority."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Independent water-main inquiry report",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "ABmunis and RMA public statements",
+        "tag": "PROF",
+        "note": "Municipal representative bodies."
+      },
+      {
+        "stars": 3,
+        "name": "Court rulings on Canmore vacancy tax",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Eric Adams, U of A constitutional law",
+        "tag": "PR",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Hansard debates on Bill 20, Bill 18, Bill 28",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "verdictText": "The selective accountability is the proof. <em>A government that demands 20 years of municipal records while refusing a subpoena in its own $614M scandal is not bringing accountability—it is centralising power.</em>",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Rural-caucus amplifiers"
+    }
+  },
+  {
+    "id": "wyant-no-interference",
+    "num": "24",
+    "category": "governance",
+    "short": "Wyant found <em>no political interference</em>",
+    "full": "The Wyant review was an independent investigation and found no evidence of political interference in health procurement. The government has been exonerated.",
+    "verdict": "contradicted",
+    "verdictTag": "Scope-Limited",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "UCP press releases citing the Wyant report",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Smith public statements",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "The Wyant report did not make findings of criminal wrongdoing.",
+      "Some contracts were found to meet emergency-procurement standards for 2020 PPE."
+    ],
+    "omitted": [
+      "<strong>Wyant himself admits</strong> he could not make \"definitive statements\"—<strong>no subpoena power, did not interview ministers, sensed information was withheld</strong>.",
+      "The scope of his review was <strong>limited by the government that commissioned him</strong>.",
+      "The emergency-procurement defence only covers <strong>2020 PPE</strong>. Scandal contracts—recovery centres, surgical procurement, Turkish meds, property flips, nephew hires—are 2023–2024.",
+      "<strong>August 11, 2023:</strong> house purchase + move-in + nephew hire on the SAME DAY. Zero work product across 3 years.",
+      "<strong>$49.2M of public funds held \"well over a year\" with ZERO product received.</strong> RSM forensic accountants could not verify the contract value.",
+      "<strong>Wyant addendum (March 2026):</strong> $7M unexplained contract increase—forensic accountants couldn't justify.",
+      "<strong>Dr. Lori Williams (MRU):</strong> the report's limitations make it unfit for the exoneration use it's been put to.",
+      "The <strong>RCMP investigation remains active</strong> with search warrants executed—investigation building, not absent evidence.",
+      "AHS Board dissolved, CEO fired 2 days before AG briefing, Bill 14 gave Justice Minister immunity—all consistent with active obstruction."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Wyant report — preamble admissions",
+        "tag": "GOV",
+        "note": "Primary document."
+      },
+      {
+        "stars": 3,
+        "name": "RSM forensic findings",
+        "tag": "GOV",
+        "note": "Contracted forensic accountants."
+      },
+      {
+        "stars": 2,
+        "name": "Dr. Lori Williams (MRU) analysis",
+        "tag": "PR",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Ongoing RCMP investigation (public)",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Auditor General Wylie interim work",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "verdictText": "Using a limited-scope review as exoneration while the criminal probe continues is the definition of misrepresenting a document. <em>Wyant's own admissions in the report's own preamble undercut the use being made of the report.</em> Nobody is charged during an active investigation—warrants are how evidence is gathered.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Western Standard",
+        "Pro-UCP outlets"
+      ],
+      "tier4": "Pro-UCP amplifiers"
+    }
+  },
+  {
+    "id": "gun-program",
+    "num": "25",
+    "category": "governance",
+    "short": "UCP <em>protects gun owners</em> from Ottawa",
+    "full": "Provincial resistance to the federal firearms buyback shields lawful gun owners from overreach. The UCP defends property rights.",
+    "verdict": "misleading",
+    "verdictTag": "Legal Paradox",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "UCP government messaging on federal firearms policy",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      },
+      {
+        "stars": 1,
+        "name": "APP and CPC amplification",
+        "tag": "ADV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Selective industry surveys",
+        "tag": "SURVEY",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "The federal buyback has legitimate policy critiques (cost, design, effectiveness).",
+      "Lawful Alberta gun owners have real concerns about process and fairness.",
+      "Provincial political space to disagree on federal policy exists."
+    ],
+    "omitted": [
+      "<strong>Firearms are SOLELY federal Criminal Code jurisdiction</strong> under Constitution Act 1867, s.91(27). Provinces <strong>cannot override</strong> federal criminal law on firearms.",
+      "The federal <strong>amnesty expires</strong>. After that, a prohibited weapon = Criminal Code offence, regardless of Alberta government posturing.",
+      "<strong>alberta.ca itself warns</strong> that an expired PAL means the holder <strong>cannot legally possess ANY firearms</strong>—an Alberta government page contradicting the political messaging.",
+      "The <strong>National Firearms Association</strong> confirms chief firearms officers CAN revoke licences.",
+      "<strong>7,334 Alberta firearms have already been declared</strong> under the federal program despite provincial resistance—owners chose compliance over posturing.",
+      "A Criminal Code conviction triggers federal prohibition orders that survive regardless of provincial policy.",
+      "The \"freedom\" party's defiance <strong>could criminalize the exact gun owners they claim to protect</strong>, by encouraging non-compliance with a law the province has no authority to override."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Constitution Act 1867, s.91(27)",
+        "tag": "GOV",
+        "note": "Foundational."
+      },
+      {
+        "stars": 3,
+        "name": "Criminal Code of Canada, firearms provisions",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "alberta.ca firearms licensing guidance",
+        "tag": "GOV",
+        "note": "Alberta's own page."
+      },
+      {
+        "stars": 3,
+        "name": "National Firearms Association public statements",
+        "tag": "PROF",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "RCMP / Canadian Firearms Program compliance statistics",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "verdictText": "The policy critique of the federal buyback is a legitimate debate. <em>The legal paradox is real and separate: a province cannot override federal criminal law, and encouraging non-compliance risks the exact gun owners the rhetoric claims to protect.</em>",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith",
+        "@CPC_HQ"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Firearm-policy amplifiers"
+    }
+  },
+  {
+    "id": "press-freedom",
+    "num": "26",
+    "category": "governance",
+    "short": "Press freedom complaints are <em>exaggerated</em>—just political disagreement",
+    "full": "Journalist complaints are normal political pushback. The government does not control private individuals or anonymous accounts. SLAPP suits are legitimate.",
+    "verdict": "contradicted",
+    "verdictTag": "Documented Pattern",
+    "theirSources": [
+      {
+        "stars": 1,
+        "name": "Smith office \"condemnations\" with no action",
+        "tag": "ADV",
+        "note": ""
+      },
+      {
+        "stars": 1,
+        "name": "UCP communications framing coverage as partisan",
+        "tag": "ADV",
+        "note": ""
+      }
+    ],
+    "accurate": [
+      "Political journalism is inherently adversarial.",
+      "Government has some latitude to dispute coverage.",
+      "Some critical coverage is partisan."
+    ],
+    "omitted": [
+      "<strong>Carrie Tait (Globe and Mail)</strong> was surveilled—photos at a dog park (July 10) and restaurant (July 12), posted on the anonymous \"The Brokedown\" X account.",
+      "Her <strong>phone number was spoofed</strong>.",
+      "<strong>David Wallace</strong> (self-described \"political fixer\") confirmed to the Globe he had been <strong>\"supplied with the photographs in advance\"</strong>.",
+      "Wallace told police (during the <strong>RCMP search of his home</strong>) he had been \"<strong>retained by Alberta lawyer Bryan Ward</strong>\"—who has represented Mraiche.",
+      "<strong>Smith's X account viewed Wallace's videos.</strong>",
+      "<strong>CAJ (Brent Jolly):</strong> \"bold-faced assault on press freedom.\"",
+      "<strong>IFJ (International Federation of Journalists)</strong> condemned the attacks.",
+      "<strong>Unifor:</strong> \"cowardly attempts to silence a journalist... direct threat to our press freedoms, Charter rights, Canadian democracy.\"",
+      "<strong>Shannon Phillips:</strong> \"It's a one-party state.\"",
+      "<strong>SLAPP pattern:</strong> $6M vs Pike/Breakdown (injunction shut down entire show); $12M vs Mentzelopoulos + Globe + Tait; $500K vs former UCP MLAs.",
+      "<strong>587+ pages of FOIP records denied</strong> on Mraiche/ROSC recovery-centre contracts."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "Globe and Mail investigative coverage (July 21, 2025+)",
+        "tag": "NEWS",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "CAJ (Canadian Association of Journalists)",
+        "tag": "PROF",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "IFJ International Federation of Journalists",
+        "tag": "INTL",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Unifor press freedom statement",
+        "tag": "PROF",
+        "note": "Union"
+      },
+      {
+        "stars": 3,
+        "name": "Hilary Young (UNB law) legal analysis",
+        "tag": "PR",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "RCMP search warrant records",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "Court filings in all four SLAPP matters",
+        "tag": "GOV",
+        "note": ""
+      }
+    ],
+    "verdictText": "Surveillance, phone spoofing, SLAPP suits over $18M combined, and 587+ pages of FOIP denial against a reporter investigating a $614M procurement scandal are not \"political disagreement.\" <em>When CAJ, IFJ, Unifor, and the Globe's own editorial board all independently describe the pattern as a threat to press freedom, the framing has collapsed.</em>",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Pro-UCP outlets"
+      ],
+      "tier4": "Pro-UCP amplifiers"
+    }
+  },
+  {
+    "id": "immigration-straining",
+    "num": "27",
+    "category": "governance",
+    "short": "Population growth <em>strains services</em>—Ottawa's fault",
+    "full": "Smith (February 2026): 600,000-person population surge driven by federal immigration policy has overwhelmed Alberta services.",
+    "verdict": "misleading",
+    "verdictTag": "Brexit Playbook",
+    "theirSources": [
+      {
+        "stars": 2,
+        "name": "Smith public statements (Feb–Apr 2026)",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "UCP messaging on healthcare and housing strain",
+        "tag": "GOV",
+        "note": "Policy advocacy"
+      }
+    ],
+    "accurate": [
+      "Population growth did strain services.",
+      "Canada's federal immigration levels became a legitimate policy question in 2024–2025.",
+      "Urban housing affordability is a real issue."
+    ],
+    "omitted": [
+      "Smith's <strong>600,000 figure includes temporary residents</strong>. Actual <strong>permanent immigration to Alberta was approximately 318,000</strong>.",
+      "<strong>The UCP's OWN \"Alberta is Calling\" campaign</strong> actively recruited workers from other provinces for years—the exact population growth now being blamed on Ottawa and immigrants.",
+      "<strong>This is the Brexit playbook:</strong> lobby for workers when industry needs them; scapegoat immigrants when the bills arrive.",
+      "The <strong>service crisis predates the recent immigration wave</strong>: healthcare restructuring began 2023; AHS executive purges 2024–2025; ambulance/ER crisis documented before any recent migration surge; 700K+ without family doctor through 2024.",
+      "The UCP did not build healthcare capacity, housing supply, or schools to match the growth it actively recruited.",
+      "Budget 2026 redirects $66M to charter-school infrastructure while public schools face $910M underfunding—capacity redirection, not capacity-building."
+    ],
+    "counterSources": [
+      {
+        "stars": 3,
+        "name": "StatsCan permanent-resident admission data",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "Taking Alberta Forward analysis",
+        "tag": "NGO",
+        "note": ""
+      },
+      {
+        "stars": 3,
+        "name": "UCP \"Alberta is Calling\" campaign materials",
+        "tag": "GOV",
+        "note": "The government's own recruitment."
+      },
+      {
+        "stars": 3,
+        "name": "Alberta healthcare timeline (CIHI, pre/post-2023)",
+        "tag": "GOV",
+        "note": ""
+      },
+      {
+        "stars": 2,
+        "name": "ATA Budget 2025 analysis",
+        "tag": "PROF",
+        "note": ""
+      }
+    ],
+    "verdictText": "The UCP recruited the workers, then blamed the workers. <em>The 600K figure is inflated by temporary residents. The service collapse predates the immigration wave, and it tracks the government's own policy choices.</em> Scapegoat complete; accountability not.",
+    "amplifiers": {
+      "tier1": [
+        "@Alberta_UCP",
+        "@ABDanielleSmith"
+      ],
+      "tier2": [
+        "Rebel News",
+        "Western Standard"
+      ],
+      "tier4": "Pro-UCP amplifiers"
+    }
+  }
+];
+
+// ============================================================
+// ACCOUNTS — ecosystem directory
+// ============================================================
+const ACCOUNTS = [
+  // ========== TIER 1: CORE POLITICAL ==========
+  { handle: '@Alberta_UCP', name: 'United Conservative Party', tier: 1, type: 'official', badge: 'badge-org', platform: 'X / Official', reach: '—', role: 'Governing party; policy vehicle since 2019.', status: 'Premier: Danielle Smith', categories: ['atm','prosperity','scs','energy','parental','small-gov'] },
+  { handle: '@ABDanielleSmith', name: 'Danielle Smith', tier: 1, type: 'official', badge: 'badge-official', platform: 'X', reach: 'Public Office', role: 'Premier of Alberta.', status: 'Elected official · direct claim attribution applicable', categories: ['atm','scs','energy','parental','small-gov'] },
+  { handle: '@CPC_HQ', name: 'Conservative Party of Canada', tier: 1, type: 'official', badge: 'badge-org', platform: 'X / Official', reach: '—', role: 'Federal counterpart; echoes provincial grievances. Official Opposition.', status: 'Leader: Pierre Poilievre', categories: ['atm','small-gov'] },
+  { handle: '@ABProsperityPrj', name: 'Alberta Prosperity Project (APP)', tier: 1, type: 'org', badge: 'badge-org', platform: 'X / YouTube / Podcast', reach: '17.3K · 7.2K subs', role: 'Full-independence/separation vehicle. Petition drive; Oct 2026 referendum push.', status: 'CEO: Mitch Sylvestre · Legal: Jeff Rath · Modry', categories: ['atm','prosperity','legal','polls'] },
+  { handle: '@stayfreealberta', name: 'Stay Free Alberta', tier: 1, type: 'org', badge: 'badge-org', platform: 'X', reach: '—', role: 'Petition-collection arm of APP. Claims 177,732+ signatures (unverified).', status: 'Mitch Sylvestre', categories: ['atm','prosperity','legal','polls'] },
+  { handle: '@takebackalberta', name: 'Take Back Alberta (TBA)', tier: 1, type: 'org', badge: 'badge-org', platform: 'X / Podcast', reach: '—', role: 'Evangelical grassroots capture of UCP boards/nominations. ~30 UCP constituency associations influenced.', status: 'Founder: David Parker · $120.5K Elections AB fines (unpaid)', categories: ['parental','small-gov'] },
+
+  // ========== TIER 2: MEDIA & AMPLIFICATION ==========
+  { handle: '@RebelNewsOnline', name: 'Rebel News', tier: 2, type: 'media', badge: 'badge-media', platform: 'YouTube / X / Site', reach: 'High', role: 'Far-right populist. Amplifies convoy/freedom/sovereignty narratives; town halls.', status: 'Founder: Ezra Levant', categories: ['atm','legal','polls','energy','scs','small-gov'] },
+  { handle: 'Western Standard', name: 'Western Standard', tier: 2, type: 'media', badge: 'badge-media', platform: 'Site / YouTube', reach: 'Moderate', role: 'Alberta-focused journalism; covers sovereignty positively.', status: 'Editorial lean: right-conservative', categories: ['atm','legal','polls','energy','parental','small-gov'] },
+  { handle: '@LavigneShow', name: 'The Lavigne Show', tier: 2, type: 'media', badge: 'badge-media', platform: 'Podcast / YouTube', reach: 'Moderate', role: 'Right-conservative Alberta-focused podcast. Hosts APP/UCP figures.', status: 'Jason Lavigne', categories: ['atm','prosperity','legal','polls'] },
+  { handle: 'The Canadian Story', name: 'The Canadian Story', tier: 2, type: 'media', badge: 'badge-media', platform: 'Podcast / Platform', reach: 'Moderate', role: 'TBA\'s own platform. Evangelical + sovereignty + oil &amp; gas framing.', status: 'David Parker (TBA)', categories: ['atm','prosperity','parental','small-gov'] },
+  { handle: 'Canadians for Truth', name: 'Canadians for Truth', tier: 2, type: 'media', badge: 'badge-media', platform: 'Podcast / Site', reach: 'Moderate', role: 'Freedom/patriot framing. Convoy-to-sovereignty pipeline.', status: 'Theo Fleury · Joseph Bourgault', categories: ['legal','small-gov'] },
+  { handle: '@ShaunNewmanPod', name: 'Shaun Newman Podcast', tier: 2, type: 'media', badge: 'badge-media', platform: 'Podcast', reach: 'Moderate', role: 'Pro-sovereignty. Hosts APP leaders regularly.', status: 'Shaun Newman', categories: ['prosperity','legal','polls'] },
+
+  // ========== TIER 3: SOCIAL CONSERVATIVE / CHRISTIAN NATIONALIST ==========
+  { handle: 'Liberty Coalition Canada', name: 'Liberty Coalition Canada', tier: 3, type: 'org', badge: 'badge-org', platform: 'Org / Network', reach: '—', role: 'Anti-LGBTQ2S+ school board candidates. "Biblical Sexuality Sundays." Convoy-rooted.', status: 'Trained candidates across provinces', categories: ['parental','small-gov'] },
+  { handle: 'Parents for Choice in Education', name: 'Parents for Choice in Education (PCE)', tier: 3, type: 'org', badge: 'badge-org', platform: 'Org / Network', reach: '—', role: 'Anti-SOGI, pro-religious school funding. School board campaigns since ~2012.', status: 'Lobbying + school board', categories: ['parental'] },
+  { handle: 'Action4Canada', name: 'Action4Canada', tier: 3, type: 'org', badge: 'badge-org', platform: 'Org / Network', reach: '—', role: 'Anti-drag, anti-SOGI, "Judeo-Christian principles." School board harassment.', status: 'Founder Tanya Gaw frames as "spiritual battle"', categories: ['parental'] },
+  { handle: 'Campaign Life Coalition', name: 'Campaign Life Coalition', tier: 3, type: 'org', badge: 'badge-org', platform: 'Org / Network', reach: '—', role: 'Anti-abortion, anti-LGBTQ2S+. National socially-conservative candidate promotion.', status: 'National org', categories: ['parental'] },
+  { handle: 'Alberta Parents\' Union', name: 'Alberta Parents\' Union', tier: 3, type: 'org', badge: 'badge-org', platform: 'Org', reach: '—', role: '"Parental rights" in schools. Curriculum/flag/anthem mandates.', status: '—', categories: ['parental'] },
+  { handle: 'Revival Reformation Alliance', name: 'Revival Reformation Alliance', tier: 3, type: 'org', badge: 'badge-org', platform: 'Org / Events', reach: '—', role: '"Battle for Canada" events. Militant Christianity + patriotism framing.', status: '—', categories: ['small-gov','parental'] },
+  { handle: 'Christian Impact Network', name: 'Christian Impact Network (CIN)', tier: 3, type: 'org', badge: 'badge-org', platform: 'Org / Events', reach: '—', role: 'Hosts the Premier\'s Annual Christian Summit. Pay-for-access. "On Earth as it is in Heaven" branding.', status: '—', categories: ['small-gov','parental'] },
+
+  // ========== TIER 4: INDIVIDUAL AMPLIFIERS ==========
+  // Core APP / Sovereignty (public-branded)
+  { handle: '@JeffreyRWRath', name: 'Jeffrey Rath', tier: 4, type: 'public', badge: 'badge-public', platform: 'X', reach: '—', role: 'APP legal strategist. Named actor in constitutional arguments.', status: 'Public figure · direct attribution applicable', categories: ['atm','prosperity','legal'] },
+  { handle: '@MitchSylvestre6', name: 'Mitch Sylvestre', tier: 4, type: 'public', badge: 'badge-public', platform: 'X', reach: '—', role: 'APP CEO · Stay Free Alberta. Petition drive organiser.', status: 'Public figure · direct attribution applicable', categories: ['atm','prosperity','legal','polls'] },
+  { handle: '@RiseOfAlberta', name: 'RiseOfAlberta', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'High engagement', role: 'Separation amplifier. Content pattern: APP clips, referendum push.', status: 'Attribution pending · evidence-collection in progress', categories: ['atm','prosperity','legal','polls'] },
+  { handle: '@albertaseparate', name: 'albertaseparate', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '48.2K', role: 'Separation amplifier.', status: 'Attribution pending', categories: ['atm','legal','polls'] },
+  { handle: '@kathyflett1', name: 'kathyflett1', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '5.5K', role: 'Sovereignty / APP-adjacent.', status: 'Attribution pending', categories: ['atm','legal','polls'] },
+  { handle: '@PJTheBelt', name: 'PJTheBelt', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal','polls'] },
+  { handle: '@Martyupnorth', name: 'Martyupnorth', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@JonFromAlberta', name: 'JonFromAlberta', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'APP-adjacent amplifier.', status: 'Attribution pending', categories: ['atm','legal'] },
+  { handle: '@PrairieSteel2', name: 'PrairieSteel2', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal','polls'] },
+  { handle: '@NikkieZ11', name: 'NikkieZ11', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@RFBurke63', name: 'RFBurke63', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['atm','legal'] },
+  { handle: '@dienes_tom', name: 'dienes_tom', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@DustyRoseYYC', name: 'DustyRoseYYC', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@TheAlbertaChad', name: 'TheAlbertaChad', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal','small-gov'] },
+  { handle: '@DenZuzana', name: 'DenZuzana', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@wealthmoose', name: 'wealthmoose', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Fiscal/sovereignty amplifier.', status: 'Attribution pending', categories: ['atm','prosperity'] },
+  { handle: '@MarcNixon24', name: 'MarcNixon24', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@johnrbolton01', name: 'johnrbolton01', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal','atm'] },
+  { handle: '@albertapat17926', name: 'albertapat17926', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@70skeeter', name: '70skeeter', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@dnSabine', name: 'dnSabine', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@GMatwiv', name: 'GMatwiv', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@nualanichols', name: 'nualanichols', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Sovereignty amplifier.', status: 'Attribution pending', categories: ['legal'] },
+
+  // Convoy → Sovereignty Pipeline (public figures)
+  { handle: '@TheoFleury14', name: 'Theo Fleury', tier: 4, type: 'public', badge: 'badge-public', platform: 'X / Podcast', reach: '339K', role: 'Convoy-pipeline key conversion account. Freedom → explicit sovereignty support.', status: 'Public figure · direct attribution applicable', categories: ['small-gov','legal'] },
+  { handle: '@echipiuk', name: 'Eva Chipiuk', tier: 4, type: 'public', badge: 'badge-public', platform: 'X', reach: '118K', role: 'Convoy-pipeline key conversion account.', status: 'Public figure · direct attribution applicable', categories: ['legal','small-gov'] },
+  { handle: '@Concern70732755', name: 'Concerned Canadian', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '170K', role: 'Convoy-pipeline amplifier.', status: 'Attribution pending', categories: ['legal','small-gov'] },
+  { handle: '@ezralevant', name: 'Ezra Levant', tier: 4, type: 'public', badge: 'badge-public', platform: 'X / Rebel', reach: 'High', role: 'Convoy→sovereignty pipeline. Rebel News founder.', status: 'Public figure · direct attribution applicable', categories: ['atm','legal','polls','energy','small-gov'] },
+  { handle: '@DreaHumphrey', name: 'Drea Humphrey', tier: 4, type: 'public', badge: 'badge-public', platform: 'X / Rebel', reach: 'Moderate', role: 'Rebel News. Convoy→sovereignty.', status: 'Public figure · direct attribution applicable', categories: ['legal','small-gov'] },
+  { handle: '@ikwilson', name: 'Keith Wilson', tier: 4, type: 'public', badge: 'badge-public', platform: 'X / YouTube', reach: '—', role: 'Constitutional-argument amplifier. Convoy-pipeline.', status: 'Public figure · direct attribution applicable', categories: ['legal'] },
+  { handle: '@FreeAlbertaRob', name: 'Rob Anderson', tier: 4, type: 'public', badge: 'badge-public', platform: 'X', reach: '—', role: 'Free Alberta Strategy co-author. Policy document direct-attributable.', status: 'Public figure · direct attribution applicable', categories: ['atm','legal','small-gov'] },
+
+  // Separation-dedicated amplifiers
+  { handle: '@IndependenceAb', name: 'IndependenceAb', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Separation-dedicated amplifier.', status: 'Attribution pending', categories: ['legal','polls'] },
+  { handle: '@AlbertaSeparat2', name: 'AlbertaSeparat2', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Separation-dedicated amplifier.', status: 'Attribution pending', categories: ['legal','polls'] },
+  { handle: '@ABSeparation', name: 'ABSeparation', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Separation-dedicated amplifier.', status: 'Attribution pending', categories: ['legal','polls'] },
+  { handle: '@GothamBatSignal', name: 'GothamBatSignal', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Separation amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@SeparationNovel', name: 'SeparationNovel', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Separation-dedicated amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@AlbertaStrong65', name: 'AlbertaStrong65', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Separation amplifier.', status: 'Attribution pending', categories: ['legal'] },
+  { handle: '@KieserBill', name: 'KieserBill', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: '—', role: 'Separation amplifier.', status: 'Attribution pending', categories: ['legal'] },
+
+  // Smaller but active engagers
+  { handle: '@KingSnake2154', name: 'KingSnake2154', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP / sovereignty engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@dhowie1955', name: 'dhowie1955', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@foti_galanis', name: 'foti_galanis', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@KimMcLe10081812', name: 'KimMcLe10081812', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@Nordseemensch', name: 'Nordseemensch', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@StephenSny96661', name: 'StephenSny96661', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@LisaMar91564392', name: 'LisaMar91564392', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@coryn70', name: 'coryn70', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@TerryHethering9', name: 'TerryHethering9', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@JudyMaxB', name: 'JudyMaxB', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@Realcamdavies', name: 'Cam Davies', tier: 4, type: 'public', badge: 'badge-public', platform: 'X', reach: '—', role: 'Named public figure. Candidate / political-adjacent.', status: 'Public figure · direct attribution applicable', categories: ['small-gov','legal'] },
+  { handle: '@justinrumpel', name: 'justinrumpel', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Active pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@yegwave', name: 'yegwave', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Edmonton-adjacent pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@albertaradios', name: 'albertaradios', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+  { handle: '@jasononTheDrums', name: 'jasononTheDrums', tier: 4, type: 'pseudo', badge: 'badge-pseudo', platform: 'X', reach: 'Small', role: 'Pro-UCP engager.', status: 'Attribution pending', categories: ['small-gov'] },
+
+  // Official UCP/CPC (mainstream, non-separatist)
+  { handle: '@jkenney', name: 'Jason Kenney', tier: 4, type: 'official', badge: 'badge-official', platform: 'X', reach: 'High', role: 'Former Premier. Mainstream UCP; ousted in 2022 leadership review at 51.4%.', status: 'Former elected · direct attribution applicable', categories: ['energy','small-gov'] },
+  { handle: '@shuvmajumdar', name: 'Shuv Majumdar', tier: 4, type: 'official', badge: 'badge-official', platform: 'X', reach: 'Moderate', role: 'Federal CPC MP / public figure.', status: 'Elected · direct attribution applicable', categories: ['atm','small-gov'] }
+];
+
+// Build category labels for amplifier chips
+const CATEGORY_LABELS = {
+  "atm": "Fiscal \"ATM\"",
+  "prosperity": "Prosperity",
+  "legal": "Legal right",
+  "polls": "Polls",
+  "smith-not-sep": "Smith/APP",
+  "tax-cuts": "Tax cuts",
+  "trillion-fled": "$1T fled",
+  "scs": "SCS / drug policy",
+  "ahs-bloated": "AHS bloated",
+  "private-healthcare": "Private HC",
+  "dynalife": "DynaLife",
+  "recovery-model": "Recovery model",
+  "energy": "Energy",
+  "renewables-freedom": "Renewables",
+  "parental": "Parental rights",
+  "charter-schools": "Charter schools",
+  "bill-25-neutrality": "Bill 25",
+  "gerrymandering": "Gerrymandering",
+  "notwithstanding": "Notwithstanding",
+  "oversight-works": "Oversight",
+  "bill-14": "Bill 14",
+  "small-gov": "Small gov framing",
+  "municipal-reform": "Municipal",
+  "wyant-no-interference": "Wyant defence",
+  "gun-program": "Gun program",
+  "press-freedom": "Press freedom",
+  "immigration-straining": "Immigration"
+};
+
+// ============================================================
+// RENDER — CLAIMS
+// ============================================================
+function renderClaims(filter) {
+  const container = document.getElementById('claimsContainer');
+  container.innerHTML = '';
+  const items = filter && filter !== 'all' ? CLAIMS.filter(c => c.category === filter) : CLAIMS;
+
+  items.forEach(claim => {
+    const card = document.createElement('div');
+    card.className = 'claim-card';
+    card.setAttribute('data-id', claim.id);
+
+    const theirSourcesHTML = claim.theirSources.map(s => sourceLi(s)).join('');
+    const counterSourcesHTML = claim.counterSources.map(s => sourceLi(s)).join('');
+    const accurateHTML = claim.accurate.map(a => `<li>${a}</li>`).join('');
+    const omittedHTML = claim.omitted.map(o => `<li>${o}</li>`).join('');
+
+    const ampHTML = buildAmplifierHTML(claim.amplifiers, claim.id);
+
+    card.innerHTML = `
+      <div class="claim-header" onclick="toggleClaim('${claim.id}')">
+        <div class="claim-num">CLAIM ${claim.num}</div>
+        <div class="claim-short">${claim.short}</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="claim-verdict-tag verdict-${claim.verdict}">${claim.verdictTag}</span>
+          <span class="claim-toggle">+</span>
+        </div>
+      </div>
+      <div class="claim-body">
+        <div class="claim-full">"${claim.full}"</div>
+        <div class="claim-grid">
+          <div class="claim-block their-sources">
+            <h4>Their sources</h4>
+            <ul class="source-list">${theirSourcesHTML}</ul>
+          </div>
+          <div class="claim-block counter-sources">
+            <h4>Counter-sources</h4>
+            <ul class="source-list">${counterSourcesHTML}</ul>
+          </div>
+          <div class="claim-block what-accurate">
+            <h4>What's accurate</h4>
+            <ul class="bullet-list">${accurateHTML}</ul>
+          </div>
+          <div class="claim-block what-omitted">
+            <h4>What's omitted / cherry-picked</h4>
+            <ul class="bullet-list">${omittedHTML}</ul>
+          </div>
+        </div>
+        <div class="verdict-block">
+          <h4>Verdict</h4>
+          <p>${claim.verdictText}</p>
+        </div>
+        ${ampHTML}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function sourceLi(s) {
+  const starClass = s.stars === 3 ? 'source-star-3' : s.stars === 2 ? 'source-star-2' : 'source-star-1';
+  const stars = s.stars === 3 ? '★★★' : s.stars === 2 ? '★★☆' : '★☆☆';
+  const noteHTML = s.note ? ` — <span style="color:var(--text-dim);">${s.note}</span>` : '';
+  return `<li>
+    <span class="source-stars ${starClass}">${stars}</span>
+    <span class="source-name"><strong>${s.name}</strong>${noteHTML}</span>
+    ${s.tag ? `<span class="source-tag">${s.tag}</span>` : ''}
+  </li>`;
+}
+
+function buildAmplifierHTML(amps, claimId) {
+  if (!amps) return '';
+  const parts = [];
+  if (amps.tier1 && amps.tier1.length) {
+    parts.push(`<div style="margin-bottom:8px;"><span style="font-family:var(--mono); font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em; margin-right:8px;">Tier 1:</span>${amps.tier1.map(a => `<span class="amplifier-tag tier-1">${a}</span>`).join(' ')}</div>`);
+  }
+  if (amps.tier2 && amps.tier2.length) {
+    parts.push(`<div style="margin-bottom:8px;"><span style="font-family:var(--mono); font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em; margin-right:8px;">Tier 2:</span>${amps.tier2.map(a => `<span class="amplifier-tag tier-2">${a}</span>`).join(' ')}</div>`);
+  }
+  if (amps.tier3 && amps.tier3.length) {
+    parts.push(`<div style="margin-bottom:8px;"><span style="font-family:var(--mono); font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em; margin-right:8px;">Tier 3:</span>${amps.tier3.map(a => `<span class="amplifier-tag tier-3">${a}</span>`).join(' ')}</div>`);
+  }
+  if (amps.tier4) {
+    parts.push(`<div><span style="font-family:var(--mono); font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em; margin-right:8px;">Tier 4:</span><span class="amplifier-tag tier-4">${amps.tier4}</span></div>`);
+  }
+  return `
+    <div class="amplifiers-block">
+      <h4>Who <em>amplifies</em> this claim</h4>
+      ${parts.join('')}
+    </div>
+  `;
+}
+
+function toggleClaim(id) {
+  const card = document.querySelector(`.claim-card[data-id="${id}"]`);
+  if (card) card.classList.toggle('expanded');
+}
+
+// ============================================================
+// RENDER — ACCOUNTS
+// ============================================================
+function renderAccounts(tierFilter, searchQuery) {
+  const container = document.getElementById('accountsContainer');
+  container.innerHTML = '';
+
+  const q = (searchQuery || '').toLowerCase().trim();
+  let items = ACCOUNTS;
+
+  if (tierFilter === 'official') {
+    items = items.filter(a => a.type === 'official');
+  } else if (tierFilter && tierFilter !== 'all') {
+    items = items.filter(a => String(a.tier) === String(tierFilter));
+  }
+
+  if (q) {
+    items = items.filter(a =>
+      a.handle.toLowerCase().includes(q) ||
+      a.name.toLowerCase().includes(q) ||
+      a.role.toLowerCase().includes(q)
+    );
+  }
+
+  // Group by tier
+  const tiers = {
+    1: { title: 'Core <em>Political</em> Infrastructure', sub: 'Governing party, federal counterpart, separation vehicle, grassroots-capture org.', items: [] },
+    2: { title: 'Media &amp; <em>Amplification</em>', sub: 'Outlets and podcasts that set and amplify the narrative.', items: [] },
+    3: { title: 'Social <em>Conservative</em> / Christian Nationalist', sub: 'School-board, parental-rights, and evangelical-political networks.', items: [] },
+    4: { title: 'Individual <em>Amplifiers</em>', sub: 'X-handle directory. Public figures directly attributable; pseudonymous handles retained as handles with role-level attribution only.', items: [] }
+  };
+  items.forEach(a => { if (tiers[a.tier]) tiers[a.tier].items.push(a); });
+
+  Object.keys(tiers).forEach(tierNum => {
+    const t = tiers[tierNum];
+    if (!t.items.length) return;
+    const section = document.createElement('div');
+    section.className = 'tier-section';
+    section.innerHTML = `
+      <div class="tier-header">TIER ${tierNum} · ${t.title} <span class="count-badge">${t.items.length} ${t.items.length === 1 ? 'entry' : 'entries'}</span></div>
+      <div class="tier-sub">${t.sub}</div>
+      <div class="account-grid"></div>
+    `;
+
+    const grid = section.querySelector('.account-grid');
+    t.items.forEach(acc => grid.appendChild(accountCard(acc)));
+    container.appendChild(section);
+  });
+
+  if (!items.length) {
+    container.innerHTML = '<div class="directory-note" style="text-align:center;"><p>No accounts match this filter. Try a different tier or clear the search box.</p></div>';
+  }
+}
+
+function accountCard(acc) {
+  const card = document.createElement('div');
+  card.className = 'account-card' + (acc.type === 'pseudo' ? ' pseudonymous-card' : '');
+
+  const badgeLabel = {
+    'badge-org': 'Organisation',
+    'badge-media': 'Media',
+    'badge-public': 'Public Figure',
+    'badge-pseudo': 'Pseudonymous',
+    'badge-official': 'Elected'
+  }[acc.badge] || '';
+
+  const claimsHTML = (acc.categories || []).map(cat =>
+    `<span class="claim-pill" onclick="jumpToClaim('${cat}')" title="Jump to ${CATEGORY_LABELS[cat] || cat}">${CATEGORY_LABELS[cat] || cat}</span>`
+  ).join('');
+
+  card.innerHTML = `
+    <div class="account-header">
+      <div class="account-handle ${acc.type === 'pseudo' ? 'pseudonymous' : ''}">${acc.handle}</div>
+      <div class="account-badge ${acc.badge}">${badgeLabel}</div>
+    </div>
+    <div class="account-name">${acc.name}</div>
+    <div class="account-role">${acc.role}</div>
+    ${acc.status ? `<div style="font-size:11px; color:var(--text-dim); font-style:italic; margin-top:-2px;">${acc.status}</div>` : ''}
+    ${claimsHTML ? `<div class="account-claims">${claimsHTML}</div>` : ''}
+    <div class="account-meta">
+      <span><strong>${acc.platform}</strong></span>
+      ${acc.reach && acc.reach !== '—' ? `<span>Reach: ${acc.reach}</span>` : ''}
+    </div>
+  `;
+  return card;
+}
+
+function jumpToClaim(categoryId) {
+  // Switch to claims view, filter to category, find claim with that category, expand it
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.view-btn[data-view="claims"]').classList.add('active');
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('viewClaims').classList.add('active');
+
+  // Find the claim with matching id
+  const claim = CLAIMS.find(c => c.id === categoryId);
+  if (claim) {
+    // Update filter chips
+    document.querySelectorAll('#claimFilterBar .filter-chip').forEach(c => c.classList.remove('active'));
+    const targetChip = document.querySelector(`#claimFilterBar .filter-chip[data-category="${claim.category}"]`);
+    if (targetChip) targetChip.classList.add('active');
+    renderClaims(claim.category);
+    // Expand the specific claim
+    setTimeout(() => {
+      const card = document.querySelector(`.claim-card[data-id="${claim.id}"]`);
+      if (card) {
+        card.classList.add('expanded');
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 50);
+  }
+}
+
+// ============================================================
+// EVENT WIRING
+// ============================================================
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('view' + btn.dataset.view.charAt(0).toUpperCase() + btn.dataset.view.slice(1)).classList.add('active');
+  });
+});
+
+document.querySelectorAll('#claimFilterBar .filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#claimFilterBar .filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    renderClaims(chip.dataset.category);
+  });
+});
+
+document.querySelectorAll('#accountFilterBar .filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#accountFilterBar .filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    renderAccounts(chip.dataset.tier, document.getElementById('accountSearch').value);
+  });
+});
+
+document.getElementById('accountSearch').addEventListener('input', (e) => {
+  const activeTier = document.querySelector('#accountFilterBar .filter-chip.active').dataset.tier;
+  renderAccounts(activeTier, e.target.value);
+});
+
+// ============================================================
+// INIT
+// ============================================================
+document.getElementById('claimCount').textContent = `· ${CLAIMS.length} talking points`;
+document.getElementById('accountCount').textContent = `· ${ACCOUNTS.length} accounts`;
+renderClaims('all');
+renderAccounts('all', '');
+
+</script>
+</body>
+</html>
